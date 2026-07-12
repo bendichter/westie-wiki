@@ -131,6 +131,21 @@ async function main() {
   await expectText(page, `Lead ${run}`);
   await shot(page, "08-video-added");
 
+  log("edit clip timing on an existing video");
+  await page.goto(moveUrl);
+  await page.getByRole("button", { name: "Edit clip" }).first().click();
+  await page.getByLabel("Clip start").fill("0:10");
+  await page.getByLabel("Clip end").fill("0:50");
+  await page.getByRole("button", { name: "Save clip" }).click();
+  await expectText(page, "0:10 → 0:50");
+
+  log("restore original clip timing");
+  await page.getByRole("button", { name: "Edit clip" }).first().click();
+  await page.getByLabel("Clip start").fill("0:30");
+  await page.getByLabel("Clip end").fill("1:00");
+  await page.getByRole("button", { name: "Save clip" }).click();
+  await expectText(page, "0:30 → 1:00");
+
   log("dancer page groups clips by move");
   await page.goto(`${BASE}/dancers/lead-${run}`);
   await expectText(page, moveName);
@@ -147,6 +162,21 @@ async function main() {
   await page.goto(`${BASE}/search?q=Follow ${run}`);
   await expectText(page, `Follow ${run}`);
   await shot(page, "10-search");
+
+  log("list pages: inline search and pagination");
+  await page.goto(`${BASE}/moves?q=Secret Handshake`);
+  await expectText(page, moveName);
+  await page.goto(`${BASE}/moves?page=2`);
+  await expectText(page, "page 2 of");
+  await page.goto(`${BASE}/dancers?q=Lead ${run}`);
+  await expectText(page, `Lead ${run}`);
+  await page.goto(`${BASE}/events?q=Test Event ${run.toUpperCase()}`);
+  await expectText(page, `Test Event ${run.toUpperCase()}`);
+
+  log("home feed counts the clip as a contribution");
+  await page.goto(BASE);
+  await expectText(page, "Recent contributions");
+  await expectText(page, "added a video clip");
 
   // --- relations ---
   log("link a related move");
@@ -212,6 +242,23 @@ async function main() {
   await expectText(page, moveName);
   await expectText(page, curriculumTitle);
   await shot(page, "13-profile");
+
+  log("fill in public profile with name and city");
+  await page.getByRole("button", { name: "Edit profile" }).click();
+  await page.getByLabel("Name").fill("Test Dancer");
+  await page.getByLabel("City").fill("Nashville, TN");
+  await page.getByLabel("I dance as").selectOption("switch");
+  await page.getByLabel("About you").fill("Automated test dancer since 2026.");
+  await page.getByRole("button", { name: "Save profile" }).click();
+  await expectText(page, "Profile saved.");
+
+  log("public profile page shows the info and contributions");
+  await page.goto(`${BASE}/users/${user1.username}`);
+  await expectText(page, "Test Dancer");
+  await expectText(page, "Nashville, TN");
+  await expectText(page, "dances both roles");
+  await expectText(page, "added a video clip");
+  await shot(page, "13b-public-profile");
 
   // --- second user: collaborative editing ---
   log("second user edits the same move (wiki-style)");

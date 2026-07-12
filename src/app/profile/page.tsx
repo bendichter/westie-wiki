@@ -12,6 +12,7 @@ import {
   moves,
   videos,
 } from "@/db/schema";
+import { ProfileForm } from "@/components/ProfileForm";
 import { DifficultyBadge, EmptyState, PageTitle } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { formatDate, timeAgo } from "@/lib/format";
@@ -77,6 +78,23 @@ export default async function ProfilePage() {
       <PageTitle sub={`Member since ${formatDate(user.createdAt)} · ${editCount} edit${editCount === 1 ? "" : "s"} · ${videoCount} video${videoCount === 1 ? "" : "s"} added`}>
         {user.username}
       </PageTitle>
+
+      <section className="mb-10">
+        <div className="mb-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <h2 className="text-xl font-bold">Your public profile</h2>
+          <Link href={`/users/${user.username}`} className="font-display text-sm text-denim hover:underline">
+            View as others see it →
+          </Link>
+        </div>
+        <ProfileForm
+          initial={{
+            displayName: user.displayName,
+            city: user.city,
+            bio: user.bio,
+            danceRole: user.danceRole,
+          }}
+        />
+      </section>
 
       <div className="grid gap-10 lg:grid-cols-2">
         <section>

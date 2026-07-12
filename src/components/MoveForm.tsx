@@ -81,7 +81,12 @@ export function MoveForm({ mode, initial }: MoveFormProps) {
           }
         />
         <FieldHint>
-          Markdown supported. Describe, don&apos;t prescribe: write what dancers actually do.
+          Markdown supported. Describe, don&apos;t prescribe — and write roles, not genders
+          (&ldquo;the follower turns under their arm&rdquo;). See the{" "}
+          <a href="/guidelines" target="_blank" className="text-denim underline">
+            contribution guidelines
+          </a>
+          .
         </FieldHint>
       </div>
 

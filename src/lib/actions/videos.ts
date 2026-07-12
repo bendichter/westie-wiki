@@ -110,6 +110,53 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
   return { error: null, success: true };
 }
 
+/**
+ * Update a clip's timing and note. Open to any logged-in member, wiki-style —
+ * trimming a full video down to the relevant segment is a contribution.
+ */
+export async function updateVideoClip(
+  _prev: VideoFormState,
+  formData: FormData
+): Promise<VideoFormState> {
+  const user = await getCurrentUser();
+  const videoId = Number(formData.get("videoId"));
+  const video = db.select().from(videos).where(eq(videos.id, videoId)).get();
+  if (!video) return { error: "This video no longer exists." };
+  const move = db.select().from(moves).where(eq(moves.id, video.moveId)).get();
+  if (!move) return { error: "This move no longer exists." };
+  if (!user) redirect(`/login?next=/moves/${move.slug}`);
+
+  const startRaw = String(formData.get("start") ?? "").trim();
+  const endRaw = String(formData.get("end") ?? "").trim();
+
+  let startSec = 0;
+  if (startRaw) {
+    const t = parseTimestamp(startRaw);
+    if (t == null) return { error: `Couldn't read the start time "${startRaw}". Use formats like 90 or 1:30.` };
+    startSec = t;
+  }
+
+  let endSec: number | null = null;
+  if (endRaw) {
+    const t = parseTimestamp(endRaw);
+    if (t == null) return { error: `Couldn't read the end time "${endRaw}". Use formats like 105 or 1:45.` };
+    endSec = t;
+  }
+  if (endSec != null && endSec <= startSec) {
+    return { error: "The end time must be after the start time." };
+  }
+
+  const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+
+  db.update(videos)
+    .set({ startSec, endSec, note: note || null })
+    .where(eq(videos.id, videoId))
+    .run();
+
+  revalidatePath(`/moves/${move.slug}`);
+  return { error: null, success: true };
+}
+
 export async function deleteVideo(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
   if (!user) return;

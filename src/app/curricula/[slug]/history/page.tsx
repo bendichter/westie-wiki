@@ -52,7 +52,7 @@ export default async function CurriculumHistoryPage({
               </Link>
               {i === 0 ? <CountChip>current</CountChip> : null}
               <span className="text-sm text-muted font-display">
-                {rev.editor} · {formatDateTime(rev.createdAt)}
+                <Link href={`/users/${rev.editor}`} className="hover:underline">{rev.editor}</Link> · {formatDateTime(rev.createdAt)}
               </span>
             </div>
             <p className="text-[15px] text-ink-soft font-display mt-0.5">

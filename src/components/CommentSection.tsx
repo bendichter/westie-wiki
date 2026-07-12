@@ -44,7 +44,7 @@ export function CommentSection({
           {comments.map((c) => (
             <li key={c.id} className="bg-panel border border-line rounded-lg px-4 py-3">
               <div className="flex items-baseline gap-2 text-sm font-display">
-                <span className="font-bold text-ink">{c.username}</span>
+                <Link href={`/users/${c.username}`} className="font-bold text-ink hover:underline">{c.username}</Link>
                 <span className="text-muted text-xs">{c.timeAgoLabel}</span>
                 {currentUserId === c.userId ? (
                   <form action={deleteComment} className="ml-auto">

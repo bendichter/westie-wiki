@@ -64,7 +64,7 @@ export default async function CurriculumRevisionPage({
           {isCurrent ? <CountChip>current</CountChip> : null}
         </div>
         <p className="text-muted font-display mt-1">
-          {revision.editor} · {formatDateTime(revision.createdAt)} ·{" "}
+          <Link href={`/users/${revision.editor}`} className="hover:underline">{revision.editor}</Link> · {formatDateTime(revision.createdAt)} ·{" "}
           {revision.editSummary || <span className="italic">no edit summary</span>}
         </p>
         <div className="slot-line mt-3" aria-hidden />

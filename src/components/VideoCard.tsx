@@ -3,6 +3,7 @@ import { deleteVideo } from "@/lib/actions/videos";
 import type { VideoWithLabels } from "@/lib/data/moves";
 import { formatTimestamp } from "@/lib/time";
 import { youtubeWatchUrl } from "@/lib/youtube";
+import { EditClipForm } from "./EditClipForm";
 import { LiteYouTube } from "./LiteYouTube";
 
 export function VideoCard({
@@ -80,7 +81,7 @@ export function VideoCard({
               {video.title}
             </p>
           ) : null}
-          <div className="flex items-center gap-3 pt-1 text-xs text-muted">
+          <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-muted">
             <a
               href={youtubeWatchUrl(video.youtubeId, video.startSec)}
               target="_blank"
@@ -89,7 +90,20 @@ export function VideoCard({
             >
               Watch on YouTube
             </a>
-            <span>added by {video.addedByName}</span>
+            <span>
+              added by{" "}
+              <Link href={`/users/${video.addedByName}`} className="hover:text-denim hover:underline">
+                {video.addedByName}
+              </Link>
+            </span>
+            {currentUserId != null ? (
+              <EditClipForm
+                videoId={video.id}
+                startSec={video.startSec}
+                endSec={video.endSec}
+                note={video.note}
+              />
+            ) : null}
             {currentUserId === video.addedBy ? (
               <form action={deleteVideo} className="ml-auto">
                 <input type="hidden" name="videoId" value={video.id} />

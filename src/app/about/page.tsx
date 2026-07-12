@@ -48,6 +48,13 @@ export default function AboutPage() {
         </ul>
 
         <h2>House style</h2>
+        <p>
+          The short version is below — the full{" "}
+          <Link href="/guidelines" className="text-denim underline">
+            contribution guidelines
+          </Link>{" "}
+          cover role-neutral language, naming collisions, and how to write for learners.
+        </p>
         <ul>
           <li>Describe what you see and what is commonly taught, not what you think is correct.</li>
           <li>When names conflict, list them all as alternative names and let the description explain.</li>

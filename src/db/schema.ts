@@ -1,5 +1,8 @@
 import { sqliteTable, text, integer, primaryKey, uniqueIndex, index } from "drizzle-orm/sqlite-core";
 
+export const DANCE_ROLES = ["leader", "follower", "switch"] as const;
+export type DanceRole = (typeof DANCE_ROLES)[number];
+
 export const users = sqliteTable(
   "users",
   {
@@ -8,6 +11,11 @@ export const users = sqliteTable(
     username: text("username").notNull(),
     passwordHash: text("password_hash").notNull(),
     createdAt: integer("created_at").notNull(),
+    // optional public profile fields
+    displayName: text("display_name"),
+    city: text("city"),
+    bio: text("bio"),
+    danceRole: text("dance_role", { enum: DANCE_ROLES }),
   },
   (t) => [uniqueIndex("users_email_idx").on(t.email), uniqueIndex("users_username_idx").on(t.username)]
 );

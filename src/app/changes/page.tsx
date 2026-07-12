@@ -75,7 +75,8 @@ export default function ChangesPage() {
                 </Link>
                 <span className="text-sm text-muted font-display">
                   {" "}
-                  — {edit.editSummary || "edited"} · {edit.editor} · {formatDateTime(edit.createdAt)}
+                  — {edit.editSummary || "edited"} ·{" "}
+                  <Link href={`/users/${edit.editor}`} className="hover:underline">{edit.editor}</Link> · {formatDateTime(edit.createdAt)}
                 </span>
               </div>
             </li>

@@ -3,11 +3,29 @@ import Link from "next/link";
 import { count, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { events, videos } from "@/db/schema";
+import { ListSearchForm } from "@/components/ListSearchForm";
+import { clampPage, Pagination } from "@/components/Pagination";
 import { EmptyState, PageTitle } from "@/components/ui";
+import { likeContains } from "@/lib/like";
 
 export const metadata: Metadata = { title: "Events" };
 
-export default function EventsPage() {
+const PER_PAGE = 30;
+
+export default async function EventsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+  const { q, page: pageParam } = await searchParams;
+  const query = (q ?? "").trim().slice(0, 100);
+
+  const where = query ? likeContains(events.name, query) : undefined;
+
+  const total = db.select({ n: count() }).from(events).where(where).get()?.n ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const page = clampPage(pageParam, totalPages);
+
   const rows = db
     .select({
       id: events.id,
@@ -18,18 +36,33 @@ export default function EventsPage() {
     })
     .from(events)
     .leftJoin(videos, eq(videos.eventId, events.id))
+    .where(where)
     .groupBy(events.id)
     .orderBy(desc(events.year), events.name)
+    .limit(PER_PAGE)
+    .offset((page - 1) * PER_PAGE)
     .all();
 
   return (
     <div>
-      <PageTitle sub="Conventions and competitions where labeled clips were filmed.">Events</PageTitle>
+      <PageTitle
+        sub={`${total} event${total === 1 ? "" : "s"}${query ? ` matching “${query}”` : " where labeled clips were filmed"}${totalPages > 1 ? ` · page ${page} of ${totalPages}` : ""}.`}
+      >
+        Events
+      </PageTitle>
+
+      <ListSearchForm basePath="/events" query={query} placeholder="Search events by name…" />
 
       {rows.length === 0 ? (
-        <EmptyState title="No events yet">
-          Events appear here automatically when video clips are labeled on move pages.
-        </EmptyState>
+        query ? (
+          <EmptyState title={`No events matching “${query}”`}>
+            Events appear here when a video clip is labeled with them on a move page.
+          </EmptyState>
+        ) : (
+          <EmptyState title="No events yet">
+            Events appear here automatically when video clips are labeled on move pages.
+          </EmptyState>
+        )
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {rows.map((e) => (
@@ -50,6 +83,8 @@ export default function EventsPage() {
           ))}
         </ul>
       )}
+
+      <Pagination page={page} totalPages={totalPages} basePath="/events" params={{ q: query }} />
     </div>
   );
 }

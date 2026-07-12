@@ -15,6 +15,13 @@
       "when": 1783812636610,
       "tag": "0001_aromatic_mercury",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1783830657044,
+      "tag": "0002_fluffy_meteorite",
+      "breakpoints": true
     }
   ]
 }

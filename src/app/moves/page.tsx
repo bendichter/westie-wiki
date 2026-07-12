@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, or } from "drizzle-orm";
 import { db } from "@/db";
 import {
   dancers,
@@ -11,20 +11,33 @@ import {
   videoDancers,
   videos,
 } from "@/db/schema";
+import { ListSearchForm } from "@/components/ListSearchForm";
+import { clampPage, Pagination } from "@/components/Pagination";
 import { ButtonLink, DifficultyBadge, EmptyState, PageTitle, TagChip } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { timeAgo } from "@/lib/format";
+import { likeContains } from "@/lib/like";
 
 export const metadata: Metadata = { title: "Moves" };
 
-type SearchParams = { tag?: string; difficulty?: string; dancer?: string; sort?: string };
+const PER_PAGE = 20;
+
+type SearchParams = {
+  q?: string;
+  tag?: string;
+  difficulty?: string;
+  dancer?: string;
+  sort?: string;
+  page?: string;
+};
 
 export default async function MovesPage({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const { tag, difficulty, dancer, sort } = await searchParams;
+  const { q, tag, difficulty, dancer, sort, page: pageParam } = await searchParams;
+  const query = (q ?? "").trim().slice(0, 100);
   const user = await getCurrentUser();
 
   // resolve filters
@@ -63,12 +76,37 @@ export default async function MovesPage({
       conditions.push(inArray(moves.id, moveIdFilter));
     }
   }
+  if (query) {
+    // match the move name or any of its alternative names
+    const aliasIds = db
+      .selectDistinct({ moveId: moveAliases.moveId })
+      .from(moveAliases)
+      .where(likeContains(moveAliases.name, query))
+      .all()
+      .map((r) => r.moveId);
+    conditions.push(
+      aliasIds.length > 0
+        ? or(likeContains(moves.name, query), inArray(moves.id, aliasIds))!
+        : likeContains(moves.name, query)
+    );
+  }
+
+  const total =
+    db
+      .select({ n: count() })
+      .from(moves)
+      .where(and(...conditions))
+      .get()?.n ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const page = clampPage(pageParam, totalPages);
 
   const rows = db
     .select()
     .from(moves)
     .where(and(...conditions))
-    .orderBy(sort === "recent" ? desc(moves.updatedAt) : asc(moves.name))
+    .orderBy(sort === "recent" ? desc(moves.updatedAt) : asc(moves.name), asc(moves.id))
+    .limit(PER_PAGE)
+    .offset((page - 1) * PER_PAGE)
     .all();
 
   // secondary data for the list
@@ -96,9 +134,10 @@ export default async function MovesPage({
 
   const allTags = db.select().from(tags).orderBy(asc(tags.name)).all();
 
+  // page resets whenever a filter or the query changes
   const filterQuery = (overrides: Partial<SearchParams>) => {
     const params = new URLSearchParams();
-    const merged = { tag, difficulty, dancer, sort, ...overrides };
+    const merged = { q: query, tag, difficulty, dancer, sort, ...overrides };
     for (const [k, v] of Object.entries(merged)) if (v) params.set(k, v);
     const qs = params.toString();
     return qs ? `/moves?${qs}` : "/moves";
@@ -108,16 +147,26 @@ export default async function MovesPage({
     tagRow ? { label: `tag: ${tagRow.name}`, clear: filterQuery({ tag: undefined }) } : null,
     difficulty ? { label: `difficulty: ${difficulty}`, clear: filterQuery({ difficulty: undefined }) } : null,
     dancerRow ? { label: `danced by: ${dancerRow.name}`, clear: filterQuery({ dancer: undefined }) } : null,
+    query ? { label: `matching: “${query}”`, clear: filterQuery({ q: undefined }) } : null,
   ].filter(Boolean) as { label: string; clear: string }[];
 
   return (
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <PageTitle sub={`${rows.length} move${rows.length === 1 ? "" : "s"} documented by the community.`}>
+        <PageTitle
+          sub={`${total} move${total === 1 ? "" : "s"}${query || activeFilters.length ? " matching" : " documented by the community"}${totalPages > 1 ? ` · page ${page} of ${totalPages}` : ""}.`}
+        >
           Moves
         </PageTitle>
         {user ? <ButtonLink href="/moves/new">+ Document a move</ButtonLink> : null}
       </div>
+
+      <ListSearchForm
+        basePath="/moves"
+        query={query}
+        placeholder="Search moves by name or alias…"
+        preserve={{ tag, difficulty, dancer, sort }}
+      />
 
       {/* filters */}
       <div className="flex flex-wrap items-center gap-2 mb-6 font-display text-sm">
@@ -214,6 +263,13 @@ export default async function MovesPage({
           })}
         </ul>
       )}
+
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        basePath="/moves"
+        params={{ q: query, tag, difficulty, dancer, sort }}
+      />
 
       {allTags.length > 0 ? (
         <div className="mt-8">
