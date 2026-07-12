@@ -48,6 +48,23 @@ deploy:
 rather deploy manually. Note the workflow runs plain `flyctl deploy` — after the FIRST
 manual `fly deploy --ha=false`, the machine count is already 1 and later deploys keep it.
 
+### Password-reset email (Resend)
+
+Password reset works out of the box but only *logs* the reset link to the server console
+(`fly logs`) until an email provider is configured. To actually deliver email:
+
+1. Create a free [Resend](https://resend.com) account (100 emails/day free).
+2. Add the `westie.wiki` domain in Resend and create the DNS records it asks for at your
+   registrar (TXT + DKIM records — Resend shows exactly what to add).
+3. Create an API key and set it on the app:
+
+   ```sh
+   fly secrets set RESEND_API_KEY=re_xxxxxxxx
+   ```
+
+The From address defaults to `Westie Wiki <noreply@westie.wiki>`; override with
+`fly secrets set MAIL_FROM='...'` if needed.
+
 ### Backups
 
 The whole site is one file. To snapshot it:
