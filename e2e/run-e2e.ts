@@ -48,6 +48,24 @@ function cleanupPreviousRuns() {
   sqlite.close();
 }
 
+function plantVerificationToken(email: string): string {
+  const raw = randomBytes(32).toString("hex");
+  const sqlite = new Database(process.env.DATABASE_PATH ?? "./data/wcs-wiki.db");
+  const u = sqlite.prepare("SELECT id FROM users WHERE email = ?").get(email) as { id: number };
+  sqlite.prepare("DELETE FROM email_verification_tokens WHERE user_id = ?").run(u.id);
+  sqlite
+    .prepare("INSERT INTO email_verification_tokens (id, user_id, expires_at) VALUES (?, ?, ?)")
+    .run(createHash("sha256").update(raw).digest("hex"), u.id, Date.now() + 3600_000);
+  sqlite.close();
+  return raw;
+}
+
+function markVerified(email: string) {
+  const sqlite = new Database(process.env.DATABASE_PATH ?? "./data/wcs-wiki.db");
+  sqlite.prepare("UPDATE users SET email_verified_at = ? WHERE email = ?").run(Date.now(), email);
+  sqlite.close();
+}
+
 async function main() {
   fs.mkdirSync(SHOTS, { recursive: true });
   cleanupPreviousRuns();
@@ -84,6 +102,22 @@ async function main() {
   await page.getByRole("button", { name: "Create account" }).click();
   await page.waitForURL(`${BASE}/`);
   await expectText(page, user1.username);
+
+  // --- email verification gate ---
+  log("unverified user is blocked from editing");
+  await expectText(page, "Confirm your email address to edit the wiki");
+  await page.goto(`${BASE}/moves/new`);
+  await page.getByLabel("Move name").fill("Blocked Move");
+  await page.getByRole("button", { name: "Create move" }).click();
+  await expectText(page, "Confirm your email address to edit");
+
+  log("verification link confirms the email");
+  const verifyToken = plantVerificationToken(user1.email);
+  await page.goto(`${BASE}/verify-email?token=${verifyToken}`);
+  await expectText(page, "Email confirmed");
+  await page.goto(`${BASE}/`);
+  const bannerGone = await page.getByText("Confirm your email address to edit the wiki").count();
+  if (bannerGone !== 0) throw new Error("verify banner still visible after confirming");
 
   // --- create move ---
   log("create a move");
@@ -346,6 +380,7 @@ async function main() {
   await page.getByLabel("Password").fill(user2.password);
   await page.getByRole("button", { name: "Create account" }).click();
   await page.waitForURL(`${BASE}/`);
+  markVerified(user2.email);
 
   await page.goto(`${moveUrl}/edit`);
   await page.getByLabel("Alternative names").fill("Test Alias One, Secret Handshake, Community Name");

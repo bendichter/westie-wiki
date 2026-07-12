@@ -11,6 +11,8 @@ export const users = sqliteTable(
     username: text("username").notNull(),
     passwordHash: text("password_hash").notNull(),
     createdAt: integer("created_at").notNull(),
+    // set once the address is confirmed; editing requires it
+    emailVerifiedAt: integer("email_verified_at"),
     // optional public profile fields
     displayName: text("display_name"),
     city: text("city"),
@@ -28,6 +30,19 @@ export const sessions = sqliteTable("sessions", {
     .references(() => users.id),
   expiresAt: integer("expires_at").notNull(),
 });
+
+export const emailVerificationTokens = sqliteTable(
+  "email_verification_tokens",
+  {
+    // sha256 hash of the token; raw token only lives in the emailed link
+    id: text("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    expiresAt: integer("expires_at").notNull(),
+  },
+  (t) => [index("email_verification_tokens_user_idx").on(t.userId)]
+);
 
 export const passwordResetTokens = sqliteTable(
   "password_reset_tokens",

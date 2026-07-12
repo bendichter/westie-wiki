@@ -44,6 +44,7 @@ const archivist = db
     username: "archivist",
     passwordHash: hashPassword("westie-demo-1234"),
     createdAt: now,
+    emailVerifiedAt: now,
   })
   .returning()
   .get();

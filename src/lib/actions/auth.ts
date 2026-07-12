@@ -5,11 +5,12 @@ import { createHash, randomBytes } from "node:crypto";
 import { eq, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
-import { passwordResetTokens, sessions, users } from "@/db/schema";
+import { emailVerificationTokens, passwordResetTokens, sessions, users } from "@/db/schema";
 import {
   checkRateLimit,
   createSession,
   destroySession,
+  getCurrentUser,
   hashPassword,
   verifyPassword,
 } from "@/lib/auth";
@@ -55,6 +56,7 @@ export async function signup(_prev: AuthFormState, formData: FormData): Promise<
     .returning({ id: users.id })
     .get();
 
+  await sendVerificationEmail(inserted.id, email, username);
   await createSession(inserted.id);
   redirect(safeNextPath(formData.get("next")));
 }
@@ -81,6 +83,47 @@ export async function login(_prev: AuthFormState, formData: FormData): Promise<A
 export async function logout(): Promise<void> {
   await destroySession();
   redirect("/");
+}
+
+// --- email verification ---
+
+const VERIFY_TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+async function sendVerificationEmail(userId: number, email: string, username: string): Promise<void> {
+  const token = randomBytes(32).toString("hex");
+  db.delete(emailVerificationTokens).where(eq(emailVerificationTokens.userId, userId)).run();
+  db.insert(emailVerificationTokens)
+    .values({
+      id: createHash("sha256").update(token).digest("hex"),
+      userId,
+      expiresAt: Date.now() + VERIFY_TOKEN_TTL_MS,
+    })
+    .run();
+
+  const hdrs = await headers();
+  const proto = hdrs.get("x-forwarded-proto") ?? "http";
+  const host = hdrs.get("host") ?? "localhost:3000";
+  const link = `${proto}://${host}/verify-email?token=${token}`;
+  await sendEmail({
+    to: email,
+    subject: "Confirm your Westie Wiki email",
+    text: `Hi ${username},\n\nConfirm your email to start editing on Westie Wiki. This link expires in 24 hours:\n\n${link}\n\nIf you didn't create this account, you can ignore this email.\n\n— Westie Wiki`,
+  });
+}
+
+export async function resendVerification(): Promise<AuthFormState & { sent?: boolean }> {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (user.emailVerifiedAt != null) return { error: null, sent: true };
+
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  if (!checkRateLimit(`verify:${ip}`, 5)) {
+    return { error: "Too many requests. Try again in a few minutes." };
+  }
+
+  await sendVerificationEmail(user.id, user.email, user.username);
+  return { error: null, sent: true };
 }
 
 // --- password reset ---

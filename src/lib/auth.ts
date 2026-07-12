@@ -67,6 +67,14 @@ export async function requireUser(): Promise<User> {
   return user;
 }
 
+export const VERIFY_TO_EDIT_ERROR =
+  "Confirm your email address to edit — check your inbox for the link, or resend it from the banner above.";
+
+/** Editing requires a confirmed email; browsing and personal lists don't. */
+export function isVerified(user: User | null): boolean {
+  return user?.emailVerifiedAt != null;
+}
+
 // --- naive in-memory login rate limiting (per process) ---
 
 const attempts = new Map<string, { count: number; resetAt: number }>();

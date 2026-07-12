@@ -15,7 +15,7 @@ import {
   videos,
   type VideoRole,
 } from "@/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
 import { fetchYoutubeTitle, parseYoutubeUrl } from "@/lib/youtube";
@@ -46,6 +46,7 @@ function findOrCreateEvent(name: string, year: number | null): number {
 export async function createDance(_prev: DanceFormState, formData: FormData): Promise<DanceFormState> {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/dances/new");
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const url = String(formData.get("url") ?? "").trim();
   const parsed = parseYoutubeUrl(url);
@@ -126,6 +127,7 @@ export async function addAnnotation(
   const dance = db.select().from(dances).where(eq(dances.id, danceId)).get();
   if (!dance) return { error: "This dance no longer exists." };
   if (!user) redirect(`/login?next=/dances/${dance.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const moveName = String(formData.get("moveName") ?? "").trim();
   const move = db

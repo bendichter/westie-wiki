@@ -13,7 +13,7 @@ import {
   tags,
   type Difficulty,
 } from "@/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { getLatestRevisionNo, getRevision } from "@/lib/data/moves";
 import { slugify, uniqueSlug } from "@/lib/slug";
 
@@ -109,6 +109,7 @@ function nameTaken(name: string, excludeMoveId?: number): boolean {
 export async function createMove(_prev: MoveFormState, formData: FormData): Promise<MoveFormState> {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/moves/new");
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const parsed = parseMoveForm(formData);
   if (!parsed.ok) return { error: parsed.error };
@@ -157,6 +158,7 @@ export async function updateMove(_prev: MoveFormState, formData: FormData): Prom
   const move = db.select().from(moves).where(and(eq(moves.id, moveId), eq(moves.deleted, 0))).get();
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}/edit`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const parsed = parseMoveForm(formData);
   if (!parsed.ok) return { error: parsed.error };
@@ -209,6 +211,7 @@ export async function restoreRevision(formData: FormData): Promise<void> {
   const move = db.select().from(moves).where(and(eq(moves.id, moveId), eq(moves.deleted, 0))).get();
   if (!move) return;
   if (!user) redirect(`/login?next=/moves/${move.slug}/history`);
+  if (!isVerified(user)) return;
 
   const revision = getRevision(move.id, revisionNo);
   if (!revision) return;

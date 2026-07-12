@@ -15,7 +15,7 @@ import {
   RELATION_KINDS,
   type RelationKind,
 } from "@/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 
 export type CommentFormState = { error: string | null; success?: boolean };
 
@@ -25,6 +25,7 @@ export async function addComment(_prev: CommentFormState, formData: FormData): P
   const move = db.select().from(moves).where(and(eq(moves.id, moveId), eq(moves.deleted, 0))).get();
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const body = String(formData.get("body") ?? "").trim();
   if (!body) return { error: "Write something first." };
@@ -76,6 +77,7 @@ export async function addRelation(_prev: RelationFormState, formData: FormData):
   const move = db.select().from(moves).where(and(eq(moves.id, fromMoveId), eq(moves.deleted, 0))).get();
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const kindRaw = String(formData.get("kind") ?? "");
   if (!(RELATION_KINDS as readonly string[]).includes(kindRaw)) return { error: "Pick a relationship type." };
@@ -101,7 +103,7 @@ export async function addRelation(_prev: RelationFormState, formData: FormData):
 
 export async function removeRelation(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
-  if (!user) return;
+  if (!user || !isVerified(user)) return;
   const relationId = Number(formData.get("relationId"));
   const relation = db.select().from(moveRelations).where(eq(moveRelations.id, relationId)).get();
   if (!relation) return;

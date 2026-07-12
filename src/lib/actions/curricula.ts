@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { curricula, curriculumItems, curriculumRevisions, moves } from "@/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 
 export type CurriculumFormState = { error: string | null };
@@ -94,6 +94,7 @@ export async function createCurriculum(
 ): Promise<CurriculumFormState> {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/curricula/new");
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").replace(/\r\n/g, "\n").trim();
@@ -129,6 +130,7 @@ export async function updateCurriculum(
     .get();
   if (!curriculum) return { error: "This curriculum no longer exists." };
   if (!user) redirect(`/login?next=/curricula/${curriculum.slug}/edit`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").replace(/\r\n/g, "\n").trim();
@@ -184,6 +186,7 @@ export async function restoreCurriculumRevision(formData: FormData): Promise<voi
     .get();
   if (!curriculum) return;
   if (!user) redirect(`/login?next=/curricula/${curriculum.slug}/history`);
+  if (!isVerified(user)) return;
 
   const revision = db
     .select()

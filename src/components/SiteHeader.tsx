@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { logout } from "@/lib/actions/auth";
 import { SearchBar } from "./SearchBar";
+import { VerifyEmailBanner } from "./VerifyEmailBanner";
 
 const NAV = [
   { href: "/moves", label: "Moves" },
@@ -76,6 +77,7 @@ export async function SiteHeader() {
           </div>
         </div>
       </div>
+      {user && user.emailVerifiedAt == null ? <VerifyEmailBanner /> : null}
       <div className="bg-denim-deep text-paper/85 text-center text-[13px] font-display py-1 px-4">
         Descriptive, not prescriptive — a learning aid built by dancers, not a source of truth about West
         Coast Swing.{" "}

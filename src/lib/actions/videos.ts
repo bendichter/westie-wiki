@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { dancers, events, moves, VIDEO_ROLES, videoDancers, videos, type VideoRole } from "@/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
 import { fetchYoutubeTitle, parseYoutubeUrl } from "@/lib/youtube";
@@ -38,6 +38,7 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
   const move = db.select().from(moves).where(and(eq(moves.id, moveId), eq(moves.deleted, 0))).get();
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const url = String(formData.get("url") ?? "").trim();
   const parsed = parseYoutubeUrl(url);
@@ -129,6 +130,7 @@ export async function updateVideoClip(
   const move = db.select().from(moves).where(eq(moves.id, video.moveId)).get();
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
   const startRaw = String(formData.get("start") ?? "").trim();
   const endRaw = String(formData.get("end") ?? "").trim();
