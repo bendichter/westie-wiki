@@ -23,6 +23,7 @@ export function SiteFooter() {
             <li><Link href="/curricula" className="hover:text-paper hover:underline">Curricula</Link></li>
             <li><Link href="/changes" className="hover:text-paper hover:underline">Recent changes</Link></li>
             <li><Link href="/guidelines" className="hover:text-paper hover:underline">Contribution guidelines</Link></li>
+            <li><Link href="/sponsor" className="hover:text-paper hover:underline">Sponsor the wiki</Link></li>
             <li><Link href="/about" className="hover:text-paper hover:underline">About</Link></li>
           </ul>
         </div>

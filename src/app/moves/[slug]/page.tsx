@@ -8,6 +8,7 @@ import { AddVideoForm } from "@/components/AddVideoForm";
 import { CommentSection } from "@/components/CommentSection";
 import { Markdown } from "@/components/Markdown";
 import { RelationEditor } from "@/components/RelationEditor";
+import { SponsorSlot } from "@/components/SponsorSlot";
 import { VideoCard } from "@/components/VideoCard";
 import { ButtonLink, DifficultyBadge, EmptyState, TagChip } from "@/components/ui";
 import { removeRelation, toggleFavorite } from "@/lib/actions/community";
@@ -260,6 +261,10 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
               <RelationEditor moveId={move.id} moveNames={allMoveNames} />
             </div>
           ) : null}
+
+          <div className="mt-8">
+            <SponsorSlot limit={1} />
+          </div>
 
           <div className="mt-8 pt-5 border-t border-line text-sm text-muted font-display space-y-1">
             <p>

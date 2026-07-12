@@ -352,6 +352,17 @@ export const learned = sqliteTable(
   (t) => [primaryKey({ columns: [t.userId, t.curriculumId, t.moveId] })]
 );
 
+export const sponsors = sqliteTable("sponsors", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  url: text("url").notNull(),
+  tagline: text("tagline").notNull().default(""),
+  active: integer("active").notNull().default(1),
+  position: integer("position").notNull().default(0),
+  clicks: integer("clicks").notNull().default(0),
+  createdAt: integer("created_at").notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type Move = typeof moves.$inferSelect;
 export type MoveRevision = typeof moveRevisions.$inferSelect;
@@ -359,6 +370,7 @@ export type Dancer = typeof dancers.$inferSelect;
 export type EventRow = typeof events.$inferSelect;
 export type Video = typeof videos.$inferSelect;
 export type Dance = typeof dances.$inferSelect;
+export type Sponsor = typeof sponsors.$inferSelect;
 export type Tag = typeof tags.$inferSelect;
 export type Curriculum = typeof curricula.$inferSelect;
 export type CurriculumItem = typeof curriculumItems.$inferSelect;

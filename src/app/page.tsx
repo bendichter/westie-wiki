@@ -2,6 +2,7 @@ import Link from "next/link";
 import { count, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { curricula, curriculumRevisions, dancers, moveRevisions, moves, users, videos } from "@/db/schema";
+import { SponsorSlot } from "@/components/SponsorSlot";
 import { ButtonLink, CountChip, EmptyState } from "@/components/ui";
 import { timeAgo } from "@/lib/format";
 
@@ -165,6 +166,8 @@ export default function HomePage() {
               </ul>
             )}
           </div>
+
+          <SponsorSlot />
 
           <div className="border border-amber/40 bg-amber-soft/40 rounded-lg p-4 text-[15px]">
             <div className="font-display font-bold text-amber mb-1">A map, not the territory</div>

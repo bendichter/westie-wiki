@@ -8,6 +8,8 @@ primary_region = 'sjc'
 
 [env]
   DATABASE_PATH = '/data/wcs-wiki.db'
+  # comma-separated usernames with access to /admin/*
+  ADMIN_USERNAMES = 'archivist'
   # SEED=1 loads starter content on boot; it's a no-op once moves exist.
   SEED = '1'
 

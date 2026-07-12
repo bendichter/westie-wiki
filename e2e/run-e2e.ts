@@ -34,8 +34,23 @@ async function expectText(page: Page, text: string) {
   await page.getByText(text, { exact: false }).first().waitFor({ state: "visible", timeout: 15000 });
 }
 
+function cleanupPreviousRuns() {
+  // dances dedupe on youtubeId and sponsors accumulate — scrub leftovers so
+  // count-based assertions hold on every run
+  const sqlite = new Database(process.env.DATABASE_PATH ?? "./data/wcs-wiki.db");
+  sqlite.exec(`
+    DELETE FROM video_dancers WHERE video_id IN (SELECT id FROM videos WHERE dance_id IS NOT NULL);
+    DELETE FROM videos WHERE dance_id IS NOT NULL;
+    DELETE FROM dance_dancers;
+    DELETE FROM dances;
+    DELETE FROM sponsors;
+  `);
+  sqlite.close();
+}
+
 async function main() {
   fs.mkdirSync(SHOTS, { recursive: true });
+  cleanupPreviousRuns();
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   page.setDefaultTimeout(20000);
@@ -346,6 +361,7 @@ async function main() {
 
   log("login page works for returning user");
   await page.getByRole("button", { name: "Log out" }).click();
+  await page.waitForURL(`${BASE}/`);
   await page.goto(`${BASE}/login`);
   await page.getByLabel("Email").fill(user1.email);
   await page.getByLabel("Password").fill(user1.password);
@@ -355,11 +371,58 @@ async function main() {
 
   log("wrong password rejected");
   await page.getByRole("button", { name: "Log out" }).click();
+  await page.waitForURL(`${BASE}/`);
   await page.goto(`${BASE}/login`);
   await page.getByLabel("Email").fill(user1.email);
   await page.getByLabel("Password").fill("wrong-password");
   await page.getByRole("button", { name: "Log in" }).click();
   await expectText(page, "Incorrect email or password");
+
+  // --- sponsors ---
+  log("house ad shows when no sponsors; admin page hidden from non-admins");
+  await page.goto(`${BASE}/`);
+  await expectText(page, "Sponsor Westie Wiki");
+  const adminRes = await page.goto(`${BASE}/admin/sponsors`);
+  if (adminRes && adminRes.status() !== 404) throw new Error("admin page leaked to non-admin");
+
+  log("admin adds a sponsor; card and click-through work");
+  await page.goto(`${BASE}/login`);
+  await page.getByLabel("Email").fill("archivist@westiewiki.example");
+  await page.getByLabel("Password").fill("westie-demo-1234");
+  await page.getByRole("button", { name: "Log in" }).click();
+  await page.waitForURL(`${BASE}/`);
+  await page.goto(`${BASE}/admin/sponsors`);
+  const sponsorName = `Test Sponsor ${run.toUpperCase()}`;
+  await page.getByLabel("Name", { exact: true }).fill(sponsorName);
+  await page.getByLabel("Link").fill("https://example.com/sponsor-landing");
+  await page.getByLabel("Tagline").fill("The finest test sponsorship money can buy.");
+  await page.getByRole("button", { name: "Add sponsor" }).click();
+  const sponsorRow = page.locator("li", { hasText: sponsorName });
+  await sponsorRow.getByText("0 clicks").waitFor();
+
+  await page.goto(`${BASE}/`);
+  await expectText(page, sponsorName);
+  const clickHref = await page.locator('a[href^="/s/"]').first().getAttribute("href");
+  const clickRes = await page.request.get(`${BASE}${clickHref}`, { maxRedirects: 0 });
+  if (clickRes.status() !== 302) throw new Error(`sponsor click-through returned ${clickRes.status()}`);
+  await page.goto(`${BASE}/admin/sponsors`);
+  await sponsorRow.getByText("1 clicks").waitFor();
+
+  log("paused sponsor disappears from the slot");
+  await sponsorRow.getByRole("button", { name: "Pause" }).click();
+  await sponsorRow.getByText("paused").waitFor();
+  await page.goto(`${BASE}/`);
+  await expectText(page, "Sponsor Westie Wiki");
+  await page.goto(`${BASE}/admin/sponsors`);
+  await sponsorRow.getByRole("button", { name: "Delete", exact: true }).click();
+  await sponsorRow.waitFor({ state: "detached" });
+  await page.getByRole("button", { name: "Log out" }).click();
+  await page.waitForURL(`${BASE}/`);
+
+  log("sponsor pitch page renders");
+  await page.goto(`${BASE}/sponsor`);
+  await expectText(page, "What a sponsorship includes");
+  await shot(page, "17-sponsor-page");
 
   log("forgot-password request always claims success");
   await page.goto(`${BASE}/forgot-password`);
