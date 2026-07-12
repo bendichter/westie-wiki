@@ -37,7 +37,8 @@ npm run db:seed      # optional: 25 real WCS moves, verified video clips, 2 curr
 npm run dev          # http://localhost:3000
 ```
 
-The seed creates a demo login — `archivist@westiewiki.example` / `westie-demo-1234` — and
+The seed creates a demo login for **local development** — `archivist@westiewiki.example` /
+`westie-demo-1234` (rotate it on any real deployment) — and
 attributes all starter content to it. The seed refuses to run twice.
 
 ## Scripts

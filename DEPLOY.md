@@ -112,6 +112,6 @@ Three layers protect the database:
 - Sessions are stored in the database; no extra secret configuration is required.
 - Login rate limiting is in-memory per process — fine for one machine, resets on deploy.
 - All write actions require an account; browsing is public.
-- The demo account seeded on first boot is `archivist@westiewiki.example` / `westie-demo-1234`.
-  Change that password (or delete the row in `users`) if you don't want a shared login floating
-  around: `fly ssh console -C "sqlite3 /data/wcs-wiki.db \"DELETE FROM sessions; UPDATE users SET password_hash='locked' WHERE username='archivist';\""`
+- The `archivist` account seeded on first boot uses the well-known local-dev password —
+  rotate it immediately on a real deployment (done for westie.wiki) and add your own
+  account to `ADMIN_USERNAMES` instead of relying on it.
