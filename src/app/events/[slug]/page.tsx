@@ -4,10 +4,12 @@ import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { events } from "@/db/schema";
+import { DanceCard } from "@/components/DanceCard";
 import { VideoCard } from "@/components/VideoCard";
 import { EmptyState, PageTitle } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { getEventClips, groupClipsByMove } from "@/lib/data/clips";
+import { listDances } from "@/lib/data/dances";
 
 export async function generateMetadata({
   params,
@@ -27,19 +29,35 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const user = await getCurrentUser();
   const clips = getEventClips(event.id);
   const groups = groupClipsByMove(clips);
+  const eventDances = listDances({ eventId: event.id });
 
   return (
     <div>
       <PageTitle
-        sub={`${clips.length} labeled clip${clips.length === 1 ? "" : "s"} across ${groups.length} move${groups.length === 1 ? "" : "s"} from this event.`}
+        sub={`${eventDances.length} dance${eventDances.length === 1 ? "" : "s"} · ${clips.length} labeled clip${clips.length === 1 ? "" : "s"} across ${groups.length} move${groups.length === 1 ? "" : "s"} from this event.`}
       >
         {event.name}
         {event.year ? <span className="text-muted font-mono text-2xl"> · {event.year}</span> : null}
       </PageTitle>
 
+      {eventDances.length > 0 ? (
+        <section className="mb-12">
+          <h2 className="mb-4 text-xl font-bold">Dances</h2>
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {eventDances.map((dance) => (
+              <li key={dance.id}>
+                <DanceCard dance={dance} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <h2 className="mb-4 text-xl font-bold">Clips by move</h2>
       {groups.length === 0 ? (
         <EmptyState title="No clips from this event yet">
-          Label a video with this event on any move page and it will show up here.
+          Mark moves in one of the dances above, or label a video with this event on any move
+          page, and clips will show up here.
         </EmptyState>
       ) : (
         <div className="space-y-10">

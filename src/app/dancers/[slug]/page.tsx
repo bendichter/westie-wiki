@@ -4,10 +4,12 @@ import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { dancers } from "@/db/schema";
+import { DanceCard } from "@/components/DanceCard";
 import { VideoCard } from "@/components/VideoCard";
 import { EmptyState, PageTitle } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { getDancerClips, groupClipsByMove } from "@/lib/data/clips";
+import { listDances } from "@/lib/data/dances";
 
 export async function generateMetadata({
   params,
@@ -27,18 +29,34 @@ export default async function DancerPage({ params }: { params: Promise<{ slug: s
   const user = await getCurrentUser();
   const clips = getDancerClips(dancer.id);
   const groups = groupClipsByMove(clips);
+  const dancerDances = listDances({ dancerId: dancer.id });
 
   return (
     <div>
       <PageTitle
-        sub={`${clips.length} labeled clip${clips.length === 1 ? "" : "s"} across ${groups.length} move${groups.length === 1 ? "" : "s"}. Labeled by the community — corrections welcome on each move page.`}
+        sub={`${dancerDances.length} dance${dancerDances.length === 1 ? "" : "s"} · ${clips.length} labeled clip${clips.length === 1 ? "" : "s"} across ${groups.length} move${groups.length === 1 ? "" : "s"}. Labeled by the community — corrections welcome.`}
       >
         {dancer.name}
       </PageTitle>
 
+      {dancerDances.length > 0 ? (
+        <section className="mb-12">
+          <h2 className="mb-4 text-xl font-bold">Dances</h2>
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {dancerDances.map((dance) => (
+              <li key={dance.id}>
+                <DanceCard dance={dance} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <h2 className="mb-4 text-xl font-bold">Clips by move</h2>
       {groups.length === 0 ? (
         <EmptyState title="No clips labeled yet">
-          Label {dancer.name} in a video on any move page and it will show up here.
+          Mark moves in one of {dancer.name}&apos;s dances, or label them in a video on any move
+          page, and clips will show up here.
         </EmptyState>
       ) : (
         <div className="space-y-10">

@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, count, desc, eq } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import {
   danceDancers,
@@ -70,7 +70,38 @@ export function getDanceAnnotations(danceId: number): AnnotationItem[] {
     }));
 }
 
-export function listDances() {
+export type DanceListItem = ReturnType<typeof listDances>[number];
+
+/**
+ * Dance cards, optionally restricted to a dancer's dances, an event's dances,
+ * or the dances in which a move has been annotated.
+ */
+export function listDances(filter?: { dancerId?: number; eventId?: number; moveId?: number }) {
+  let idFilter: number[] | null = null;
+  if (filter?.dancerId != null) {
+    idFilter = db
+      .select({ danceId: danceDancers.danceId })
+      .from(danceDancers)
+      .where(eq(danceDancers.dancerId, filter.dancerId))
+      .all()
+      .map((r) => r.danceId);
+  }
+  if (filter?.moveId != null) {
+    const ids = db
+      .selectDistinct({ danceId: videos.danceId })
+      .from(videos)
+      .where(eq(videos.moveId, filter.moveId))
+      .all()
+      .map((r) => r.danceId)
+      .filter((id): id is number => id != null);
+    idFilter = idFilter ? idFilter.filter((id) => ids.includes(id)) : ids;
+  }
+  if (idFilter != null && idFilter.length === 0) return [];
+
+  const conditions = [];
+  if (idFilter != null) conditions.push(inArray(dances.id, idFilter));
+  if (filter?.eventId != null) conditions.push(eq(dances.eventId, filter.eventId));
+
   const rows = db
     .select({
       id: dances.id,
@@ -88,6 +119,7 @@ export function listDances() {
     .from(dances)
     .leftJoin(events, eq(events.id, dances.eventId))
     .leftJoin(videos, eq(videos.danceId, dances.id))
+    .where(conditions.length > 0 ? and(...conditions) : undefined)
     .groupBy(dances.id)
     .orderBy(desc(dances.createdAt))
     .all();

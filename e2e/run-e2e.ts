@@ -312,6 +312,13 @@ async function main() {
   await page.goto(`${BASE}/dances`);
   await expectText(page, "3 moves marked");
 
+  log("dance appears on the dancer page and move page");
+  await page.goto(`${BASE}/dancers/lead-${run}`);
+  await expectText(page, "Advanced Jack & Jill");
+  await page.goto(`${BASE}/moves/sugar-push`);
+  await expectText(page, "Seen in dances");
+  await expectText(page, `Lead ${run} & Follow ${run}`);
+
   // --- curriculum ---
   log("create a curriculum with ordered moves, notes, key videos");
   await page.goto(`${BASE}/curricula/new`);

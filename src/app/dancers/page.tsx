@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { asc, count, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers, videoDancers } from "@/db/schema";
+import { danceDancers, dancers, videoDancers } from "@/db/schema";
 import { ListSearchForm } from "@/components/ListSearchForm";
 import { clampPage, Pagination } from "@/components/Pagination";
 import { EmptyState, PageTitle } from "@/components/ui";
@@ -42,6 +42,17 @@ export default async function DancersPage({
     .offset((page - 1) * PER_PAGE)
     .all();
 
+  const danceCounts = new Map(
+    rows.length > 0
+      ? db
+          .select({ dancerId: danceDancers.dancerId, n: count() })
+          .from(danceDancers)
+          .groupBy(danceDancers.dancerId)
+          .all()
+          .map((r) => [r.dancerId, r.n])
+      : []
+  );
+
   return (
     <div>
       <PageTitle
@@ -74,6 +85,7 @@ export default async function DancersPage({
                   {d.name}
                 </span>
                 <span className="block font-mono text-xs text-muted mt-0.5">
+                  {danceCounts.get(d.id) ?? 0} dance{(danceCounts.get(d.id) ?? 0) === 1 ? "" : "s"} ·{" "}
                   {d.clipCount} labeled clip{d.clipCount === 1 ? "" : "s"}
                 </span>
               </Link>

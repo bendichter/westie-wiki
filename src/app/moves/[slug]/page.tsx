@@ -23,6 +23,7 @@ import {
   getRelatedMoves,
   type MoveLink,
 } from "@/lib/data/moves";
+import { listDances } from "@/lib/data/dances";
 import { formatDate, timeAgo } from "@/lib/format";
 
 export async function generateMetadata({
@@ -97,6 +98,7 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
     timeAgoLabel: timeAgo(c.createdAt),
   }));
   const latestRevision = getLatestRevisionNo(move.id);
+  const seenInDances = listDances({ moveId: move.id });
 
   const isFavorite = user
     ? !!db
@@ -259,6 +261,30 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
           {user ? (
             <div className="mt-5">
               <RelationEditor moveId={move.id} moveNames={allMoveNames} />
+            </div>
+          ) : null}
+
+          {seenInDances.length > 0 ? (
+            <div className="mt-8 border-t border-line pt-5">
+              <h3 className="mb-2 font-display text-xs font-semibold uppercase tracking-wide text-muted">
+                Seen in dances
+              </h3>
+              <ul className="space-y-1.5">
+                {seenInDances.map((dance) => (
+                  <li key={dance.id} className="text-[15px]">
+                    <Link href={`/dances/${dance.slug}`} className="font-display text-denim hover:underline">
+                      {dance.dancers.map((d) => d.name).join(" & ") || dance.title || "Untitled dance"}
+                    </Link>
+                    {dance.eventName ? (
+                      <span className="font-display text-sm text-muted">
+                        {" "}
+                        · {dance.eventName}
+                        {dance.eventYear ? ` ${dance.eventYear}` : ""}
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
             </div>
           ) : null}
 
