@@ -5,6 +5,7 @@ import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { moves, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
+import { JsonLd } from "@/components/JsonLd";
 import { CountChip } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import {
@@ -24,7 +25,20 @@ export async function generateMetadata({
   const dance = getDanceBySlug(slug);
   if (!dance) return { title: "Dance not found" };
   const who = getDanceDancers(dance.id).map((d) => d.name).join(" & ");
-  return { title: who ? `${who} — dance` : (dance.title ?? "Dance") };
+  const event = getDanceEvent(dance.id);
+  const description = `Watch ${who || "this dance"}${event ? ` at ${event.name}${event.year ? ` ${event.year}` : ""}` : ""}${dance.competition ? ` (${dance.competition})` : ""}, mapped move by move on Westie Wiki.`;
+  return {
+    title: who ? `${who} — dance` : (dance.title ?? "Dance"),
+    description,
+    alternates: { canonical: `/dances/${dance.slug}` },
+    openGraph: {
+      title: who ? `${who} — West Coast Swing dance` : (dance.title ?? "Dance"),
+      description,
+      type: "video.other",
+      url: `/dances/${dance.slug}`,
+      images: [{ url: `https://i.ytimg.com/vi/${dance.youtubeId}/hqdefault.jpg` }],
+    },
+  };
 }
 
 export default async function DancePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -52,6 +66,18 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
 
   return (
     <div>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          name: dance.title ?? heading,
+          description: `West Coast Swing${dance.competition ? ` — ${dance.competition}` : ""}${event ? ` at ${event.name}${event.year ? ` ${event.year}` : ""}` : ""}, danced by ${heading}.`,
+          thumbnailUrl: `https://i.ytimg.com/vi/${dance.youtubeId}/hqdefault.jpg`,
+          uploadDate: new Date(dance.createdAt).toISOString(),
+          embedUrl: `https://www.youtube-nocookie.com/embed/${dance.youtubeId}`,
+          url: `https://westie.wiki/dances/${dance.slug}`,
+        }}
+      />
       <div className="mb-6">
         <p className="mb-2 font-display text-sm text-muted">
           <Link href="/dances" className="text-denim hover:underline">

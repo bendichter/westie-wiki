@@ -5,7 +5,7 @@ import { Card } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { safeNextPath } from "@/lib/redirects";
 
-export const metadata: Metadata = { title: "Join" };
+export const metadata: Metadata = { title: "Join", robots: { index: false } };
 
 export default async function SignupPage({
   searchParams,

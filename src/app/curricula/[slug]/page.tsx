@@ -21,7 +21,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const curriculum = getCurriculumBySlug(slug);
-  return { title: curriculum?.title ?? "Curriculum not found" };
+  if (!curriculum) return { title: "Curriculum not found" };
+  return {
+    title: `${curriculum.title} — West Coast Swing learning path`,
+    description: curriculum.description.replace(/[#*_`>\n]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 160),
+    alternates: { canonical: `/curricula/${curriculum.slug}` },
+  };
 }
 
 export default async function CurriculumPage({ params }: { params: Promise<{ slug: string }> }) {

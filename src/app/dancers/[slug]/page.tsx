@@ -18,7 +18,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const dancer = db.select().from(dancers).where(eq(dancers.slug, slug)).get();
-  return { title: dancer ? `${dancer.name} — clips` : "Dancer not found" };
+  if (!dancer) return { title: "Dancer not found" };
+  return {
+    title: `${dancer.name} — West Coast Swing dances & clips`,
+    description: `${dancer.name}'s dances and labeled move clips on Westie Wiki, the community West Coast Swing move wiki.`,
+    alternates: { canonical: `/dancers/${dancer.slug}` },
+  };
 }
 
 export default async function DancerPage({ params }: { params: Promise<{ slug: string }> }) {

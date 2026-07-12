@@ -18,7 +18,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const event = db.select().from(events).where(eq(events.slug, slug)).get();
-  return { title: event ? `${event.name}${event.year ? ` ${event.year}` : ""} — clips` : "Event not found" };
+  if (!event) return { title: "Event not found" };
+  const name = `${event.name}${event.year ? ` ${event.year}` : ""}`;
+  return {
+    title: `${name} — West Coast Swing dances & clips`,
+    description: `Dances and labeled move clips from ${name} on Westie Wiki.`,
+    alternates: { canonical: `/events/${event.slug}` },
+  };
 }
 
 export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {

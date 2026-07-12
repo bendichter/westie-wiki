@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "Verify email" };
+export const metadata: Metadata = { title: "Verify email", robots: { index: false } };
 
 export default async function VerifyEmailResultPage({
   searchParams,

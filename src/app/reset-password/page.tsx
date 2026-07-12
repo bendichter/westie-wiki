@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ResetPasswordForm } from "@/components/PasswordResetForms";
 import { Card } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Reset password" };
+export const metadata: Metadata = { title: "Reset password", robots: { index: false } };
 
 export default async function ResetPasswordPage({
   searchParams,

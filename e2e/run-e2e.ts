@@ -92,6 +92,20 @@ async function main() {
   await expectText(page, "Variations");
   await shot(page, "03-move-whip");
 
+  log("SEO surfaces: sitemap, robots, OG images, structured data");
+  const sitemapRes = await page.request.get(`${BASE}/sitemap.xml`);
+  if (!(await sitemapRes.text()).includes("/moves/whip")) throw new Error("sitemap missing move URLs");
+  const robotsRes = await page.request.get(`${BASE}/robots.txt`);
+  if (!(await robotsRes.text()).includes("Disallow: /admin/")) throw new Error("robots missing admin disallow");
+  for (const ogPath of ["/opengraph-image", "/moves/whip/opengraph-image"]) {
+    const res = await page.request.get(`${BASE}${ogPath}`);
+    if (res.status() !== 200 || !res.headers()["content-type"]?.includes("image/png")) {
+      throw new Error(`OG image failed: ${ogPath} -> ${res.status()}`);
+    }
+  }
+  const movePage = await (await page.request.get(`${BASE}/moves/whip`)).text();
+  if (!movePage.includes('"@type":"Article"')) throw new Error("move page missing Article JSON-LD");
+
   // --- signup ---
   log("signup user1");
   await page.goto(`${BASE}/signup`);

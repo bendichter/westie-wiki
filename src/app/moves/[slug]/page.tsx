@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { dancers, favorites, moveRelations, moves } from "@/db/schema";
 import { AddVideoForm } from "@/components/AddVideoForm";
 import { CommentSection } from "@/components/CommentSection";
+import { JsonLd } from "@/components/JsonLd";
 import { Markdown } from "@/components/Markdown";
 import { RelationEditor } from "@/components/RelationEditor";
 import { SponsorSlot } from "@/components/SponsorSlot";
@@ -34,9 +35,19 @@ export async function generateMetadata({
   const { slug } = await params;
   const move = getMoveBySlug(slug);
   if (!move) return { title: "Move not found" };
+  const description =
+    move.description.replace(/[#*_`>\n]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) ||
+    `${move.name} — a West Coast Swing move documented by the community.`;
   return {
-    title: move.name,
-    description: move.description.slice(0, 160),
+    title: `${move.name} — West Coast Swing move`,
+    description,
+    alternates: { canonical: `/moves/${move.slug}` },
+    openGraph: {
+      title: move.name,
+      description,
+      type: "article",
+      url: `/moves/${move.slug}`,
+    },
   };
 }
 
@@ -134,6 +145,20 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
 
   return (
     <div>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: move.name,
+          description: move.description.slice(0, 200),
+          url: `https://westie.wiki/moves/${move.slug}`,
+          mainEntityOfPage: `https://westie.wiki/moves/${move.slug}`,
+          datePublished: new Date(move.createdAt).toISOString(),
+          dateModified: new Date(move.updatedAt).toISOString(),
+          author: { "@type": "Organization", name: "Westie Wiki contributors", url: "https://westie.wiki" },
+          publisher: { "@type": "Organization", name: "Westie Wiki", url: "https://westie.wiki" },
+        }}
+      />
       {/* header */}
       <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
         <div className="min-w-0">

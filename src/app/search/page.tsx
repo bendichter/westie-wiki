@@ -6,7 +6,7 @@ import { db } from "@/db";
 import { curricula, dancers, events, moveAliases, moves } from "@/db/schema";
 import { DifficultyBadge, EmptyState, PageTitle } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Search" };
+export const metadata: Metadata = { title: "Search", robots: { index: false } };
 
 export default async function SearchPage({
   searchParams,

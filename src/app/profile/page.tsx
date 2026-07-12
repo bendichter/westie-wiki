@@ -17,7 +17,7 @@ import { DifficultyBadge, EmptyState, PageTitle } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { formatDate, timeAgo } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Your profile" };
+export const metadata: Metadata = { title: "Your profile", robots: { index: false } };
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();

@@ -4,7 +4,7 @@ import { ForgotPasswordForm } from "@/components/PasswordResetForms";
 import { Card } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 
-export const metadata: Metadata = { title: "Forgot password" };
+export const metadata: Metadata = { title: "Forgot password", robots: { index: false } };
 
 export default async function ForgotPasswordPage() {
   if (await getCurrentUser()) redirect("/profile");

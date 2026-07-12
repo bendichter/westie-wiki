@@ -5,7 +5,7 @@ import { Card } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { safeNextPath } from "@/lib/redirects";
 
-export const metadata: Metadata = { title: "Log in" };
+export const metadata: Metadata = { title: "Log in", robots: { index: false } };
 
 export default async function LoginPage({
   searchParams,

@@ -10,7 +10,7 @@ import { isAdmin } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Sponsors admin" };
+export const metadata: Metadata = { title: "Sponsors admin", robots: { index: false } };
 
 export default async function SponsorsAdminPage() {
   const user = await getCurrentUser();
