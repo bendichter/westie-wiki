@@ -29,6 +29,19 @@ export const sessions = sqliteTable("sessions", {
   expiresAt: integer("expires_at").notNull(),
 });
 
+export const passwordResetTokens = sqliteTable(
+  "password_reset_tokens",
+  {
+    // sha256 hash of the token; raw token only lives in the emailed link
+    id: text("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    expiresAt: integer("expires_at").notNull(),
+  },
+  (t) => [index("password_reset_tokens_user_idx").on(t.userId)]
+);
+
 export const DIFFICULTIES = ["beginner", "intermediate", "advanced"] as const;
 export type Difficulty = (typeof DIFFICULTIES)[number];
 
@@ -119,6 +132,8 @@ export const videos = sqliteTable(
     endSec: integer("end_sec"),
     title: text("title"),
     note: text("note"),
+    song: text("song"),
+    artist: text("artist"),
     eventId: integer("event_id").references(() => events.id),
     addedBy: integer("added_by")
       .notNull()

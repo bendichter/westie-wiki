@@ -102,6 +102,8 @@ export type VideoWithLabels = {
   endSec: number | null;
   title: string | null;
   note: string | null;
+  song: string | null;
+  artist: string | null;
   createdAt: number;
   addedBy: number;
   addedByName: string;
@@ -118,6 +120,8 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
       endSec: videos.endSec,
       title: videos.title,
       note: videos.note,
+      song: videos.song,
+      artist: videos.artist,
       createdAt: videos.createdAt,
       addedBy: videos.addedBy,
       addedByName: users.username,
@@ -155,6 +159,8 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     endSec: r.endSec,
     title: r.title,
     note: r.note,
+    song: r.song,
+    artist: r.artist,
     createdAt: r.createdAt,
     addedBy: r.addedBy,
     addedByName: r.addedByName,

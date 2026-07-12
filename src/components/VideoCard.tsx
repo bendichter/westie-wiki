@@ -75,6 +75,14 @@ export function VideoCard({
               </Link>
             </div>
           ) : null}
+          {video.song || video.artist ? (
+            <div className="text-muted">
+              <span aria-hidden>♪</span>{" "}
+              {video.song ? <span className="text-ink-soft">{video.song}</span> : null}
+              {video.song && video.artist ? " — " : null}
+              {video.artist}
+            </div>
+          ) : null}
           {video.note ? <p className="text-ink-soft">{video.note}</p> : null}
           {video.title ? (
             <p className="text-xs text-muted truncate" title={video.title}>
@@ -102,6 +110,8 @@ export function VideoCard({
                 startSec={video.startSec}
                 endSec={video.endSec}
                 note={video.note}
+                song={video.song}
+                artist={video.artist}
               />
             ) : null}
             {currentUserId === video.addedBy ? (

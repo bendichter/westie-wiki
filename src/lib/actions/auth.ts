@@ -1,10 +1,11 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { createHash, randomBytes } from "node:crypto";
 import { eq, or, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { passwordResetTokens, sessions, users } from "@/db/schema";
 import {
   checkRateLimit,
   createSession,
@@ -12,6 +13,7 @@ import {
   hashPassword,
   verifyPassword,
 } from "@/lib/auth";
+import { sendEmail } from "@/lib/mailer";
 import { safeNextPath } from "@/lib/redirects";
 
 export type AuthFormState = { error: string | null };
@@ -79,4 +81,76 @@ export async function login(_prev: AuthFormState, formData: FormData): Promise<A
 export async function logout(): Promise<void> {
   await destroySession();
   redirect("/");
+}
+
+// --- password reset ---
+
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+function hashResetToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
+}
+
+export async function requestPasswordReset(
+  _prev: AuthFormState,
+  formData: FormData
+): Promise<AuthFormState & { sent?: boolean }> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid email address." };
+
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  if (!checkRateLimit(`reset:${ip}`, 5)) {
+    return { error: "Too many reset requests. Try again in a few minutes." };
+  }
+
+  // Always claim success so the form can't be used to probe which emails exist.
+  const user = db.select().from(users).where(eq(users.email, email)).get();
+  if (user) {
+    const token = randomBytes(32).toString("hex");
+    db.delete(passwordResetTokens).where(eq(passwordResetTokens.userId, user.id)).run();
+    db.insert(passwordResetTokens)
+      .values({ id: hashResetToken(token), userId: user.id, expiresAt: Date.now() + RESET_TOKEN_TTL_MS })
+      .run();
+
+    const proto = hdrs.get("x-forwarded-proto") ?? "http";
+    const host = hdrs.get("host") ?? "localhost:3000";
+    const link = `${proto}://${host}/reset-password?token=${token}`;
+    await sendEmail({
+      to: user.email,
+      subject: "Reset your Westie Wiki password",
+      text: `Hi ${user.username},\n\nSomeone (hopefully you) asked to reset your Westie Wiki password. This link works once and expires in an hour:\n\n${link}\n\nIf you didn't ask for this, you can ignore this email — your password is unchanged.\n\n— Westie Wiki`,
+    });
+  }
+
+  return { error: null, sent: true };
+}
+
+export async function resetPassword(
+  _prev: AuthFormState,
+  formData: FormData
+): Promise<AuthFormState> {
+  const token = String(formData.get("token") ?? "");
+  const password = String(formData.get("password") ?? "");
+  if (password.length < 8) return { error: "Password must be at least 8 characters." };
+  if (!/^[a-f0-9]{64}$/.test(token)) return { error: "This reset link is invalid. Request a new one." };
+
+  const row = db
+    .select()
+    .from(passwordResetTokens)
+    .where(eq(passwordResetTokens.id, hashResetToken(token)))
+    .get();
+  if (!row || row.expiresAt < Date.now()) {
+    return { error: "This reset link has expired or was already used. Request a new one." };
+  }
+
+  db.update(users)
+    .set({ passwordHash: hashPassword(password) })
+    .where(eq(users.id, row.userId))
+    .run();
+  // single-use token; log out every existing session for safety
+  db.delete(passwordResetTokens).where(eq(passwordResetTokens.userId, row.userId)).run();
+  db.delete(sessions).where(eq(sessions.userId, row.userId)).run();
+
+  redirect("/login?reset=1");
 }

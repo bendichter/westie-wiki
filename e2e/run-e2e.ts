@@ -7,6 +7,8 @@
  * Exits non-zero on the first failed assertion.
  */
 import { chromium, type Page } from "playwright";
+import Database from "better-sqlite3";
+import { createHash, randomBytes } from "node:crypto";
 import fs from "node:fs";
 
 const BASE = process.env.E2E_BASE_URL ?? "http://localhost:3000";
@@ -126,9 +128,13 @@ async function main() {
   await page.getByLabel("Event", { exact: true }).fill(`Test Event ${run.toUpperCase()}`);
   await page.getByLabel("Year").fill("2025");
   await page.getByLabel("Note").fill("Automated test clip");
+  await page.getByLabel("Song").fill("Test Song");
+  await page.getByLabel("Artist").fill("Test Artist");
   await page.getByRole("button", { name: "Add video" }).click();
   await expectText(page, "0:30 → 1:00");
   await expectText(page, `Lead ${run}`);
+  await expectText(page, "Test Song");
+  await expectText(page, "Test Artist");
   await shot(page, "08-video-added");
 
   log("edit clip timing on an existing video");
@@ -139,12 +145,14 @@ async function main() {
   await page.getByRole("button", { name: "Save clip" }).click();
   await expectText(page, "0:10 → 0:50");
 
-  log("restore original clip timing");
+  log("restore original clip timing and annotate the song");
   await page.getByRole("button", { name: "Edit clip" }).first().click();
   await page.getByLabel("Clip start").fill("0:30");
   await page.getByLabel("Clip end").fill("1:00");
+  await page.getByLabel("Song").fill("Renamed Song");
   await page.getByRole("button", { name: "Save clip" }).click();
   await expectText(page, "0:30 → 1:00");
+  await expectText(page, "Renamed Song");
 
   log("dancer page groups clips by move");
   await page.goto(`${BASE}/dancers/lead-${run}`);
@@ -299,6 +307,40 @@ async function main() {
   await page.getByLabel("Password").fill("wrong-password");
   await page.getByRole("button", { name: "Log in" }).click();
   await expectText(page, "Incorrect email or password");
+
+  log("forgot-password request always claims success");
+  await page.goto(`${BASE}/forgot-password`);
+  await page.getByLabel("Email").fill(user1.email);
+  await page.getByRole("button", { name: "Send reset link" }).click();
+  await expectText(page, "a reset link is on its way");
+
+  log("reset password via emailed token, old sessions killed");
+  // no inbox in CI: plant a token directly, exactly as requestPasswordReset stores it
+  const rawToken = randomBytes(32).toString("hex");
+  const sqlite = new Database(process.env.DATABASE_PATH ?? "./data/wcs-wiki.db");
+  const userRow = sqlite.prepare("SELECT id FROM users WHERE email = ?").get(user1.email) as { id: number };
+  sqlite
+    .prepare("INSERT INTO password_reset_tokens (id, user_id, expires_at) VALUES (?, ?, ?)")
+    .run(createHash("sha256").update(rawToken).digest("hex"), userRow.id, Date.now() + 3600_000);
+  sqlite.close();
+
+  await page.goto(`${BASE}/reset-password?token=${rawToken}`);
+  await page.getByLabel("New password").fill("brand-new-password-1");
+  await page.getByRole("button", { name: "Set new password" }).click();
+  await page.waitForURL(/login\?reset=1/);
+  await expectText(page, "Password updated");
+  await page.getByLabel("Email").fill(user1.email);
+  await page.getByLabel("Password").fill("brand-new-password-1");
+  await page.getByRole("button", { name: "Log in" }).click();
+  await page.waitForURL(`${BASE}/`);
+  await expectText(page, user1.username);
+
+  log("used reset token is rejected");
+  await page.getByRole("button", { name: "Log out" }).click();
+  await page.goto(`${BASE}/reset-password?token=${rawToken}`);
+  await page.getByLabel("New password").fill("another-password-1");
+  await page.getByRole("button", { name: "Set new password" }).click();
+  await expectText(page, "expired or was already used");
 
   await browser.close();
   console.log("\n✅ All E2E flows passed.");

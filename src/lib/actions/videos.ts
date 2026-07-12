@@ -80,6 +80,8 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
   const eventYear = /^\d{4}$/.test(eventYearRaw) ? Number(eventYearRaw) : null;
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+  const song = String(formData.get("song") ?? "").trim().slice(0, 120);
+  const artist = String(formData.get("artist") ?? "").trim().slice(0, 120);
   const title = await fetchYoutubeTitle(parsed.id);
 
   const video = db
@@ -91,6 +93,8 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
       endSec,
       title,
       note: note || null,
+      song: song || null,
+      artist: artist || null,
       eventId: eventName ? findOrCreateEvent(eventName, eventYear) : null,
       addedBy: user.id,
       createdAt: Date.now(),
@@ -147,9 +151,11 @@ export async function updateVideoClip(
   }
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+  const song = String(formData.get("song") ?? "").trim().slice(0, 120);
+  const artist = String(formData.get("artist") ?? "").trim().slice(0, 120);
 
   db.update(videos)
-    .set({ startSec, endSec, note: note || null })
+    .set({ startSec, endSec, note: note || null, song: song || null, artist: artist || null })
     .where(eq(videos.id, videoId))
     .run();
 

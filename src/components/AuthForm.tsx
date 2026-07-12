@@ -46,6 +46,14 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: stri
         {pending ? "One moment…" : mode === "login" ? "Log in" : "Create account"}
       </PrimaryButton>
 
+      {mode === "login" ? (
+        <p className="text-sm font-display text-center">
+          <Link href="/forgot-password" className="text-denim underline">
+            Forgot your password?
+          </Link>
+        </p>
+      ) : null}
+
       <p className="text-sm text-muted font-display text-center">
         {mode === "login" ? (
           <>
