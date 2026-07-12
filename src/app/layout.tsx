@@ -20,6 +20,7 @@ const splineMono = Spline_Sans_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://westie.wiki"),
   title: {
     default: "Westie Wiki — West Coast Swing moves, documented by dancers",
     template: "%s · Westie Wiki",
