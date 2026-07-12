@@ -1,4 +1,7 @@
 import type { MetadataRoute } from "next";
+
+// the Docker build runs against a throwaway DB — always render from live data
+export const dynamic = "force-dynamic";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { curricula, dancers, dances, events, moves } from "@/db/schema";
