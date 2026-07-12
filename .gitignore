@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# database (SQLite lives in the repo-root data dir only)
+/data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+

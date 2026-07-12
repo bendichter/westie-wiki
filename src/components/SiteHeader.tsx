@@ -1,0 +1,87 @@
+import Link from "next/link";
+import { getCurrentUser } from "@/lib/auth";
+import { logout } from "@/lib/actions/auth";
+import { SearchBar } from "./SearchBar";
+
+const NAV = [
+  { href: "/moves", label: "Moves" },
+  { href: "/dancers", label: "Dancers" },
+  { href: "/events", label: "Events" },
+  { href: "/curricula", label: "Curricula" },
+];
+
+export async function SiteHeader() {
+  const user = await getCurrentUser();
+
+  return (
+    <header className="bg-ink text-paper">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center gap-4 sm:gap-6 py-3 flex-wrap">
+          <Link href="/" className="group shrink-0">
+            <span className="font-display text-2xl font-bold tracking-tight">
+              Westie<span className="text-amber">&nbsp;Wiki</span>
+            </span>
+            <div className="slot-line !bg-ink-soft mt-0.5 transition-all" aria-hidden />
+          </Link>
+
+          <nav className="flex items-center gap-4 text-sm font-display order-3 sm:order-2 w-full sm:w-auto">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-paper/80 hover:text-paper hover:underline underline-offset-4"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              href="/search"
+              className="text-paper/80 hover:text-paper hover:underline underline-offset-4 md:hidden"
+            >
+              Search
+            </Link>
+          </nav>
+
+          <div className="flex items-center gap-3 ml-auto order-2 sm:order-3">
+            <SearchBar />
+            {user ? (
+              <div className="flex items-center gap-3 text-sm font-display">
+                <Link href="/profile" className="text-paper/90 hover:text-paper hover:underline underline-offset-4">
+                  {user.username}
+                </Link>
+                <form action={logout}>
+                  <button
+                    type="submit"
+                    className="text-paper/60 hover:text-paper cursor-pointer"
+                    title="Log out"
+                  >
+                    Log out
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-sm font-display">
+                <Link href="/login" className="text-paper/90 hover:text-paper hover:underline underline-offset-4">
+                  Log in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="bg-amber text-white rounded-md px-3 py-1.5 hover:bg-amber/85 font-medium"
+                >
+                  Join
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="bg-denim-deep text-paper/85 text-center text-[13px] font-display py-1 px-4">
+        Descriptive, not prescriptive — a learning aid built by dancers, not a source of truth about West
+        Coast Swing.{" "}
+        <Link href="/about" className="underline underline-offset-2 hover:text-paper">
+          Read more
+        </Link>
+      </div>
+    </header>
+  );
+}

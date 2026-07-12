@@ -1,0 +1,1 @@
+ALTER TABLE `move_revisions` ADD `tags` text DEFAULT '[]' NOT NULL;

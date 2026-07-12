@@ -1,0 +1,72 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { PageTitle } from "@/components/ui";
+
+export const metadata: Metadata = { title: "About" };
+
+export default function AboutPage() {
+  return (
+    <div className="max-w-2xl">
+      <PageTitle sub="What this project is — and what it isn't.">About Westie Wiki</PageTitle>
+
+      <div className="prose-wcs space-y-4">
+        <p>
+          Westie Wiki is a community-edited catalog of West Coast Swing moves. Dancers document
+          patterns, link video examples with exact timestamps, label who&apos;s dancing and where, and
+          assemble curricula — ordered paths through the material with notes for learners.
+        </p>
+
+        <h2>Descriptive, not prescriptive</h2>
+        <p>
+          Everything here describes how dancers actually dance and what they actually call things.
+          Nothing here defines how a move <em>must</em> be danced or what it <em>must</em> be
+          called. West Coast Swing is a living, improvised dance: patterns mutate, names collide,
+          regional scenes disagree, and the pros you&apos;ll find in our video examples break these
+          &ldquo;rules&rdquo; constantly and gloriously.
+        </p>
+        <p>
+          Treat every page as a learning aid — a map drawn by fellow travelers — not as a source of
+          truth about West Coast Swing. If your teacher tells you something different from what you
+          read here, listen to your teacher. Better yet, add what you learned to the wiki.
+        </p>
+
+        <h2>How it works</h2>
+        <ul>
+          <li>
+            <strong>Anyone can browse.</strong> Moves, videos, dancers, events, and curricula are
+            public.
+          </li>
+          <li>
+            <strong>Members can edit.</strong> Like Wikipedia, every edit is recorded with who made
+            it and why. Old versions are never lost — you can view history, compare revisions, and
+            restore.
+          </li>
+          <li>
+            <strong>Videos stay on YouTube.</strong> We link to clips with start/end timestamps and
+            label them with dancers and events. We host nothing and claim nothing.
+          </li>
+        </ul>
+
+        <h2>House style</h2>
+        <ul>
+          <li>Describe what you see and what is commonly taught, not what you think is correct.</li>
+          <li>When names conflict, list them all as alternative names and let the description explain.</li>
+          <li>Prefer video evidence over assertion — link a clip.</li>
+          <li>Leave an edit summary so others understand your change.</li>
+        </ul>
+
+        <p>
+          Ready to contribute?{" "}
+          <Link href="/signup" className="text-denim underline">
+            Create an account
+          </Link>{" "}
+          or{" "}
+          <Link href="/moves" className="text-denim underline">
+            start browsing
+          </Link>
+          .
+        </p>
+      </div>
+    </div>
+  );
+}

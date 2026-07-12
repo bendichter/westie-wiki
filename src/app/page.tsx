@@ -1,65 +1,142 @@
-import Image from "next/image";
+import Link from "next/link";
+import { count, desc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { curricula, dancers, moveRevisions, moves, users, videos } from "@/db/schema";
+import { ButtonLink, CountChip, EmptyState } from "@/components/ui";
+import { timeAgo } from "@/lib/format";
 
-export default function Home() {
+export default function HomePage() {
+  const stats = {
+    moves: db.select({ n: count() }).from(moves).where(eq(moves.deleted, 0)).get()?.n ?? 0,
+    videos: db.select({ n: count() }).from(videos).get()?.n ?? 0,
+    dancers: db.select({ n: count() }).from(dancers).get()?.n ?? 0,
+    curricula: db.select({ n: count() }).from(curricula).where(eq(curricula.deleted, 0)).get()?.n ?? 0,
+  };
+
+  const recentEdits = db
+    .select({
+      moveName: moves.name,
+      moveSlug: moves.slug,
+      editSummary: moveRevisions.editSummary,
+      editor: users.username,
+      createdAt: moveRevisions.createdAt,
+      revisionNo: moveRevisions.revisionNo,
+    })
+    .from(moveRevisions)
+    .innerJoin(moves, eq(moves.id, moveRevisions.moveId))
+    .innerJoin(users, eq(users.id, moveRevisions.editorId))
+    .where(eq(moves.deleted, 0))
+    .orderBy(desc(moveRevisions.createdAt))
+    .limit(8)
+    .all();
+
+  const featuredCurricula = db
+    .select()
+    .from(curricula)
+    .where(eq(curricula.deleted, 0))
+    .orderBy(desc(curricula.updatedAt))
+    .limit(3)
+    .all();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div>
+      {/* hero */}
+      <section className="py-10 sm:py-16">
+        <div className="max-w-3xl">
+          <div className="font-mono text-[13px] text-amber mb-4">1&nbsp;&nbsp;2&nbsp;&nbsp;3&amp;4&nbsp;&nbsp;5&amp;6</div>
+          <h1 className="text-4xl sm:text-6xl font-bold leading-[1.05]">
+            The moves of West Coast Swing,{" "}
+            <span className="text-denim">documented by the people dancing them.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-5 text-lg text-ink-soft max-w-2xl">
+            Every move with its names and its aliases. Every description backed by timestamped
+            video of real dancers at real events. Every page editable, wiki-style, by anyone in the
+            community.
           </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <ButtonLink href="/moves">Browse the moves</ButtonLink>
+            <ButtonLink href="/curricula" variant="secondary">
+              Start a learning path
+            </ButtonLink>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="mt-12 slot-line" aria-hidden />
+        <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2 font-mono text-sm text-muted">
+          <span><strong className="text-ink">{stats.moves}</strong> moves</span>
+          <span><strong className="text-ink">{stats.videos}</strong> video clips</span>
+          <span><strong className="text-ink">{stats.dancers}</strong> dancers</span>
+          <span><strong className="text-ink">{stats.curricula}</strong> curricula</span>
         </div>
-      </main>
+      </section>
+
+      <section className="grid gap-10 lg:grid-cols-[1fr_360px] mt-4">
+        {/* recent edits */}
+        <div>
+          <h2 className="text-xl font-bold mb-4">Recent edits</h2>
+          {recentEdits.length === 0 ? (
+            <EmptyState title="No edits yet">
+              The wiki is brand new. <Link href="/moves/new" className="text-denim underline">Document the first move</Link>.
+            </EmptyState>
+          ) : (
+            <ul className="divide-y divide-line border border-line rounded-lg bg-panel">
+              {recentEdits.map((edit, i) => (
+                <li key={i} className="px-4 py-3 flex items-baseline gap-3">
+                  <CountChip>r{edit.revisionNo}</CountChip>
+                  <div className="min-w-0">
+                    <Link
+                      href={`/moves/${edit.moveSlug}`}
+                      className="font-display font-semibold text-denim hover:underline"
+                    >
+                      {edit.moveName}
+                    </Link>
+                    <span className="text-sm text-muted font-display">
+                      {" "}
+                      — {edit.editSummary || "edited"} · {edit.editor} · {timeAgo(edit.createdAt)}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* curricula + about */}
+        <div className="space-y-8">
+          <div>
+            <h2 className="text-xl font-bold mb-4">Learning paths</h2>
+            {featuredCurricula.length === 0 ? (
+              <EmptyState title="No curricula yet">
+                Curricula are ordered lists of moves with notes and key videos —{" "}
+                <Link href="/curricula/new" className="text-denim underline">build one</Link>.
+              </EmptyState>
+            ) : (
+              <ul className="space-y-3">
+                {featuredCurricula.map((c) => (
+                  <li key={c.id} className="border border-line rounded-lg bg-panel p-4">
+                    <Link
+                      href={`/curricula/${c.slug}`}
+                      className="font-display font-bold text-denim hover:underline"
+                    >
+                      {c.title}
+                    </Link>
+                    <p className="text-sm text-muted mt-1 font-display line-clamp-2">{c.description}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="border border-amber/40 bg-amber-soft/40 rounded-lg p-4 text-[15px]">
+            <div className="font-display font-bold text-amber mb-1">A map, not the territory</div>
+            <p className="text-ink-soft">
+              This wiki is descriptive, not prescriptive: it records how the community dances and
+              names moves. It&apos;s a learning aid — not a source of truth about West Coast Swing.{" "}
+              <Link href="/about" className="text-denim underline">Read the whole disclaimer</Link>.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
