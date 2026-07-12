@@ -1,0 +1,14 @@
+# Litestream continuous replication config. Only used when
+# LITESTREAM_REPLICA_URL is set (see scripts/start.sh) — e.g. Cloudflare R2:
+#   LITESTREAM_REPLICA_URL=s3://westie-wiki-backup/db
+#   LITESTREAM_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+#   LITESTREAM_ACCESS_KEY_ID / LITESTREAM_SECRET_ACCESS_KEY from an R2 API token
+dbs:
+  - path: /data/wcs-wiki.db
+    replicas:
+      - url: ${LITESTREAM_REPLICA_URL}
+        endpoint: ${LITESTREAM_ENDPOINT}
+        access-key-id: ${LITESTREAM_ACCESS_KEY_ID}
+        secret-access-key: ${LITESTREAM_SECRET_ACCESS_KEY}
+        retention: 720h
+        sync-interval: 10s

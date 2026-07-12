@@ -67,14 +67,35 @@ The From address defaults to `Westie Wiki <noreply@westie.wiki>`; override with
 
 ### Backups
 
-The whole site is one file. To snapshot it:
+Three layers protect the database:
 
-```sh
-fly ssh console -C "cat /data/wcs-wiki.db" > backup-$(date +%F).db
-```
+1. **Fly volume snapshots** — automatic, daily, ~5-day retention. Last-resort only.
+2. **Nightly off-site backup (already active)** — `.github/workflows/db-backup.yml` pulls a
+   consistent snapshot off the volume every night, verifies `PRAGMA integrity_check`, and
+   stores it as a GitHub Actions artifact for 30 days. Run it on demand from the Actions tab
+   ("DB Backup" → Run workflow). To restore: download the artifact, then
+   `fly ssh sftp shell -a westie-wiki` → `put backup.db /data/wcs-wiki.db` (with the app
+   stopped: `fly machine stop <id>` first, `fly machine start <id>` after).
+3. **Continuous replication with Litestream (optional, recommended once the site matters)** —
+   the image ships with Litestream; it activates when secrets are set. With Cloudflare R2
+   (free tier: 10 GB):
 
-(For a hot database under write load, prefer `sqlite3 /data/wcs-wiki.db '.backup /data/backup.db'`
-via `fly ssh console`, then download that file. Fly also snapshots volumes daily by default.)
+   1. Create an R2 bucket (e.g. `westie-wiki-backup`) in the Cloudflare dashboard.
+   2. Create an R2 API token with edit access to that bucket.
+   3. Set the secrets:
+
+      ```sh
+      fly secrets set \
+        LITESTREAM_REPLICA_URL=s3://westie-wiki-backup/db \
+        LITESTREAM_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com \
+        LITESTREAM_ACCESS_KEY_ID=... \
+        LITESTREAM_SECRET_ACCESS_KEY=...
+      ```
+
+   The app restarts under `litestream replicate` (10-second sync interval, 30-day retention).
+   On a fresh volume the entrypoint auto-restores from the replica before starting — so a
+   destroyed volume recovers to within seconds of the last write. Manual restore:
+   `litestream restore -config /app/litestream.yml /data/wcs-wiki.db` via `fly ssh console`.
 
 ## Alternatives
 

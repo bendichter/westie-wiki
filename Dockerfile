@@ -25,17 +25,23 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV DATABASE_PATH=/data/wcs-wiki.db
 
+# litestream for optional continuous off-site replication
+ADD https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.tar.gz /tmp/litestream.tar.gz
+RUN tar -C /usr/local/bin -xzf /tmp/litestream.tar.gz && rm /tmp/litestream.tar.gz
+
 COPY --from=builder /app/package.json /app/package-lock.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/src ./src
-COPY --from=builder /app/drizzle.config.ts /app/next.config.ts /app/tsconfig.json ./
+COPY --from=builder /app/drizzle.config.ts /app/next.config.ts /app/tsconfig.json /app/litestream.yml ./
+COPY --from=builder /app/scripts/start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
 RUN mkdir -p /data
 VOLUME /data
 EXPOSE 3000
 
-# migrate (idempotent), optionally seed, then serve
-CMD ["sh", "-c", "npx tsx src/db/migrate.ts && if [ \"$SEED\" = \"1\" ]; then npx tsx src/db/seed.ts; fi && npx next start -p 3000"]
+# migrate (idempotent), optionally seed, then serve (under litestream when configured)
+CMD ["/app/start.sh"]
