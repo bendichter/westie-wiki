@@ -4,6 +4,7 @@ import { db } from "@/db";
 import {
   comments,
   dancers,
+  dances,
   events,
   moveAliases,
   moveRelations,
@@ -104,6 +105,7 @@ export type VideoWithLabels = {
   note: string | null;
   song: string | null;
   artist: string | null;
+  danceSlug: string | null;
   createdAt: number;
   addedBy: number;
   addedByName: string;
@@ -122,6 +124,7 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
       note: videos.note,
       song: videos.song,
       artist: videos.artist,
+      danceSlug: dances.slug,
       createdAt: videos.createdAt,
       addedBy: videos.addedBy,
       addedByName: users.username,
@@ -133,6 +136,7 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     .from(videos)
     .innerJoin(users, eq(users.id, videos.addedBy))
     .leftJoin(events, eq(events.id, videos.eventId))
+    .leftJoin(dances, eq(dances.id, videos.danceId))
     .where(eq(videos.moveId, moveId))
     .orderBy(asc(videos.createdAt))
     .all();
@@ -161,6 +165,7 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     note: r.note,
     song: r.song,
     artist: r.artist,
+    danceSlug: r.danceSlug,
     createdAt: r.createdAt,
     addedBy: r.addedBy,
     addedByName: r.addedByName,

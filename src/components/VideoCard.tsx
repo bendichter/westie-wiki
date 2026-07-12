@@ -98,6 +98,11 @@ export function VideoCard({
             >
               Watch on YouTube
             </a>
+            {video.danceSlug ? (
+              <Link href={`/dances/${video.danceSlug}`} className="hover:text-denim underline">
+                From a mapped dance
+              </Link>
+            ) : null}
             <span>
               added by{" "}
               <Link href={`/users/${video.addedByName}`} className="hover:text-denim hover:underline">

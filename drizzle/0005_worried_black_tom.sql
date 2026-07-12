@@ -1,0 +1,1 @@
+ALTER TABLE `dances` ADD `competition` text;

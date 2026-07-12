@@ -120,6 +120,27 @@ export const events = sqliteTable(
   (t) => [uniqueIndex("events_slug_idx").on(t.slug)]
 );
 
+export const dances = sqliteTable(
+  "dances",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    slug: text("slug").notNull(),
+    youtubeId: text("youtube_id").notNull(),
+    title: text("title"),
+    note: text("note"),
+    song: text("song"),
+    artist: text("artist"),
+    // competition/division, e.g. "Advanced Jack & Jill", "Classic", "Strictly Swing"
+    competition: text("competition"),
+    eventId: integer("event_id").references(() => events.id),
+    addedBy: integer("added_by")
+      .notNull()
+      .references(() => users.id),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [uniqueIndex("dances_slug_idx").on(t.slug), index("dances_event_idx").on(t.eventId)]
+);
+
 export const videos = sqliteTable(
   "videos",
   {
@@ -135,12 +156,18 @@ export const videos = sqliteTable(
     song: text("song"),
     artist: text("artist"),
     eventId: integer("event_id").references(() => events.id),
+    // set when this clip is an annotation within a registered dance
+    danceId: integer("dance_id").references(() => dances.id),
     addedBy: integer("added_by")
       .notNull()
       .references(() => users.id),
     createdAt: integer("created_at").notNull(),
   },
-  (t) => [index("videos_move_idx").on(t.moveId), index("videos_event_idx").on(t.eventId)]
+  (t) => [
+    index("videos_move_idx").on(t.moveId),
+    index("videos_event_idx").on(t.eventId),
+    index("videos_dance_idx").on(t.danceId),
+  ]
 );
 
 export const VIDEO_ROLES = ["leader", "follower"] as const;
@@ -158,6 +185,20 @@ export const videoDancers = sqliteTable(
     role: text("role", { enum: VIDEO_ROLES }),
   },
   (t) => [primaryKey({ columns: [t.videoId, t.dancerId] }), index("video_dancers_dancer_idx").on(t.dancerId)]
+);
+
+export const danceDancers = sqliteTable(
+  "dance_dancers",
+  {
+    danceId: integer("dance_id")
+      .notNull()
+      .references(() => dances.id),
+    dancerId: integer("dancer_id")
+      .notNull()
+      .references(() => dancers.id),
+    role: text("role", { enum: VIDEO_ROLES }),
+  },
+  (t) => [primaryKey({ columns: [t.danceId, t.dancerId] }), index("dance_dancers_dancer_idx").on(t.dancerId)]
 );
 
 export const tags = sqliteTable(
@@ -317,6 +358,7 @@ export type MoveRevision = typeof moveRevisions.$inferSelect;
 export type Dancer = typeof dancers.$inferSelect;
 export type EventRow = typeof events.$inferSelect;
 export type Video = typeof videos.$inferSelect;
+export type Dance = typeof dances.$inferSelect;
 export type Tag = typeof tags.$inferSelect;
 export type Curriculum = typeof curricula.$inferSelect;
 export type CurriculumItem = typeof curriculumItems.$inferSelect;

@@ -210,6 +210,59 @@ async function main() {
   await page.getByRole("button", { name: "Add to favorites" }).click();
   await page.getByRole("button", { name: "Remove from favorites" }).waitFor();
 
+  // --- dances ---
+  log("register a dance with dancers, event, competition");
+  await page.goto(`${BASE}/dances/new`);
+  await page.getByLabel("YouTube link").fill("https://www.youtube.com/watch?v=GGi2Rkf-15g");
+  await page.locator('input[name="dancerName"]').nth(0).fill(`Lead ${run}`);
+  await page.locator('select[name="dancerRole"]').nth(0).selectOption("leader");
+  await page.locator('input[name="dancerName"]').nth(1).fill(`Follow ${run}`);
+  await page.locator('select[name="dancerRole"]').nth(1).selectOption("follower");
+  await page.getByLabel("Event", { exact: true }).fill(`Test Event ${run.toUpperCase()}`);
+  await page.getByLabel("Year").fill("2025");
+  await page.getByLabel("Competition").fill("Advanced Jack & Jill");
+  await page.getByLabel("Song", { exact: true }).fill("Dance Song");
+  await page.getByLabel("Artist", { exact: true }).fill("Dance Artist");
+  await page.getByRole("button", { name: "Register and start marking" }).click();
+  await page.waitForURL(/\/dances\//);
+  await expectText(page, "Advanced Jack & Jill");
+  const danceUrl = page.url();
+  await shot(page, "15-dance-page");
+
+  log("annotate multiple moves in the dance");
+  for (const [move, start, end] of [
+    ["Sugar Push", "0:15", "0:19"],
+    ["Whip", "0:22", ""],
+    [moveName, "0:31", "0:38"],
+  ] as const) {
+    await page.getByLabel("Move", { exact: true }).fill(move);
+    await page.getByLabel("Start").fill(start);
+    if (end) await page.getByLabel("End (optional)").fill(end);
+    await page.getByRole("button", { name: "Add move" }).click();
+    await expectText(page, move);
+    await page.waitForTimeout(400);
+  }
+  await expectText(page, "(3)");
+  await shot(page, "16-dance-annotated");
+
+  log("unknown move name is rejected with guidance");
+  await page.getByLabel("Move", { exact: true }).fill("Not A Real Move");
+  await page.getByLabel("Start").fill("1:00");
+  await page.getByRole("button", { name: "Add move" }).click();
+  await expectText(page, "pick one from the suggestions");
+
+  log("annotation appears on the move page with inherited labels");
+  await page.goto(`${BASE}/moves/sugar-push`);
+  await expectText(page, "0:15 → 0:19");
+  await expectText(page, "Dance Song");
+  await expectText(page, "From a mapped dance");
+  await page.getByRole("link", { name: "From a mapped dance" }).first().click();
+  await page.waitForURL(danceUrl);
+
+  log("dances list shows the mapped dance");
+  await page.goto(`${BASE}/dances`);
+  await expectText(page, "3 moves marked");
+
   // --- curriculum ---
   log("create a curriculum with ordered moves, notes, key videos");
   await page.goto(`${BASE}/curricula/new`);

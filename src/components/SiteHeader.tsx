@@ -5,6 +5,7 @@ import { SearchBar } from "./SearchBar";
 
 const NAV = [
   { href: "/moves", label: "Moves" },
+  { href: "/dances", label: "Dances" },
   { href: "/dancers", label: "Dancers" },
   { href: "/events", label: "Events" },
   { href: "/curricula", label: "Curricula" },

@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers, events, moves, users, videoDancers, videos } from "@/db/schema";
+import { dancers, dances, events, moves, users, videoDancers, videos } from "@/db/schema";
 import type { VideoWithLabels } from "./moves";
 
 export type ClipWithMove = VideoWithLabels & { moveId: number; moveName: string; moveSlug: string };
@@ -16,6 +16,7 @@ function hydrateClips(
     note: string | null;
     song: string | null;
     artist: string | null;
+    danceSlug: string | null;
     createdAt: number;
     addedBy: number;
     addedByName: string;
@@ -51,6 +52,7 @@ function hydrateClips(
     note: r.note,
     song: r.song,
     artist: r.artist,
+    danceSlug: r.danceSlug,
     createdAt: r.createdAt,
     addedBy: r.addedBy,
     addedByName: r.addedByName,
@@ -74,6 +76,7 @@ const clipSelection = {
   note: videos.note,
   song: videos.song,
   artist: videos.artist,
+  danceSlug: dances.slug,
   createdAt: videos.createdAt,
   addedBy: videos.addedBy,
   addedByName: users.username,
@@ -94,6 +97,7 @@ export function getDancerClips(dancerId: number): ClipWithMove[] {
     .innerJoin(users, eq(users.id, videos.addedBy))
     .innerJoin(moves, eq(moves.id, videos.moveId))
     .leftJoin(events, eq(events.id, videos.eventId))
+    .leftJoin(dances, eq(dances.id, videos.danceId))
     .where(and(eq(videoDancers.dancerId, dancerId), eq(moves.deleted, 0)))
     .orderBy(desc(videos.createdAt))
     .all();
@@ -107,6 +111,7 @@ export function getEventClips(eventId: number): ClipWithMove[] {
     .innerJoin(users, eq(users.id, videos.addedBy))
     .innerJoin(moves, eq(moves.id, videos.moveId))
     .leftJoin(events, eq(events.id, videos.eventId))
+    .leftJoin(dances, eq(dances.id, videos.danceId))
     .where(and(eq(videos.eventId, eventId), eq(moves.deleted, 0)))
     .orderBy(desc(videos.createdAt))
     .all();

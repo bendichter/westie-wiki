@@ -17,6 +17,7 @@ export function SiteFooter() {
           <div className="text-paper font-semibold mb-2">Explore</div>
           <ul className="space-y-1">
             <li><Link href="/moves" className="hover:text-paper hover:underline">All moves</Link></li>
+            <li><Link href="/dances" className="hover:text-paper hover:underline">Dances</Link></li>
             <li><Link href="/dancers" className="hover:text-paper hover:underline">Dancers</Link></li>
             <li><Link href="/events" className="hover:text-paper hover:underline">Events</Link></li>
             <li><Link href="/curricula" className="hover:text-paper hover:underline">Curricula</Link></li>
