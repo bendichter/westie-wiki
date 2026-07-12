@@ -48,8 +48,7 @@ influences wiki content; monthly click report included.
 >
 > westie.wiki is a new community-edited encyclopedia of West Coast Swing: 25+ moves documented
 > with timestamped video of real dancers at real events, full dances mapped move-by-move,
-> learning paths with progress tracking — all free, all editable by the community,
-> descriptive-not-prescriptive by design.
+> learning paths with progress tracking — all free and editable by the community.
 >
 > To keep it free and ad-junk-free, we're offering a handful of **founding sponsor** slots:
 > a clean, clearly-labeled card with your name and link on the site — starting at **$25/month**,

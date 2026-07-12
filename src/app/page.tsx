@@ -168,15 +168,6 @@ export default function HomePage() {
           </div>
 
           <SponsorSlot />
-
-          <div className="border border-amber/40 bg-amber-soft/40 rounded-lg p-4 text-[15px]">
-            <div className="font-display font-bold text-amber mb-1">A map, not the territory</div>
-            <p className="text-ink-soft">
-              This wiki is descriptive, not prescriptive: it records how the community dances and
-              names moves. It&apos;s a learning aid — not a source of truth about West Coast Swing.{" "}
-              <Link href="/about" className="text-denim underline">Read the whole disclaimer</Link>.
-            </p>
-          </div>
         </div>
       </section>
     </div>
