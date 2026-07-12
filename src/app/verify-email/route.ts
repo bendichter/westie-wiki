@@ -22,8 +22,12 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const url = request.nextUrl.clone();
-  url.pathname = "/verify-email/result";
-  url.search = ok ? "?ok=1" : "";
-  return NextResponse.redirect(url, 303);
+  // behind fly-proxy, nextUrl reflects the internal host (localhost:3000) —
+  // build the public URL from the forwarded headers instead
+  const proto = request.headers.get("x-forwarded-proto") ?? "http";
+  const host = request.headers.get("host") ?? "localhost:3000";
+  return NextResponse.redirect(
+    `${proto}://${host}/verify-email/result${ok ? "?ok=1" : ""}`,
+    303
+  );
 }
