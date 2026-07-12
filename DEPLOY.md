@@ -12,62 +12,41 @@ process and a persistent disk exist. The instructions below use [Fly.io](https:/
 
 ## Fly.io walkthrough
 
+The repo already contains a ready `fly.toml` (app name `westie-wiki`, region `sjc`, volume
+mounted at `/data`, `DATABASE_PATH` and `SEED=1` set). The app has been created on Fly; to
+deploy:
+
 1. **Log in**
 
    ```sh
    fly auth login
    ```
 
-2. **Create the app** (run from the repo root; don't deploy yet)
+2. **Deploy** (from the repo root)
 
    ```sh
-   fly launch --no-deploy --name your-wcs-wiki --region sjc
+   fly deploy --ha=false
    ```
 
-   When it asks about Postgres/Redis, say no — the app uses SQLite. `fly launch` detects the
-   Dockerfile automatically and writes `fly.toml`.
+   `--ha=false` matters: it keeps a single machine. Fly otherwise creates two machines for
+   high availability, and each would get its own volume — SQLite would split-brain. The
+   `data` volume is created automatically on first deploy from the `[[mounts]]` section.
 
-3. **Create a volume for the database** (1 GB is plenty to start)
+   `SEED=1` in fly.toml loads the starter content (25 moves, verified clips, 2 curricula)
+   on first boot and is a no-op once moves exist.
 
-   ```sh
-   fly volumes create wcs_data --size 1 --region sjc
-   ```
-
-4. **Wire the volume and database path into `fly.toml`** — add these sections:
-
-   ```toml
-   [mounts]
-     source = "wcs_data"
-     destination = "/data"
-
-   [env]
-     DATABASE_PATH = "/data/wcs-wiki.db"
-   ```
-
-   Also make sure the service section maps internal port 3000 (fly launch usually sets
-   `internal_port = 3000` from the Dockerfile's EXPOSE — verify).
-
-   Because SQLite lives on one disk, keep a single machine:
-
-   ```sh
-   fly scale count 1
-   ```
-
-5. **First deploy, with seed content**
-
-   ```sh
-   fly deploy --env SEED=1
-   ```
-
-   `SEED=1` loads the starter content (25 moves, verified video clips, 2 curricula) on first
-   boot. The seed is skipped automatically if the database already has moves, but for
-   subsequent deploys just use plain `fly deploy`.
-
-6. **Open it**
+3. **Open it**
 
    ```sh
    fly apps open
    ```
+
+### Continuous deployment
+
+`.github/workflows/fly-deploy.yml` deploys on every push to `main`, using the app-scoped
+`FLY_API_TOKEN` secret already set on the GitHub repo. Delete the workflow file if you'd
+rather deploy manually. Note the workflow runs plain `flyctl deploy` — after the FIRST
+manual `fly deploy --ha=false`, the machine count is already 1 and later deploys keep it.
 
 ### Backups
 
