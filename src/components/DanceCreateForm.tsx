@@ -26,8 +26,12 @@ export function DanceCreateForm({ dancerNames }: { dancerNames: string[] }) {
           placeholder="https://www.youtube.com/watch?v=… or https://youtu.be/…"
         />
         <FieldHint>
-          One full dance — a competition heat, a demo, a social video. If it&apos;s already
-          registered you&apos;ll be taken to it.
+          One full dance — a competition heat, a demo, a social video — posted with the
+          dancers&apos; permission. No workshop recaps (see the{" "}
+          <a href="/guidelines" target="_blank" className="text-denim underline">
+            guidelines
+          </a>
+          ). If it&apos;s already registered you&apos;ll be taken to it.
         </FieldHint>
       </div>
 

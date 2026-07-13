@@ -74,7 +74,14 @@ export function AddVideoForm({
           required
           placeholder="https://www.youtube.com/watch?v=… or https://youtu.be/…"
         />
-        <FieldHint>If the link has a timestamp (?t=), it becomes the start time.</FieldHint>
+        <FieldHint>
+          If the link has a timestamp (?t=), it becomes the start time. Publicly shared
+          competition and social footage only — no workshop recaps (see the{" "}
+          <a href="/guidelines" target="_blank" className="text-denim underline">
+            guidelines
+          </a>
+          ).
+        </FieldHint>
       </div>
 
       <div className="grid grid-cols-2 gap-4 max-w-sm">

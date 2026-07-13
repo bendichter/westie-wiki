@@ -102,6 +102,24 @@ export default function GuidelinesPage() {
           </li>
         </ul>
 
+        <h2>Video consent</h2>
+        <ul>
+          <li>
+            Only link videos that were posted with the dancers&apos; permission, or where
+            permission is clearly implied: competition heats, routines, demos, and social-floor
+            videos published by events, organizers, or the dancers themselves.
+          </li>
+          <li>
+            <strong>Don&apos;t link workshop recaps.</strong> Recap videos are recorded for the
+            attendees&apos; personal review and are generally not meant to be shared — that
+            stays true even when someone has uploaded one publicly.
+          </li>
+          <li>
+            If you appear in a linked video and want it removed, say so in the move&apos;s
+            discussion thread or contact an admin — it will be taken down, no questions asked.
+          </li>
+        </ul>
+
         <h2>Editing well</h2>
         <ul>
           <li>

@@ -43,7 +43,8 @@ export default function AboutPage() {
           </li>
           <li>
             <strong>Videos stay on YouTube.</strong> We link to clips with start/end timestamps and
-            label them with dancers and events. We host nothing and claim nothing.
+            label them with dancers and events. We host nothing and claim nothing — and we only
+            link footage posted with the dancers&apos; permission, never workshop recaps.
           </li>
         </ul>
 
