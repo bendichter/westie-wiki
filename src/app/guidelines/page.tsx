@@ -105,9 +105,10 @@ export default function GuidelinesPage() {
         <h2>Video consent</h2>
         <ul>
           <li>
-            Only link videos that were posted with the dancers&apos; permission, or where
-            permission is clearly implied: competition heats, routines, demos, and social-floor
-            videos published by events, organizers, or the dancers themselves.
+            Only link a video if it was <strong>uploaded by one of the dancers in it or by the
+            event</strong> where it was filmed — or if you have the dancer&apos;s explicit
+            permission. Someone else&apos;s upload of someone else&apos;s dancing doesn&apos;t
+            qualify, even when it&apos;s public.
           </li>
           <li>
             <strong>Don&apos;t link workshop recaps.</strong> Recap videos are recorded for the

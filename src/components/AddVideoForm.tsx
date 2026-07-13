@@ -75,8 +75,9 @@ export function AddVideoForm({
           placeholder="https://www.youtube.com/watch?v=… or https://youtu.be/…"
         />
         <FieldHint>
-          If the link has a timestamp (?t=), it becomes the start time. Publicly shared
-          competition and social footage only — no workshop recaps (see the{" "}
+          If the link has a timestamp (?t=), it becomes the start time. Only videos uploaded by
+          the dancers or the event — or with the dancer&apos;s explicit permission. No workshop
+          recaps (see the{" "}
           <a href="/guidelines" target="_blank" className="text-denim underline">
             guidelines
           </a>
