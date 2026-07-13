@@ -22,7 +22,7 @@ A 6-count pattern danced in the slot. The follower travels toward the leader, re
 
 - **1–2**: follower walks forward toward the leader (walk, walk)
 - **3&4**: follower arrives with a triple, connection compresses ("catch")
-- **5&6**: anchor step — both partners settle away from each other and re-establish leverage
+- **5&6**: [[Anchor Step|anchor step]] — both partners settle away from each other and re-establish leverage
 
 ## What it teaches
 
@@ -51,7 +51,7 @@ Widely also called the **push break**, especially in scenes with roots in East C
     aliases: ["LSP"],
     difficulty: "beginner",
     tags: ["fundamentals", "pass family", "6-count"],
-    description: `A 6-count pattern where the follower passes the leader on the leader's **left** side. Along with the sugar push and right side pass, it forms the core triangle of beginner WCS.
+    description: `A 6-count pattern where the follower passes the leader on the leader's **left** side. Along with the [[Sugar Push|sugar push]] and [[Right Side Pass|right side pass]], it forms the core triangle of beginner WCS.
 
 ## The shape
 
@@ -64,7 +64,7 @@ The leader redirects the follower's momentum down the slot rather than pulling �
 ## Common notes
 
 - Followers generally keep their travel on the slot; a drifting left side pass is one of the most common beginner habits.
-- The leader's hand stays low and relaxed ("in the toolbox") — high hands early in this pattern usually mean an accidental inside roll is coming.
+- The leader's hand stays low and relaxed ("in the toolbox") — high hands early in this pattern usually mean an accidental [[Inside Roll|inside roll]] is coming.
 - Brian B describes the leader's path as *curling out of the slot* on 1–2, letting the follower pass on 3&4, then rejoining the slot on the other side for the anchor.[^2]
 
 [^1]: Robert Royston, ["How to Do the Left Side Pass | Swing Dance"](https://www.youtube.com/watch?v=k7D6Uv8Y0E8&t=43s) (Howcast) at 0:43.
@@ -87,7 +87,7 @@ The leader redirects the follower's momentum down the slot rather than pulling �
 
 - The arch is an invitation, not a crank: most instruction emphasizes that the leader's raised hand stays quiet and the follower turns themselves.
 - Danced without the raised arm (a simple pass on the right side), the same slot geometry is often just called a *side pass* or *outside pass* depending on the scene.
-- The follower's footwork is identical to the left side pass — Brian B calls this "the bonus" of learning the passes together, though the raised hand makes it feel different.[^1]
+- The follower's footwork is identical to the [[Left Side Pass|left side pass]] — Brian B calls this "the bonus" of learning the passes together, though the raised hand makes it feel different.[^1]
 - As the partners pass, the feet should cross rather than close: Robert Royston teaches that one foot stays crossed in front of the other on the passing triple.[^2]
 - Brian B's tip for followers is "getting skinny" — turning the shoulders slightly while passing so the joined hand clears the head easily instead of dragging across the leader's forearm.[^3]
 
@@ -129,7 +129,7 @@ Some older curricula count the whip's second half differently or teach a "coaste
     aliases: ["Tuck Turn", "Push Tuck"],
     difficulty: "beginner",
     tags: ["push family", "spins & turns", "6-count"],
-    description: `A sugar push where the compression is redirected into an outside (clockwise) turn for the follower.
+    description: `A [[Sugar Push|sugar push]] where the compression is redirected into an outside (clockwise) turn for the follower.
 
 ## The shape
 
@@ -140,9 +140,9 @@ Danced like a sugar push through counts 1–2, but on **3&4** the leader rotates
 - The tuck is a rotation of the follower's frame, not an arm pull; the free turn comes from the follower unwinding the stored rotation.
 - Often the first pattern where followers practice **spotting** and controlled free spins.
 - Frequently danced with one hand, two hands, or with a hand change behind the leader's back as a styling variation.
-- Because the leader's hand finishes over the top of the grip, the tuck is commonly followed by an underarm turn (right side pass) to fix the handhold — Brian B calls this fix "magic, and for no extra charge."[^1]
+- Because the leader's hand finishes over the top of the grip, the tuck is commonly followed by an underarm turn ([[Right Side Pass|right side pass]]) to fix the handhold — Brian B calls this fix "magic, and for no extra charge."[^1]
 - Raising the lead hand does double duty: Brian B teaches that the raise itself closes the distance between the partners as the tuck sets up.[^2]
-- Robert Royston points out the tuck's leverage as a variation factory: led with the left hand up, right hand up, both hands, or no hands (a free spin), "once you learn the sugar tuck you immediately have four more moves."[^3]
+- Robert Royston points out the tuck's leverage as a variation factory: led with the left hand up, right hand up, both hands, or no hands (a [[Free Spin|free spin]]), "once you learn the sugar tuck you immediately have four more moves."[^3]
 
 [^1]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=598s) at 9:58.
 [^2]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=575s) at 9:35.
@@ -155,11 +155,11 @@ Danced like a sugar push through counts 1–2, but on **3&4** the leader rotates
     tags: ["fundamentals", "connection & technique"],
     description: `The little two-triple pattern many dancers use to begin a dance: side triple, side triple (or rock-and-triple), establishing connection and the slot before the first real pattern.
 
-Not universal — plenty of dancers start straight into a sugar push or side pass — but common enough in classes that learners should recognize it. Its real job is a **connection check**: settling weight, matching hand pressure, and agreeing on timing before anything travels.
+Not universal — plenty of dancers start straight into a [[Sugar Push|sugar push]] or side pass — but common enough in classes that learners should recognize it. Its real job is a **connection check**: settling weight, matching hand pressure, and agreeing on timing before anything travels.
 
 ## One taught version
 
-Thibault and Nicole Ramirez teach the starter step from closed position: the partners first "tap the tempo" in place (walk-touch on the beat) for as long as the leader likes, then dance two triple steps — the first to the side, the second opening the position — flowing directly into a left side pass.[^1] For the follower, the first triple is the signal: taps can continue indefinitely, but "as soon as we start with the triples, that tells me that the dance has now started."[^2]
+Thibault and Nicole Ramirez teach the starter step from closed position: the partners first "tap the tempo" in place (walk-touch on the beat) for as long as the leader likes, then dance two triple steps — the first to the side, the second opening the position — flowing directly into a [[Left Side Pass|left side pass]].[^1] For the follower, the first triple is the signal: taps can continue indefinitely, but "as soon as we start with the triples, that tells me that the dance has now started."[^2]
 
 [^1]: Thibault & Nicole Ramirez, ["Starter Step – How to Begin Your West Coast Swing"](https://www.youtube.com/watch?v=5NCgLVFecwI&t=50s) at 0:50.
 [^2]: Thibault & Nicole Ramirez, ["Starter Step – How to Begin Your West Coast Swing"](https://www.youtube.com/watch?v=5NCgLVFecwI&t=175s) at 2:55.`,
@@ -192,7 +192,7 @@ Strictly speaking this is a **building block** rather than a pattern, but it get
     aliases: ["Toss Out", "Whip Throwout", "Slingshot Throwout"],
     difficulty: "intermediate",
     tags: ["whip family", "8-count"],
-    description: `A whip-family pattern in which the follower is released ("thrown out") down the slot instead of being brought back to closed position.
+    description: `A [[Whip|whip]]-family pattern in which the follower is released ("thrown out") down the slot instead of being brought back to closed position.
 
 Danced like a whip through the first half; on **5–6** the leader lets the follower travel out to open position, often with a free turn, and both anchor apart. Common as a transition from closed-position figures back to open work, and as a dramatic musical accent when the release is timed to a hit in the music.`,
   },
@@ -205,7 +205,7 @@ Danced like a whip through the first half; on **5–6** the leader lets the foll
 
 ## The shape
 
-- **1–2**: as in a left side pass, but the leader raises the joined hand and initiates rotation
+- **1–2**: as in a [[Left Side Pass|left side pass]], but the leader raises the joined hand and initiates rotation
 - **3&4**: follower rolls through one (or more) traveling turns down the slot
 - **5&6**: anchor
 
@@ -213,7 +213,7 @@ Danced like a whip through the first half; on **5–6** the leader lets the foll
 
 - The traveling turn wants a small, centered head and stacked posture; big stepping makes multi-roll variations impossible.
 - Leaders: the hand traces a small halo — stirring lowers the follower's axis and kills the turn.
-- Frequently extended into double or triple rolls, or into a **barrel roll** when both partners rotate.
+- Frequently extended into double or triple rolls, or into a **[[Barrel Roll|barrel roll]]** when both partners rotate.
 - The name is literal: Brian B teaches that the joined hand "cuts inside our heads" as it passes between the partners — hence *inside* turn.[^1]
 - The double prep ("prep, prep") that beginners often learn is mostly unnecessary — only the second prep sets the follower's energy for the turn. Big double preps are usually a symptom of weak connection: the better the connection, the less the hand has to visibly move.[^2]
 
@@ -225,13 +225,13 @@ Danced like a whip through the first half; on **5–6** the leader lets the foll
     aliases: ["Follower's Free Spin", "Push Spin"],
     difficulty: "intermediate",
     tags: ["spins & turns", "pass family", "6-count"],
-    description: `Any pattern where the follower is released to turn without hand connection — most commonly a right side pass or tuck released into a full free turn.
+    description: `Any pattern where the follower is released to turn without hand connection — most commonly a [[Right Side Pass|right side pass]] or tuck released into a full free turn.
 
 The lead is finished **before** the spin begins: rotation is offered on the setup counts, the hand releases, and the follower owns the turn. A clean free spin is a spotlight moment for the follower's balance and spotting technique, and one of the most common places musicality happens ("hit the break with a free spin").
 
 ## Common notes
 
-- Brian B likes to initiate the basic free spin from the leader's **right** hand (reached from a sugar push) so the follower never has a hand over their head.[^1]
+- Brian B likes to initiate the basic free spin from the leader's **right** hand (reached from a [[Sugar Push|sugar push]]) so the follower never has a hand over their head.[^1]
 - The prep follows the same rule as other turns: two preps are taught but only the second is needed, and the most advanced version is just a slight *expansion* on count 2 — "when this is done well you shouldn't actually see the hand move."[^2]
 - Clear follower footwork on "3-and" (close the feet, step down the line, pivot) is what makes free-spin variations leadable — the leader needs that moment to pick up the follower's back and redirect.[^3]
 
@@ -244,7 +244,7 @@ The lead is finished **before** the spin begins: rotation is offered on the setu
     aliases: ["Basket", "Locked Whip"],
     difficulty: "intermediate",
     tags: ["whip family", "wraps & cuddles", "8-count"],
-    description: `A whip variation danced with two hands in which the follower is turned at the post into a wrapped ("basket") position facing away from the leader, then unwound home.
+    description: `A [[Whip|whip]] variation danced with two hands in which the follower is turned at the post into a wrapped ("basket") position facing away from the leader, then unwound home.
 
 The wrap happens around counts **3&4–5** with both hands held low; the exit typically unwinds the follower on **5–6** before the anchor. A friendly first "shape" whip: the geometry is showy but the timing stays plain whip timing. Watch for cranked shoulders — the wrap should sit at the follower's waist, led from body rotation.
 
@@ -265,7 +265,7 @@ The wrap happens around counts **3&4–5** with both hands held low; the exit ty
     aliases: ["Left Side Whip", "Cutoff Whip"],
     difficulty: "intermediate",
     tags: ["whip family", "8-count"],
-    description: `A whip danced with the redirection happening on the **left/reverse** side: the leader steps into the slot mirrored from a standard whip and the follower is turned counter-clockwise at the post.
+    description: `A [[Whip|whip]] danced with the redirection happening on the **left/reverse** side: the leader steps into the slot mirrored from a standard whip and the follower is turned counter-clockwise at the post.
 
 Because everything happens on the "wrong" side, the reverse whip is a favorite test of whether both partners are actually dancing connection rather than pattern memory. Timing is standard 8-count whip timing.
 
@@ -285,9 +285,9 @@ Because everything happens on the "wrong" side, the reverse whip is a favorite t
     aliases: ["Cuddle Whip", "Sweetheart Whip"],
     difficulty: "intermediate",
     tags: ["whip family", "wraps & cuddles", "8-count"],
-    description: `A whip variation in which the follower is caught in a wrap (cuddle/sweetheart position — follower's back to the leader's front, arms crossed) at the whip's midpoint, then released down the slot.
+    description: `A [[Whip|whip]] variation in which the follower is caught in a wrap ([[Cuddle|cuddle]]/sweetheart position — follower's back to the leader's front, arms crossed) at the whip's midpoint, then released down the slot.
 
-Distinguished from the basket whip mainly by the entry and the height/shape of the wrap; scene naming here is famously inconsistent, so expect these two names to blur together in classes. The exit can unwind (follower turns out) or release straight, and both are commonly taught.
+Distinguished from the [[Basket Whip|basket whip]] mainly by the entry and the height/shape of the wrap; scene naming here is famously inconsistent, so expect these two names to blur together in classes. The exit can unwind (follower turns out) or release straight, and both are commonly taught.
 
 ## One taught route in
 
@@ -302,7 +302,7 @@ Matt and Maggie (Daily Dance Services) teach a two-sets-of-six version: a **half
     aliases: ["Inside Turn Whip", "Inside Whip"],
     difficulty: "intermediate",
     tags: ["whip family", "spins & turns", "8-count"],
-    description: `A whip in which the follower takes an inside (counter-clockwise) turn on counts **5–6** as they travel back down the slot.
+    description: `A [[Whip|whip]] in which the follower takes an inside (counter-clockwise) turn on counts **5–6** as they travel back down the slot.
 
 The turn is prepped by the leader's raised hand around the post; the follower's travel and the whip timing don't change. Often the first whip variation taught because it isolates one new skill — turning while maintaining whip geometry — without changing the pattern's skeleton.
 
@@ -321,7 +321,7 @@ The turn is prepped by the leader's raised hand around the post; the follower's 
     aliases: ["Outside Turn Whip"],
     difficulty: "intermediate",
     tags: ["whip family", "spins & turns", "8-count"],
-    description: `The mirror of the whip with inside turn: the follower takes an outside (clockwise) turn on counts **5–6** while returning down the slot.
+    description: `The mirror of the [[Whip with Inside Turn|whip with inside turn]]: the follower takes an outside (clockwise) turn on counts **5–6** while returning down the slot.
 
 Commonly used to set up spins, hand changes, or free-spin exits. The classic error is starting the turn on 4 instead of after the post — the redirection has to finish before the rotation begins.
 
@@ -338,7 +338,7 @@ Commonly used to set up spins, hand changes, or free-spin exits. The classic err
     aliases: ["Double Whip", "Whip with Extension", "Extended Whip"],
     difficulty: "advanced",
     tags: ["whip family", "8-count", "musicality"],
-    description: `A whip whose middle is extended by repeating the coil: instead of releasing the follower down the slot on 5–6, the leader keeps the follower rotating around the post for an extra 2 (or more) counts before the exit.
+    description: `A [[Whip|whip]] whose middle is extended by repeating the coil: instead of releasing the follower down the slot on 5–6, the leader keeps the follower rotating around the post for an extra 2 (or more) counts before the exit.
 
 Counted as a 10- or 12-count figure depending on how many extensions are danced. Continuous whips are a workhorse of musicality dancing — the extra counts let you sit inside a musical phrase and exit exactly on the hit. They demand genuinely good posts from the leader and patient, centered rotation from the follower.
 
@@ -357,9 +357,9 @@ Counted as a 10- or 12-count figure depending on how many extensions are danced.
     aliases: ["Barrel Turn"],
     difficulty: "advanced",
     tags: ["spins & turns", "pass family"],
-    description: `A traveling figure where **both** partners roll down the slot together — the follower in a traveling inside roll while the leader rotates around them in the same lane, trading places as they go.
+    description: `A traveling figure where **both** partners roll down the slot together — the follower in a traveling [[Inside Roll|inside roll]] while the leader rotates around them in the same lane, trading places as they go.
 
-Usually entered from a left side pass or inside roll setup. The signature feeling is two axes braided down one track: neither partner owns the slot for a moment, and then both do. Requires committed frames and real spotting from both partners, which is why it's usually taught after traveling rolls are solid.
+Usually entered from a [[Left Side Pass|left side pass]] or inside roll setup. The signature feeling is two axes braided down one track: neither partner owns the slot for a moment, and then both do. Requires committed frames and real spotting from both partners, which is why it's usually taught after traveling rolls are solid.
 
 ## Common notes
 
@@ -409,12 +409,12 @@ Brian B teaches one-footed spins as three keys — balance, rotation around the 
     tags: ["push family", "connection & technique", "musicality"],
     description: `A compression pattern where the follower's forward travel is caught at the leader's hip instead of in the hands — the follower arrives beside the leader, is caught in a brief side-by-side compression, and rebounds back down the slot.
 
-Lives in the same connection family as the sugar push (extension → compression → extension) but with the catch displaced to the side, which reads beautifully on slow, bluesy songs. A common musicality tool for marking a pause or drop in the music.
+Lives in the same connection family as the [[Sugar Push|sugar push]] (extension → compression → extension) but with the catch displaced to the side, which reads beautifully on slow, bluesy songs. A common musicality tool for marking a pause or drop in the music.
 
 ## Common notes
 
 - Hip catches showcase one of WCS's signature ideas: connection points beyond the hands — forearm, tricep, hips, bottom of the ribs — with the follower always filling the space that's offered.[^1]
-- Filipe de Barros rolls in like a left side pass, arriving with the forearm at the follower's waist, and recommends catching on the **bony part of the hip** rather than the ribs or the fleshy part.[^2]
+- Filipe de Barros rolls in like a [[Left Side Pass|left side pass]], arriving with the forearm at the follower's waist, and recommends catching on the **bony part of the hip** rather than the ribs or the fleshy part.[^2]
 - The connection is two-way: the follower gives the weight of the hip into the leader's hand, then waits — reading the lead's energy rather than pre-empting the exit.[^3]
 - Standard exits include spinning the follower out, redirecting to a catch on the *other* hip, or rising into a tuck.[^4]
 
@@ -428,9 +428,9 @@ Lives in the same connection family as the sugar push (extension → compression
     aliases: ["LSP with Outside Turn"],
     difficulty: "intermediate",
     tags: ["pass family", "spins & turns", "6-count"],
-    description: `A left side pass in which the follower takes an outside (clockwise) turn while traveling down the slot, led under the joined hands.
+    description: `A [[Left Side Pass|left side pass]] in which the follower takes an outside (clockwise) turn while traveling down the slot, led under the joined hands.
 
-The complement to the inside roll on the same side of the slot. Because the rotation runs against the follower's natural facing during the pass, the prep matters more than in the inside version — the turn is offered on 2, taken on 3&4, and finished before the anchor.`,
+The complement to the [[Inside Roll|inside roll]] on the same side of the slot. Because the rotation runs against the follower's natural facing during the pass, the prep matters more than in the inside version — the turn is offered on 2, taken on 3&4, and finished before the anchor.`,
   },
   {
     name: "Cuddle",
@@ -439,7 +439,7 @@ The complement to the inside roll on the same side of the slot. Because the rota
     tags: ["wraps & cuddles", "6-count"],
     description: `A 6-count pattern that brings the follower into wrapped position (follower's back to the leader's front, both hands connected, arms crossed in front of the follower) and holds or exits.
 
-The cuddle is a **position**, and this pattern is the standard way in and out of it: enter like a left side pass with two hands, catch the follower into the wrap on 3&4, exit by unwinding or releasing down the slot. Once in the wrap, dancers commonly hang out for extra counts, add sways or body rolls, or chain into wrapped whips — which is why teachers often introduce the cuddle as "a place you can go," not just a pattern.
+The cuddle is a **position**, and this pattern is the standard way in and out of it: enter like a [[Left Side Pass|left side pass]] with two hands, catch the follower into the wrap on 3&4, exit by unwinding or releasing down the slot. Once in the wrap, dancers commonly hang out for extra counts, add sways or body rolls, or chain into wrapped whips — which is why teachers often introduce the cuddle as "a place you can go," not just a pattern.
 
 ## One taught version
 
@@ -510,7 +510,7 @@ Pure styling vocabulary rather than a led pattern, though it can be *matched* be
     aliases: ["Hand Change Whip", "Behind-the-Back Whip"],
     difficulty: "intermediate",
     tags: ["whip family", "8-count"],
-    description: `A whip in which the leader changes the connected hand mid-figure — commonly behind the leader's back at the post, or overhead during the follower's return — ending the pattern in the opposite handhold.
+    description: `A [[Whip|whip]] in which the leader changes the connected hand mid-figure — commonly behind the leader's back at the post, or overhead during the follower's return — ending the pattern in the opposite handhold.
 
 Mostly a connective-tissue pattern: hand changes are how leaders set up the *next* figure (wraps, two-hand patterns, tandem shapes) without stopping the dance. Clean hand changes are quiet; if the follower feels the swap, it was late.
 
