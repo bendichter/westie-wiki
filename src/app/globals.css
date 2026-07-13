@@ -123,6 +123,49 @@ a {
   text-align: left;
 }
 
+/* GFM footnotes: Wikipedia-style citations */
+.prose-wcs sup {
+  font-size: 0.7em;
+  vertical-align: super;
+  line-height: 0;
+}
+.prose-wcs sup a {
+  text-decoration: none;
+  color: var(--color-denim);
+  font-weight: 600;
+  padding: 0 0.1em;
+}
+.prose-wcs sup a::before {
+  content: "[";
+}
+.prose-wcs sup a::after {
+  content: "]";
+}
+.prose-wcs section[data-footnotes] {
+  margin-top: 2rem;
+  border-top: 1px solid var(--color-line);
+  padding-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+.prose-wcs section[data-footnotes] h2 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  margin: 0 0 0.5rem;
+}
+.prose-wcs section[data-footnotes] ol {
+  margin: 0;
+}
+.prose-wcs section[data-footnotes] li {
+  margin: 0.15rem 0;
+}
+.prose-wcs section[data-footnotes] p {
+  margin: 0;
+  display: inline;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

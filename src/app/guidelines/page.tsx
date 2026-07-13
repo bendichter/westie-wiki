@@ -136,6 +136,12 @@ export default function GuidelinesPage() {
             teachable; &ldquo;then you redirect&rdquo; isn&apos;t.
           </li>
           <li>Markdown is supported: use <code>##</code> headings, lists, and bold sparingly.</li>
+          <li>
+            Cite specific claims Wikipedia-style with footnotes: write{" "}
+            <code>most teachers cue the tuck on 3[^1]</code> in the text, and{" "}
+            <code>[^1]: Skippy Blair, Dance Terminology Notebook</code> (links welcome) on its
+            own line at the bottom of the description.
+          </li>
         </ul>
 
         <p>

@@ -102,7 +102,9 @@ Whips are where **stretch** becomes unavoidable: the redirection on 3&4 and the 
 
 ## Naming
 
-Some older curricula count the whip's second half differently or teach a "coaster" ending; the 8-count structure above is the one most commonly taught today.`,
+Some older curricula count the whip's second half differently or teach a "coaster" ending; the 8-count structure above is the one most commonly taught today.[^1]
+
+[^1]: See e.g. [West Coast Swing Online's basic patterns guide](https://www.westcoastswingonline.com/west-coast-swing-basic-patterns/), which teaches the whip as the fourth core pattern with this structure.`,
   },
   {
     name: "Sugar Tuck",

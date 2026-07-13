@@ -81,8 +81,9 @@ export function MoveForm({ mode, initial }: MoveFormProps) {
           }
         />
         <FieldHint>
-          Markdown supported. Describe, don&apos;t prescribe — and write roles, not genders
-          (&ldquo;the follower turns under their arm&rdquo;). See the{" "}
+          Markdown supported, including citations: write{" "}
+          <code>claim[^1]</code> in the text and <code>[^1]: source</code> on its own line at the
+          bottom. Describe, don&apos;t prescribe — and write roles, not genders. See the{" "}
           <a href="/guidelines" target="_blank" className="text-denim underline">
             contribution guidelines
           </a>

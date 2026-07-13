@@ -144,12 +144,18 @@ async function main() {
   await page.getByLabel("Difficulty").selectOption("intermediate");
   await page
     .getByLabel("Description")
-    .fill("A test pattern.\n\n## Counts\n\n- 1-2 walk walk\n- 3&4 triple");
+    .fill(
+      "A test pattern, commonly taught with a triple.[^1]\n\n## Counts\n\n- 1-2 walk walk\n- 3&4 triple\n\n[^1]: Test Citation, Imaginary Dance Manual"
+    );
   await page.getByLabel("Tags").fill("test tag, whip family");
   await page.getByRole("button", { name: "Create move" }).click();
   await page.waitForURL(/\/moves\/test-move-/);
   await expectText(page, "Test Alias One");
   await expectText(page, "walk walk");
+  await expectText(page, "Test Citation, Imaginary Dance Manual");
+  if ((await page.locator(".prose-wcs sup a").count()) < 1) {
+    throw new Error("footnote reference did not render as sup link");
+  }
   const moveUrl = page.url();
   await shot(page, "05-move-created");
 
