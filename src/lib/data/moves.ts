@@ -6,6 +6,7 @@ import {
   dancers,
   dances,
   danceSongs,
+  moveResources,
   moveVariants,
   events,
   moveAliases,
@@ -45,6 +46,22 @@ export function getMoveTags(moveId: number) {
     .innerJoin(tags, eq(tags.id, moveTags.tagId))
     .where(eq(moveTags.moveId, moveId))
     .orderBy(asc(tags.name))
+    .all();
+}
+
+export function getMoveResources(moveId: number) {
+  return db
+    .select({
+      id: moveResources.id,
+      url: moveResources.url,
+      title: moveResources.title,
+      addedBy: moveResources.addedBy,
+      addedByName: users.username,
+    })
+    .from(moveResources)
+    .innerJoin(users, eq(users.id, moveResources.addedBy))
+    .where(eq(moveResources.moveId, moveId))
+    .orderBy(asc(moveResources.createdAt))
     .all();
 }
 

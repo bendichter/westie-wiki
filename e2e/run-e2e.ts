@@ -224,6 +224,15 @@ async function main() {
   await page.getByRole("button", { name: "Save clip" }).click();
   await expectText(page, "0:30 → 1:00");
 
+  log("cite an instructional video from another platform");
+  await page.goto(moveUrl);
+  await page.getByRole("button", { name: "+ Cite an instructional video" }).click();
+  await page.getByLabel("Link").fill("https://www.instagram.com/p/example-tutorial/");
+  await page.getByLabel("Title", { exact: true }).fill("Handhold breakdown reel");
+  await page.getByRole("button", { name: "Add citation" }).click();
+  await expectText(page, "Handhold breakdown reel");
+  await expectText(page, "Instagram");
+
   log("dancer page groups clips by move under the Moves tab");
   await page.goto(`${BASE}/dancers/lead-${run}?tab=moves`);
   await expectText(page, moveName);

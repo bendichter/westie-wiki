@@ -9,6 +9,7 @@ import { CommentSection } from "@/components/CommentSection";
 import { JsonLd } from "@/components/JsonLd";
 import { Markdown } from "@/components/Markdown";
 import { RelationEditor } from "@/components/RelationEditor";
+import { ResourceSection } from "@/components/ResourceSection";
 import { SponsorSlot } from "@/components/SponsorSlot";
 import { VariantManager } from "@/components/VariantManager";
 import { VideoCard } from "@/components/VideoCard";
@@ -22,6 +23,7 @@ import {
   getLatestRevisionNo,
   getMoveBySlug,
   getMoveComments,
+  getMoveResources,
   getMoveTags,
   getMoveVariants,
   getMoveVideos,
@@ -30,6 +32,7 @@ import {
 } from "@/lib/data/moves";
 import { listDances } from "@/lib/data/dances";
 import { formatDate, timeAgo } from "@/lib/format";
+import { platformLabel } from "@/lib/platform";
 
 export async function generateMetadata({
   params,
@@ -116,6 +119,7 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
   const latestRevision = getLatestRevisionNo(move.id);
   const seenInDances = listDances({ moveId: move.id });
   const variants = getMoveVariants(move.id);
+  const resources = getMoveResources(move.id).map((r) => ({ ...r, platform: platformLabel(r.url) }));
 
   const isFavorite = user
     ? !!db
@@ -258,6 +262,13 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
               )}
             </div>
           </section>
+
+          <ResourceSection
+            moveId={move.id}
+            resources={resources}
+            currentUserId={user?.id ?? null}
+            currentUserIsAdmin={userIsAdmin}
+          />
 
           <CommentSection moveId={move.id} comments={comments} currentUserId={user?.id ?? null} currentUserIsAdmin={userIsAdmin} />
         </div>

@@ -162,3 +162,19 @@ describe("diffLines pathological input", () => {
     expect(ops.filter((o) => o.type === "add")).toEqual([{ type: "add", text: "new middle" }]);
   });
 });
+
+describe("platformLabel", () => {
+  it("recognizes major platforms", async () => {
+    const { platformLabel } = await import("../platform");
+    expect(platformLabel("https://www.youtube.com/watch?v=abc")).toBe("YouTube");
+    expect(platformLabel("https://youtu.be/abc")).toBe("YouTube");
+    expect(platformLabel("https://www.instagram.com/p/xyz/")).toBe("Instagram");
+    expect(platformLabel("https://fb.watch/abc/")).toBe("Facebook");
+    expect(platformLabel("https://www.tiktok.com/@x/video/1")).toBe("TikTok");
+  });
+  it("falls back to hostname or 'link'", async () => {
+    const { platformLabel } = await import("../platform");
+    expect(platformLabel("https://swingdancecouncil.com/points")).toBe("swingdancecouncil.com");
+    expect(platformLabel("not a url")).toBe("link");
+  });
+});

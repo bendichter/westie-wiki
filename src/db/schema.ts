@@ -248,6 +248,25 @@ export const danceDancers = sqliteTable(
   (t) => [primaryKey({ columns: [t.danceId, t.dancerId] }), index("dance_dancers_dancer_idx").on(t.dancerId)]
 );
 
+// instructional citations for a move: tutorials and breakdowns on any platform.
+// Links only (no embedding) — YouTube clip evidence lives in `videos`.
+export const moveResources = sqliteTable(
+  "move_resources",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    moveId: integer("move_id")
+      .notNull()
+      .references(() => moves.id),
+    url: text("url").notNull(),
+    title: text("title").notNull(),
+    addedBy: integer("added_by")
+      .notNull()
+      .references(() => users.id),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("move_resources_move_idx").on(t.moveId)]
+);
+
 export const tags = sqliteTable(
   "tags",
   {

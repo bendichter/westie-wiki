@@ -92,6 +92,13 @@
       "when": 1783959420457,
       "tag": "0012_even_warlock",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1783965408840,
+      "tag": "0013_glorious_punisher",
+      "breakpoints": true
     }
   ]
 }
