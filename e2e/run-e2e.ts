@@ -218,9 +218,11 @@ async function main() {
   await expectText(page, "0:30 → 1:00");
   await shot(page, "09-dancer-page");
 
-  log("event page shows the clip");
+  log("event page shows the clip under the Moves tab");
   await page.goto(`${BASE}/events`);
   await expectText(page, `Test Event ${run.toUpperCase()}`);
+  await page.goto(`${BASE}/events/test-event-${run}-2025?tab=moves`);
+  await expectText(page, "0:30 → 1:00");
 
   log("search finds move by alias and dancer by name");
   await page.goto(`${BASE}/search?q=Secret Handshake`);
