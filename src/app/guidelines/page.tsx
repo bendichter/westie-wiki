@@ -54,6 +54,20 @@ export default function GuidelinesPage() {
           </li>
         </ul>
 
+        <h2>Words we use</h2>
+        <ul>
+          <li>
+            A <strong>move</strong> is anything with a page here: patterns, elements, footwork
+            units, styling. A <strong>pattern</strong> means specifically a led figure with
+            counts, so a whip is a pattern but swivels are not. Use whichever is accurate in
+            your writing.
+          </li>
+          <li>
+            A <strong>clip</strong> is a timestamped video segment showing a move, whether added
+            directly to a move page or by marking a move in a dance.
+          </li>
+        </ul>
+
         <h2>Variants: parameters vs. patterns</h2>
         <ul>
           <li>
