@@ -520,6 +520,142 @@ Mostly a connective-tissue pattern: hand changes are how leaders set up the *nex
 
 [^1]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Open Reverse Whip with Leader's Turn! – WCS Guide #162"](https://www.youtube.com/watch?v=N1xwmyM5pI4&t=143s) at 2:23–3:31.`,
   },
+  {
+    name: "Duck",
+    aliases: ["Duck Under", "Head Duck"],
+    difficulty: "intermediate",
+    tags: ["spins & turns", "connection & technique"],
+    description: `A move where one partner — usually the follower — ducks briefly under the joined hands as the arm passes overhead, most often layered onto an [[Inside Roll|inside turn]] or a [[Whip|whip]].
+
+## For followers
+
+- Read the speed of the lead through the connection: the leader may take the turn slow or syncopate it faster, and matching their pace is what keeps an elbow out of your face.[^1]
+- Duck **late and briefly**: most people get dizzy turning with their head down, so stay upright through the turn and only pop the head down and back up between counts 3 and 4, when you feel the leader's arm coming over.[^2]
+- Keep your free arm in a ready frame — a hanging arm gets trapped under the joined hands and the duck stops working.[^3]
+- On an open-whip head duck, expand and open the back on count 5 rather than collapsing the frame — that's what gives the leader room to build the window.[^4]
+
+## For leaders
+
+Brian B teaches ducks on patterns the follower already owns (inside turn from either hand, basic whip): once the follower is prepped and turning on her own, slide the joined hand down to her **elbow or armpit** — the elbow is "cooler and easier" because lifting it leaves more room — then travel the hand *out and around* her path with your elbow to the sky. A flat elbow or a cut-off path is how followers get hit in the back of the head.[^5]
+
+[^1]: Megan, West Coast Swing Online, ["West Coast Swing Ducks | What You Should Know About Ducking"](https://www.youtube.com/watch?v=S16GYhXK47M&t=42s) at 0:42.
+[^2]: Megan, West Coast Swing Online, ["West Coast Swing Ducks | What You Should Know About Ducking"](https://www.youtube.com/watch?v=S16GYhXK47M&t=106s) at 1:46–2:44.
+[^3]: Brian B & Megan, West Coast Swing Online, ["How to dance a "DUCK" in West Coast Swing - 3 Different Ducks!"](https://www.youtube.com/watch?v=GJv6HOzo93A&t=286s) at 4:46.
+[^4]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Underarm Open Whip with a Head Duck! – WCS Guide #161"](https://www.youtube.com/watch?v=_1uYSrYR2bs&t=149s) at 2:29.
+[^5]: Brian B & Megan, West Coast Swing Online, ["How to dance a "DUCK" in West Coast Swing - 3 Different Ducks!"](https://www.youtube.com/watch?v=GJv6HOzo93A&t=162s) at 2:42–3:47.`,
+  },
+  {
+    name: "Open Whip",
+    aliases: ["Hustle Whip"],
+    difficulty: "intermediate",
+    tags: ["whip family", "8-count"],
+    description: `A [[Whip|whip]] danced without the closed-position catch: the connection stays in the hands the whole way, so there's an extra arm's length between the partners at the redirection.
+
+## How it differs from the basic whip
+
+In a basic whip the leader essentially holds their spot while the follower travels; in an open whip **both partners travel roughly equal amounts** — EastonSwing describes it as "a changing of places that happens twice," and notes it's also called a hustle whip.[^1] Because there's no body-to-body catch, the leader has to eat that extra arm's length with their own travel — moving counter to the follower down the slot on 2 and "3-and" — instead of catching and redirecting in place.[^2]
+
+## Common notes
+
+- Danced plain it's "a bit flat" — the pattern almost demands an exit turn, and both inside- and outside-turn exits are standard. The naming rule: if the joined hands travel *outside* the partnership first it's an outside turn, *inside* first (between the partners) it's an inside turn — which means an open-whip inside turn can genuinely feel like an outside turn to the follower.[^3]
+- Followers: the "3-and" feels long here because of the open hold — hang out in it and don't rush forward into count 4. There's real distance for the arm and body to make up before the leader places you.[^4]
+- Followers also get an "end arm" moment as the slack gets eaten up: let the frame extend momentarily, then collect it on the way back.[^5]
+- A [[Sugar Push|sugar push]] is the standard way to arrive in the two-hand or open hold that starts one.[^3]
+
+[^1]: EastonSwing, ["West Coast Swing, Level 2, Open Whip Variations"](https://www.youtube.com/watch?v=UqjnOxLE6zM&t=66s) at 1:04–1:36.
+[^2]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Open Whip and Exits! – WCS Guide #271"](https://www.youtube.com/watch?v=lKSaRBg6VE8&t=68s) at 1:08–1:45.
+[^3]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Open Whip and Exits! – WCS Guide #271"](https://www.youtube.com/watch?v=lKSaRBg6VE8&t=181s) at 3:01–4:04; EastonSwing at [1:36](https://www.youtube.com/watch?v=UqjnOxLE6zM&t=96s).
+[^4]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Underarm Open Whip with a Head Duck! – WCS Guide #161"](https://www.youtube.com/watch?v=_1uYSrYR2bs&t=109s) at 1:49–2:27.
+[^5]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Open Whip and Exits! – WCS Guide #271"](https://www.youtube.com/watch?v=lKSaRBg6VE8&t=268s) at 4:28.`,
+  },
+  {
+    name: "Rock and Go",
+    aliases: ["Rock & Go"],
+    difficulty: "intermediate",
+    tags: ["connection & technique", "musicality"],
+    description: `A connector rather than a standalone pattern: instead of finishing a pattern's [[Anchor Step|anchor]], the leader uses the connection to **rock the follower out of the anchor and directly into count 2 of the next pattern**.[^1]
+
+## The concept
+
+Brian B's framing: a rock and go bypasses the "5-and-6" of a 6-count pattern, taking the follower forward onto the left foot as count 2 of whatever comes next — two patterns fused with the anchor skipped. You can count the result as one long pattern (a 10-count sugar-push-plus-turn) or think of it as jumping between patterns; either mental model works.[^1]
+
+## Common notes
+
+- It layers onto patterns you already know: taught off the [[Sugar Push|sugar push]], [[Sugar Tuck|sugar tuck]], [[Whip|whip]], [[Starter Step|starter step]], and roll-in-roll-out shapes.[^2]
+- The lead is the stored tension in the hands at the would-be anchor — rock, then go. The leader's own footwork can rock stepping behind or stepping forward, as long as the follower is placed onto the left foot for the turn out.[^3]
+- Followers: knowing this exists is half the skill — when the anchor gets interrupted and you're taken forward, you're on count 2 of something new, not making a mistake.[^1]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["Ultimate Guide to Rock & Go's in WCS"](https://www.youtube.com/watch?v=hh-Rt6gwjWA&t=100s) at 1:40–2:52.
+[^2]: Brian B & Megan, West Coast Swing Online, ["Rock & Go for West Coast Swing"](https://www.youtube.com/watch?v=pGmktxwaRok&t=35s) at 0:35; ["Ultimate Guide to Rock & Go's in WCS"](https://www.youtube.com/watch?v=hh-Rt6gwjWA&t=49s) at 0:49.
+[^3]: Brian B & Megan, West Coast Swing Online, ["Rock & Go for West Coast Swing"](https://www.youtube.com/watch?v=pGmktxwaRok&t=76s) at 1:16–3:23.`,
+  },
+  {
+    name: "Hammerlock",
+    aliases: ["Hammerlock Position"],
+    difficulty: "intermediate",
+    tags: ["wraps & cuddles", "spins & turns", "6-count"],
+    description: `A two-hand pattern that finishes a [[Sugar Tuck|tuck turn]] with one of the follower's hands folded behind their back — the "hammerlock" hold — usually the entry to a family of wrapped and behind-the-back figures.
+
+## One taught version
+
+DrDanceRight teaches it as a sugar tuck where the leader simply *keeps both hands*: lead the tuck and spin as usual under the raised left hand while the joined right hand stays low, and the follower's arm settles behind their back into the lock.[^1]
+
+## Common notes
+
+- Grip light: "a lot of times we say no thumbs" — fingertip connection lets the hands flip around freely, and hard thumbs on the wrist are how followers get bruised.[^2]
+- The exit is a release, not a pull: never tug the locked arm. The follower just walks out with [[Right Side Pass|underarm-pass]] footwork while the leader lets go.[^3]
+- The pair ends up offset, follower to the leader's right — the leader deliberately stays off the slot so the follower has a clear lane to walk out on, then drifts back in front.[^4]
+
+[^1]: DrDanceRight, ["West Coast Swing 106: Hammerlock"](https://www.youtube.com/watch?v=tViu2wllUus&t=9s) at 0:09–0:46.
+[^2]: DrDanceRight, ["West Coast Swing 106: Hammerlock"](https://www.youtube.com/watch?v=tViu2wllUus&t=25s) at 0:25.
+[^3]: DrDanceRight, ["West Coast Swing 106: Hammerlock"](https://www.youtube.com/watch?v=tViu2wllUus&t=70s) at 1:10.
+[^4]: DrDanceRight, ["West Coast Swing 106: Hammerlock"](https://www.youtube.com/watch?v=tViu2wllUus&t=95s) at 1:35.`,
+  },
+  {
+    name: "Slingshot",
+    aliases: ["Slingshot Pass"],
+    difficulty: "intermediate",
+    tags: ["connection & technique", "musicality", "6-count"],
+    description: `A [[Left Side Pass|left side pass]] cut off early into a shared stretch: instead of letting the follower travel through, the leader catches the second hand and both partners settle into opposition — hips stretching away from each other — before releasing into an exit.[^1]
+
+## The connection
+
+Brian B builds it on a slightly **outward, rotational** connection (the childhood doorway-press feeling): flare the elbows without pushing the hands out, "read the paper" open on count 2, roll together on 3, and *set* on 4 by taking the rotation back out of the arms — that's what lets both partners land the stretch instead of bouncing off it.[^2] Filipe de Barros cues the same shape from the follower's side: forward on 1 and 2, land on 3, stretching away while the leader stretches the other way.[^3]
+
+## Common notes
+
+- The pocket is playtime: hip bumps are the classic filler (led from the centers, not the arms), and grooving in place works just as well.[^4]
+- Standard exits are a [[Sugar Tuck|tuck]] or an inside turn, but vary them — and try accelerating the entry ("one, two-and-three") to land the stretch on a hit in the music.[^5]
+- Brian B tests the partnership with a [[Open Whip|hustle whip]] first — it proves the pair can share the middle of the slot before the slingshot asks them to.[^6]
+
+[^1]: Filipe de Barros, ["Slingshot TIPS & TRICKS | For West Coast Swing Leaders & Followers"](https://www.youtube.com/watch?v=HeH6r-tGX18&t=25s) at 0:25–1:06.
+[^2]: Brian B & Megan, West Coast Swing Online, ["3 "WCS Slingshot" Variations for West Coast Swing"](https://www.youtube.com/watch?v=0a2z7VlTKGs&t=52s) at 0:52–3:11.
+[^3]: Filipe de Barros, ["Slingshot TIPS & TRICKS | For West Coast Swing Leaders & Followers"](https://www.youtube.com/watch?v=HeH6r-tGX18&t=112s) at 1:52.
+[^4]: Filipe de Barros, ["Slingshot TIPS & TRICKS | For West Coast Swing Leaders & Followers"](https://www.youtube.com/watch?v=HeH6r-tGX18&t=147s) at 2:27.
+[^5]: Filipe de Barros, ["Slingshot TIPS & TRICKS | For West Coast Swing Leaders & Followers"](https://www.youtube.com/watch?v=HeH6r-tGX18&t=176s) at 2:56–5:01.
+[^6]: Brian B & Megan, West Coast Swing Online, ["3 "WCS Slingshot" Variations for West Coast Swing"](https://www.youtube.com/watch?v=0a2z7VlTKGs&t=221s) at 3:41.`,
+  },
+  {
+    name: "Leader's Underarm Turn",
+    aliases: ["Leader's Turn", "Leader Turn"],
+    difficulty: "intermediate",
+    tags: ["spins & turns", "pass family", "6-count"],
+    description: `Any figure where the **leader** turns under the joined hands while the follower dances essentially normal pass footwork — the mirror image of the follower's [[Right Side Pass|underarm turn]], and a first taste of leaders dancing their own spins.
+
+## Two taught versions
+
+Rising Tide teaches a matched pair off basic passes: a **left turn** off the [[Left Side Pass|left side pass]] — leave the left side open on 3&4 to store torque, keep the elbow high, and place the follower's hand around your waist on 5 — and a **right turn** where the leader starts rotating on 4 and passes the hand behind their own back in a self-[[Hammerlock|hammerlock]], keeping the chest and shoulders open rather than hunching into the change.[^1]
+
+EastonSwing's version takes the joined hand over the leader's *own head*: raise it slightly higher than a normal underarm pass, prep on 5, and turn about three-quarters on the "and" count — then release so the follower traces lightly down your arm to the fingertips and the connection is already rebuilt.[^2]
+
+## Common notes
+
+- Followers: your job is patience. When the leader turns instead of you, the post stops moving — anchor where you are rather than driving down the slot, and roll through the body into count 1 so the connection is there when the leader finishes.[^3]
+
+[^1]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Basic Leader Turns – WCS Guide #51"](https://www.youtube.com/watch?v=sZsLwbUyRqg&t=63s) at 1:03–1:56.
+[^2]: EastonSwing, ["West Coast Swing, Level 2, Leaders Turns"](https://www.youtube.com/watch?v=w6eH9BtdF4k&t=104s) at 1:44–3:30.
+[^3]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Basic Leader Turns – WCS Guide #51"](https://www.youtube.com/watch?v=sZsLwbUyRqg&t=124s) at 2:04–3:45.`,
+  },
 ];
 
 // relations: [fromMove, toMove, kind]
@@ -718,6 +854,76 @@ export const SEED_RESOURCES: [string, string, string][] = [
     "https://www.youtube.com/watch?v=KYRStjChChw",
     "Spin Technique | One Foot Spins in WCS (Nerdy West Coast Swing)",
   ],
+  [
+    "Duck",
+    "https://www.youtube.com/watch?v=GJv6HOzo93A",
+    "How to Dance a Duck – 3 Different Ducks! (West Coast Swing Online)",
+  ],
+  [
+    "Duck",
+    "https://www.youtube.com/watch?v=S16GYhXK47M",
+    "What You Should Know About Ducking (West Coast Swing Online)",
+  ],
+  [
+    "Duck",
+    "https://www.youtube.com/watch?v=_1uYSrYR2bs",
+    "Underarm Open Whip with a Head Duck – WCS Guide #161 (Rising Tide Swing Dance Studio)",
+  ],
+  [
+    "Open Whip",
+    "https://www.youtube.com/watch?v=lKSaRBg6VE8",
+    "Open Whip and Exits – WCS Guide #271 (Rising Tide Swing Dance Studio)",
+  ],
+  [
+    "Open Whip",
+    "https://www.youtube.com/watch?v=UqjnOxLE6zM",
+    "Open Whip Variations, Level 2 (EastonSwing)",
+  ],
+  [
+    "Open Whip",
+    "https://www.youtube.com/watch?v=_1uYSrYR2bs",
+    "Underarm Open Whip with a Head Duck – WCS Guide #161 (Rising Tide Swing Dance Studio)",
+  ],
+  [
+    "Rock and Go",
+    "https://www.youtube.com/watch?v=hh-Rt6gwjWA",
+    "Ultimate Guide to Rock & Go's in WCS (West Coast Swing Online)",
+  ],
+  [
+    "Rock and Go",
+    "https://www.youtube.com/watch?v=pGmktxwaRok",
+    "Rock & Go for West Coast Swing (West Coast Swing Online)",
+  ],
+  [
+    "Hammerlock",
+    "https://www.youtube.com/watch?v=tViu2wllUus",
+    "WCS 106: Hammerlock (DrDanceRight)",
+  ],
+  [
+    "Hammerlock",
+    "https://www.youtube.com/watch?v=H44piGTg9PI",
+    "WCS 305: Hammerlock Technique (DrDanceRight)",
+  ],
+  [
+    "Slingshot",
+    "https://www.youtube.com/watch?v=HeH6r-tGX18",
+    "Slingshot Tips & Tricks (Filipe de Barros)",
+  ],
+  [
+    "Slingshot",
+    "https://www.youtube.com/watch?v=0a2z7VlTKGs",
+    "3 WCS Slingshot Variations (West Coast Swing Online)",
+  ],
+  [
+    "Leader's Underarm Turn",
+    "https://www.youtube.com/watch?v=sZsLwbUyRqg",
+    "Basic Leader Turns – WCS Guide #51 (Rising Tide Swing Dance Studio)",
+  ],
+  [
+    "Leader's Underarm Turn",
+    "https://www.youtube.com/watch?v=w6eH9BtdF4k",
+    "Leaders Turns, Level 2 (EastonSwing)",
+  ],
 ];
 
 export const SEED_RELATIONS: [string, string, RelationKind][] = [
@@ -742,6 +948,13 @@ export const SEED_RELATIONS: [string, string, RelationKind][] = [
   ["Free Spin", "Right Side Pass", "variation"],
   ["Free Spin", "Sugar Tuck", "related"],
   ["One Footed Spin", "Free Spin", "related"],
+  ["Duck", "Inside Roll", "related"],
+  ["Duck", "Whip", "related"],
+  ["Open Whip", "Whip", "variation"],
+  ["Rock and Go", "Anchor Step", "related"],
+  ["Hammerlock", "Sugar Tuck", "prerequisite"],
+  ["Slingshot", "Left Side Pass", "prerequisite"],
+  ["Leader's Underarm Turn", "Right Side Pass", "related"],
   ["Barrel Roll", "Inside Roll", "prerequisite"],
   ["Whip with Inside Turn", "Whip", "prerequisite"],
   ["Continuous Whip", "Whip", "prerequisite"],

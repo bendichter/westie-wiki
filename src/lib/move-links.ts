@@ -21,3 +21,11 @@ export function linkifyMoves(
     }
   );
 }
+
+/** Replace [[Name]] / [[Name|label]] with plain text, for meta descriptions and other non-markdown contexts. */
+export function stripMoveLinks(text: string): string {
+  return text.replace(
+    /\[\[([^[\]|\n]+)(?:\|([^[\]\n]+))?\]\]/g,
+    (_raw, name: string, label?: string) => (label ?? name).trim()
+  );
+}

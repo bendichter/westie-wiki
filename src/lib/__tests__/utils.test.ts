@@ -215,3 +215,10 @@ describe("linkifyMoves", () => {
     );
   });
 });
+
+describe("stripMoveLinks", () => {
+  it("strips brackets keeping label or name", async () => {
+    const { stripMoveLinks } = await import("../move-links");
+    expect(stripMoveLinks("a [[Whip]] and [[Sugar Push|pushes]]")).toBe("a Whip and pushes");
+  });
+});

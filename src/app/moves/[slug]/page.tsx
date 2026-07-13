@@ -9,6 +9,7 @@ import { CommentSection } from "@/components/CommentSection";
 import { JsonLd } from "@/components/JsonLd";
 import { DefaultHandholdPicker } from "@/components/DefaultHandholdPicker";
 import { MoveMarkdown } from "@/components/MoveMarkdown";
+import { stripMoveLinks } from "@/lib/move-links";
 import { RelationEditor } from "@/components/RelationEditor";
 import { ResourceSection } from "@/components/ResourceSection";
 import { SponsorSlot } from "@/components/SponsorSlot";
@@ -45,7 +46,7 @@ export async function generateMetadata({
   const move = getMoveBySlug(slug);
   if (!move) return { title: "Move not found" };
   const description =
-    move.description.replace(/[#*_`>\n]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) ||
+    stripMoveLinks(move.description).replace(/[#*_`>\n]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) ||
     `${move.name} — a West Coast Swing move documented by the community.`;
   return {
     title: `${move.name} — West Coast Swing move`,
@@ -164,7 +165,7 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
           "@context": "https://schema.org",
           "@type": "Article",
           headline: move.name,
-          description: move.description.slice(0, 200),
+          description: stripMoveLinks(move.description).slice(0, 200),
           url: `https://westie.wiki/moves/${move.slug}`,
           mainEntityOfPage: `https://westie.wiki/moves/${move.slug}`,
           datePublished: new Date(move.createdAt).toISOString(),
