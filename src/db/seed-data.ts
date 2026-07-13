@@ -372,15 +372,6 @@ Usually entered from a left side pass or inside roll setup. The signature feelin
 [^3]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["WCS Guide #80 – Barrel Roll Rock & Go!"](https://www.youtube.com/watch?v=lDKsWDw5dxk&t=173s) at 2:53.`,
   },
   {
-    name: "Ripcord",
-    aliases: ["Ripcord Roll"],
-    difficulty: "intermediate",
-    tags: ["spins & turns", "pass family", "6-count"],
-    description: `A redirect pattern: the leader begins as if leading an inside roll, then "pulls the ripcord" — reversing the follower's rotation with a small counter-rotation so the follower unwinds the other way and returns down the slot.
-
-The surprise reversal makes it a favorite for playfulness and for matching stutters or rewinds in the music. Should feel like a smooth elastic rebound, not a yank; most instruction emphasizes leading the reversal from the center, softly, with the hand staying close to the follower's axis.`,
-  },
-  {
     name: "Hip Catch",
     aliases: ["Hip Check Catch"],
     difficulty: "intermediate",
@@ -705,7 +696,6 @@ export const SEED_RELATIONS: [string, string, RelationKind][] = [
   ["Free Spin", "Right Side Pass", "variation"],
   ["Free Spin", "Sugar Tuck", "related"],
   ["Barrel Roll", "Inside Roll", "prerequisite"],
-  ["Ripcord", "Inside Roll", "prerequisite"],
   ["Whip with Inside Turn", "Whip", "prerequisite"],
   ["Continuous Whip", "Whip", "prerequisite"],
   ["Basket Whip", "Whip", "prerequisite"],
@@ -804,10 +794,6 @@ export const SEED_CURRICULA: SeedCurriculum[] = [
       {
         move: "Wrapped Whip",
         notes: "Combines the last two ideas. Naming varies wildly between scenes — focus on the shape, not the label.",
-      },
-      {
-        move: "Ripcord",
-        notes: "Your first redirect. Lead the reversal softly from the center — it should feel like elastic, not a yank.",
       },
       {
         move: "Hip Catch",
