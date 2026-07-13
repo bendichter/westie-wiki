@@ -213,7 +213,12 @@ Danced like a whip through the first half; on **5–6** the leader lets the foll
 
 - The traveling turn wants a small, centered head and stacked posture; big stepping makes multi-roll variations impossible.
 - Leaders: the hand traces a small halo — stirring lowers the follower's axis and kills the turn.
-- Frequently extended into double or triple rolls, or into a **barrel roll** when both partners rotate.`,
+- Frequently extended into double or triple rolls, or into a **barrel roll** when both partners rotate.
+- The name is literal: Brian B teaches that the joined hand "cuts inside our heads" as it passes between the partners — hence *inside* turn.[^1]
+- The double prep ("prep, prep") that beginners often learn is mostly unnecessary — only the second prep sets the follower's energy for the turn. Big double preps are usually a symptom of weak connection: the better the connection, the less the hand has to visibly move.[^2]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["Beginner West Coast Swing | How to Prep and Inside Turn"](https://www.youtube.com/watch?v=fEIwV6bFTqk&t=46s) at 0:46.
+[^2]: Brian B & Megan, West Coast Swing Online, ["Beginner West Coast Swing | How to Prep and Inside Turn"](https://www.youtube.com/watch?v=fEIwV6bFTqk&t=65s) at 1:05–2:10.`,
   },
   {
     name: "Free Spin",
@@ -222,7 +227,17 @@ Danced like a whip through the first half; on **5–6** the leader lets the foll
     tags: ["spins & turns", "pass family", "6-count"],
     description: `Any pattern where the follower is released to turn without hand connection — most commonly a right side pass or tuck released into a full free turn.
 
-The lead is finished **before** the spin begins: rotation is offered on the setup counts, the hand releases, and the follower owns the turn. A clean free spin is a spotlight moment for the follower's balance and spotting technique, and one of the most common places musicality happens ("hit the break with a free spin").`,
+The lead is finished **before** the spin begins: rotation is offered on the setup counts, the hand releases, and the follower owns the turn. A clean free spin is a spotlight moment for the follower's balance and spotting technique, and one of the most common places musicality happens ("hit the break with a free spin").
+
+## Common notes
+
+- Brian B likes to initiate the basic free spin from the leader's **right** hand (reached from a sugar push) so the follower never has a hand over their head.[^1]
+- The prep follows the same rule as other turns: two preps are taught but only the second is needed, and the most advanced version is just a slight *expansion* on count 2 — "when this is done well you shouldn't actually see the hand move."[^2]
+- Clear follower footwork on "3-and" (close the feet, step down the line, pivot) is what makes free-spin variations leadable — the leader needs that moment to pick up the follower's back and redirect.[^3]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["3 Free Spin Variations for West Coast Swing!"](https://www.youtube.com/watch?v=MyZsVRB89ik&t=22s) at 0:22.
+[^2]: Brian B & Megan, West Coast Swing Online, ["3 Free Spin Variations for West Coast Swing!"](https://www.youtube.com/watch?v=MyZsVRB89ik&t=93s) at 1:33–2:18.
+[^3]: Brian B & Megan, West Coast Swing Online, ["3 Free Spin Variations for West Coast Swing!"](https://www.youtube.com/watch?v=MyZsVRB89ik&t=146s) at 2:26–3:23.`,
   },
   {
     name: "Basket Whip",
@@ -238,19 +253,32 @@ The wrap happens around counts **3&4–5** with both hands held low; the exit ty
 - Regionally also called the **locked whip**: Robert Royston notes "some places in the country call this a basket whip. Locked whip, basket whip — same thing."[^1]
 - The follower's path is dead straight — all the way forward with no turn, then straight back — while the leader dances the same footwork as a basic whip.[^2]
 - Keep the basket relaxed: the leader's hand rests at the follower's hip and the free hand stays off the body rather than clamping the wrap shut.[^3]
+- The lead is a shape, not a pull: Brian B teaches "creating a basket with my right arm that she comes into" — and points out the built-in delay at the far end, where the follower stays anchored away until the leader moves across.[^4]
 
 [^1]: Robert Royston, ["How to Do Locked Whip in West Coast | Swing Dance"](https://www.youtube.com/watch?v=v6ifac32Pww&t=13s) (Howcast) at 0:13.
 [^2]: Robert Royston, ["How to Do Locked Whip in West Coast | Swing Dance"](https://www.youtube.com/watch?v=v6ifac32Pww&t=25s) (Howcast) at 0:25.
-[^3]: Robert Royston, ["How to Do Locked Whip in West Coast | Swing Dance"](https://www.youtube.com/watch?v=v6ifac32Pww&t=52s) (Howcast) at 0:52.`,
+[^3]: Robert Royston, ["How to Do Locked Whip in West Coast | Swing Dance"](https://www.youtube.com/watch?v=v6ifac32Pww&t=52s) (Howcast) at 0:52.
+[^4]: Brian B & Megan, West Coast Swing Online, ["The Basket Whip for West Coast Swing"](https://www.youtube.com/watch?v=XrjWjMDHUTg&t=52s) at 0:52–2:04.`,
   },
   {
     name: "Reverse Whip",
-    aliases: ["Left Side Whip"],
+    aliases: ["Left Side Whip", "Cutoff Whip"],
     difficulty: "intermediate",
     tags: ["whip family", "8-count"],
     description: `A whip danced with the redirection happening on the **left/reverse** side: the leader steps into the slot mirrored from a standard whip and the follower is turned counter-clockwise at the post.
 
-Because everything happens on the "wrong" side, the reverse whip is a favorite test of whether both partners are actually dancing connection rather than pattern memory. Timing is standard 8-count whip timing.`,
+Because everything happens on the "wrong" side, the reverse whip is a favorite test of whether both partners are actually dancing connection rather than pattern memory. Timing is standard 8-count whip timing.
+
+## Common notes
+
+- The good news is asymmetric: the leader keeps basic whip footwork while the follower's footwork changes — turning **away** from the partner, over the left shoulder, instead of toward them.[^1] Brian B has also heard the pattern called the **cutoff whip**; naming varies between scenes.[^2]
+- Filipe de Barros preps the reverse turn by slowing one side of the follower's body — letting the right shoulder stay back on count 2 — and stresses catching the follower's back *early*, around "3-and": taken too late, the connection is already gone.[^3]
+- A practical use: when a follower breaks frame and walks in on you, a reverse whip often absorbs the situation cleanly.[^4]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["The Reverse Whip for West Coast Swing"](https://www.youtube.com/watch?v=OLXJylMWZto&t=45s) at 0:45.
+[^2]: Brian B & Megan, West Coast Swing Online, ["The Reverse Whip for West Coast Swing"](https://www.youtube.com/watch?v=OLXJylMWZto&t=22s) at 0:22.
+[^3]: Filipe de Barros, ["The Reverse Whip & Variations - West Coast Swing Tutorial"](https://www.youtube.com/watch?v=2Zvz7e_MXXo&t=124s) at 2:04–3:01.
+[^4]: Filipe de Barros, ["The Reverse Whip & Variations - West Coast Swing Tutorial"](https://www.youtube.com/watch?v=2Zvz7e_MXXo&t=36s) at 0:36.`,
   },
   {
     name: "Wrapped Whip",
@@ -299,12 +327,22 @@ Commonly used to set up spins, hand changes, or free-spin exits. The classic err
   },
   {
     name: "Continuous Whip",
-    aliases: ["Double Whip", "Whip with Extension"],
+    aliases: ["Double Whip", "Whip with Extension", "Extended Whip"],
     difficulty: "advanced",
     tags: ["whip family", "8-count", "musicality"],
     description: `A whip whose middle is extended by repeating the coil: instead of releasing the follower down the slot on 5–6, the leader keeps the follower rotating around the post for an extra 2 (or more) counts before the exit.
 
-Counted as a 10- or 12-count figure depending on how many extensions are danced. Continuous whips are a workhorse of musicality dancing — the extra counts let you sit inside a musical phrase and exit exactly on the hit. They demand genuinely good posts from the leader and patient, centered rotation from the follower.`,
+Counted as a 10- or 12-count figure depending on how many extensions are danced. Continuous whips are a workhorse of musicality dancing — the extra counts let you sit inside a musical phrase and exit exactly on the hit. They demand genuinely good posts from the leader and patient, centered rotation from the follower.
+
+## Common notes
+
+- The whole trick lives on count 4: Brian B teaches it as the leader holding the follower's weight and *pivoting them on that foot* while sneaking his own foot across into a spot where he can catch the weight — put the foot in the wrong place and the catch (and the timing) falls apart.[^1]
+- The matching follower skill is a clean pivot on the ball of one foot with the weight staying forward over it — if the follower isn't comfortable pivoting, the extension can't be led smoothly.[^2]
+- On length: around 12 counts is a good maximum — "if you extend it longer than that you probably forgot how to come out of it."[^3]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["The Extended Whip for WCS!"](https://www.youtube.com/watch?v=DqqWs68b1LE&t=39s) at 0:39–3:30.
+[^2]: Brian B & Megan, West Coast Swing Online, ["The Extended Whip for WCS!"](https://www.youtube.com/watch?v=DqqWs68b1LE&t=88s) at 1:28.
+[^3]: Brian B & Megan, West Coast Swing Online, ["The Extended Whip for WCS!"](https://www.youtube.com/watch?v=DqqWs68b1LE&t=34s) at 0:34.`,
   },
   {
     name: "Barrel Roll",
@@ -313,7 +351,17 @@ Counted as a 10- or 12-count figure depending on how many extensions are danced.
     tags: ["spins & turns", "pass family"],
     description: `A traveling figure where **both** partners roll down the slot together — the follower in a traveling inside roll while the leader rotates around them in the same lane, trading places as they go.
 
-Usually entered from a left side pass or inside roll setup. The signature feeling is two axes braided down one track: neither partner owns the slot for a moment, and then both do. Requires committed frames and real spotting from both partners, which is why it's usually taught after traveling rolls are solid.`,
+Usually entered from a left side pass or inside roll setup. The signature feeling is two axes braided down one track: neither partner owns the slot for a moment, and then both do. Requires committed frames and real spotting from both partners, which is why it's usually taught after traveling rolls are solid.
+
+## Common notes
+
+- A common two-hand version (taught by Matt Davis and Desiree) enters from a push break: an outside-turn lead from the leader's right hand, both hands traveling up and over the heads while the leader turns only about 90 degrees.[^1]
+- Height differences are handled with the arms, not the spine — leaning backwards to clear a shorter partner "knocks the follower off their slot"; instead take the elbows back over the shoulders.[^2]
+- Followers: keep filling out the full length of the slot through the roll rather than collapsing toward the middle.[^3]
+
+[^1]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["WCS Guide #80 – Barrel Roll Rock & Go!"](https://www.youtube.com/watch?v=lDKsWDw5dxk&t=76s) at 1:16.
+[^2]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["WCS Guide #80 – Barrel Roll Rock & Go!"](https://www.youtube.com/watch?v=lDKsWDw5dxk&t=94s) at 1:34.
+[^3]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["WCS Guide #80 – Barrel Roll Rock & Go!"](https://www.youtube.com/watch?v=lDKsWDw5dxk&t=173s) at 2:53.`,
   },
   {
     name: "Ripcord",
@@ -331,7 +379,19 @@ The surprise reversal makes it a favorite for playfulness and for matching stutt
     tags: ["push family", "connection & technique", "musicality"],
     description: `A compression pattern where the follower's forward travel is caught at the leader's hip instead of in the hands — the follower arrives beside the leader, is caught in a brief side-by-side compression, and rebounds back down the slot.
 
-Lives in the same connection family as the sugar push (extension → compression → extension) but with the catch displaced to the side, which reads beautifully on slow, bluesy songs. A common musicality tool for marking a pause or drop in the music.`,
+Lives in the same connection family as the sugar push (extension → compression → extension) but with the catch displaced to the side, which reads beautifully on slow, bluesy songs. A common musicality tool for marking a pause or drop in the music.
+
+## Common notes
+
+- Hip catches showcase one of WCS's signature ideas: connection points beyond the hands — forearm, tricep, hips, bottom of the ribs — with the follower always filling the space that's offered.[^1]
+- Filipe de Barros rolls in like a left side pass, arriving with the forearm at the follower's waist, and recommends catching on the **bony part of the hip** rather than the ribs or the fleshy part.[^2]
+- The connection is two-way: the follower gives the weight of the hip into the leader's hand, then waits — reading the lead's energy rather than pre-empting the exit.[^3]
+- Standard exits include spinning the follower out, redirecting to a catch on the *other* hip, or rising into a tuck.[^4]
+
+[^1]: Filipe de Barros, ["Upgrade Your Hip Catch: Basic + 3 Creative Variations"](https://www.youtube.com/watch?v=lXYYpK4cm3k&t=40s) at 0:40.
+[^2]: Filipe de Barros, ["West Coast Swing - The Hip Catch: A Guide!"](https://www.youtube.com/watch?v=IPo2KD5jOQ0&t=48s) at 0:48–2:04.
+[^3]: Filipe de Barros, ["West Coast Swing - The Hip Catch: A Guide!"](https://www.youtube.com/watch?v=IPo2KD5jOQ0&t=184s) at 3:04.
+[^4]: Filipe de Barros, ["West Coast Swing - The Hip Catch: A Guide!"](https://www.youtube.com/watch?v=IPo2KD5jOQ0&t=357s) at 5:57.`,
   },
   {
     name: "Left Side Pass with Outside Turn",
@@ -349,7 +409,14 @@ The complement to the inside roll on the same side of the slot. Because the rota
     tags: ["wraps & cuddles", "6-count"],
     description: `A 6-count pattern that brings the follower into wrapped position (follower's back to the leader's front, both hands connected, arms crossed in front of the follower) and holds or exits.
 
-The cuddle is a **position**, and this pattern is the standard way in and out of it: enter like a left side pass with two hands, catch the follower into the wrap on 3&4, exit by unwinding or releasing down the slot. Once in the wrap, dancers commonly hang out for extra counts, add sways or body rolls, or chain into wrapped whips — which is why teachers often introduce the cuddle as "a place you can go," not just a pattern.`,
+The cuddle is a **position**, and this pattern is the standard way in and out of it: enter like a left side pass with two hands, catch the follower into the wrap on 3&4, exit by unwinding or releasing down the slot. Once in the wrap, dancers commonly hang out for extra counts, add sways or body rolls, or chain into wrapped whips — which is why teachers often introduce the cuddle as "a place you can go," not just a pattern.
+
+## One taught version
+
+Brian B teaches the roll into sweetheart position from a right-to-right handhold: the leader dances left-side-pass footwork but stops **on the rail of the slot** on count 4 (not in it, not out of it) while the follower takes a left spinning side pass, landing forward on 4. The key detail is a mild stop in the leader's right hand on 4 so the follower settles forward over the right foot — then both partners connect *away* from that point for the anchor.[^1] The same entry is taught as a 6-count or an 8-count (walk-walk-triple, walk-walk-triple) figure.[^2]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["Intermediate West Coast Swing Pattern"](https://www.youtube.com/watch?v=5O1VkJgiYFQ&t=158s) (roll in/roll out to sweetheart) at 2:38–3:55.
+[^2]: Brian B & Megan, West Coast Swing Online, ["Intermediate West Coast Swing Pattern"](https://www.youtube.com/watch?v=5O1VkJgiYFQ&t=260s) at 4:20.`,
   },
   {
     name: "Kick Ball Change",
@@ -367,7 +434,17 @@ Not a pattern on its own, but documented here because it's among the first footw
     tags: ["styling & footwork", "connection & technique"],
     description: `Follower styling in which the walk-walk counts (1–2 of most patterns) are danced with the feet closing and the hips rotating through each step — the classic sultry WCS look on slow music.
 
-Swivels are almost always described as **optional styling**, chosen by the follower when the connection and tempo give room for them. Technique instruction usually focuses on swiveling from the standing leg with the core engaged, keeping the travel honest so the pattern timing doesn't distort.`,
+Swivels are almost always described as **optional styling**, chosen by the follower when the connection and tempo give room for them. Technique instruction usually focuses on swiveling from the standing leg with the core engaged, keeping the travel honest so the pattern timing doesn't distort.
+
+## Common notes
+
+- A simple placement rule from Megan (West Coast Swing Online): almost any triple step that rotates a half turn can be replaced with a swivel or sweep — anchors included.[^1]
+- Three sizes to play with: tight and low; bigger, sweeping out and back in before the step; or lifted.[^2]
+- Done on time, swivels don't disturb the partnership: the leader keeps thinking "triple step" and the follower is on the expected foot at the expected moment.[^3]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["Swivels & Sweeps for West Coast Swing"](https://www.youtube.com/watch?v=CxmxOcX97zc&t=16s) at 0:16.
+[^2]: Brian B & Megan, West Coast Swing Online, ["Swivels & Sweeps for West Coast Swing"](https://www.youtube.com/watch?v=CxmxOcX97zc&t=46s) at 0:46.
+[^3]: Brian B & Megan, West Coast Swing Online, ["Swivels & Sweeps for West Coast Swing"](https://www.youtube.com/watch?v=CxmxOcX97zc&t=67s) at 1:07.`,
   },
   {
     name: "Body Roll",
@@ -376,7 +453,17 @@ Swivels are almost always described as **optional styling**, chosen by the follo
     tags: ["styling & footwork", "musicality"],
     description: `A wave passed through the body — chest to center to hips (or the reverse) — used by both roles as musical styling, most commonly during anchors, wraps, and hip catches on slow or contemporary music.
 
-Pure styling vocabulary rather than a led pattern, though it can be *matched* between partners when the connection invites it. Usually practiced solo against a wall or mirror first; the classic cue is to move through the spine sequentially rather than bowing at the waist.`,
+Pure styling vocabulary rather than a led pattern, though it can be *matched* between partners when the connection invites it. Usually practiced solo against a wall or mirror first; the classic cue is to move through the spine sequentially rather than bowing at the waist.
+
+## Common notes
+
+- The standard sequence taught at West Coast Swing Online: going down it's shoulder, then ribcage, then hips; coming back up the order reverses — hips, ribcage, shoulder — with the head initiating whichever direction you start.[^1]
+- The wall drill: stand a touch away from a wall (or with your head against it), peel away segment by segment, feel like you got "punched in the stomach" at the contraction, then roll back up from the hips.[^2]
+- Keep a bend in the knees — "it's really, really hard to do any of this movement with straight legs."[^3]
+
+[^1]: Emily & Megan, West Coast Swing Online, ["Body Rolls for Leaders and Followers - West Coast Swing"](https://www.youtube.com/watch?v=I-eRBXV0V6c&t=104s) at 1:44–3:13.
+[^2]: Emily & Megan, West Coast Swing Online, ["Body Rolls for Leaders and Followers - West Coast Swing"](https://www.youtube.com/watch?v=I-eRBXV0V6c&t=301s) at 5:01.
+[^3]: Emily & Megan, West Coast Swing Online, ["Body Rolls for Leaders and Followers - West Coast Swing"](https://www.youtube.com/watch?v=I-eRBXV0V6c&t=400s) at 6:40.`,
   },
   {
     name: "Whip with Hand Change",
@@ -385,7 +472,13 @@ Pure styling vocabulary rather than a led pattern, though it can be *matched* be
     tags: ["whip family", "8-count"],
     description: `A whip in which the leader changes the connected hand mid-figure — commonly behind the leader's back at the post, or overhead during the follower's return — ending the pattern in the opposite handhold.
 
-Mostly a connective-tissue pattern: hand changes are how leaders set up the *next* figure (wraps, two-hand patterns, tandem shapes) without stopping the dance. Clean hand changes are quiet; if the follower feels the swap, it was late.`,
+Mostly a connective-tissue pattern: hand changes are how leaders set up the *next* figure (wraps, two-hand patterns, tandem shapes) without stopping the dance. Clean hand changes are quiet; if the follower feels the swap, it was late.
+
+## Common notes
+
+- Followers, stay stretched away through every switch: in hand-change whips the follower's job is to keep the away connection while meeting each new hand — Desiree (Rising Tide) warns that missing one of the hand movements "will make this whip particularly impossible for your leader."[^1]
+
+[^1]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Open Reverse Whip with Leader's Turn! – WCS Guide #162"](https://www.youtube.com/watch?v=N1xwmyM5pI4&t=143s) at 2:23–3:31.`,
   },
 ];
 
@@ -479,6 +572,86 @@ export const SEED_RESOURCES: [string, string, string][] = [
     "Inside Roll",
     "https://www.youtube.com/watch?v=cKcamMuk3sA",
     "West Coast Swing Basic Steps // Beginner WCS (West Coast Swing Online)",
+  ],
+  [
+    "Inside Roll",
+    "https://www.youtube.com/watch?v=fEIwV6bFTqk",
+    "How to Prep an Inside Turn (West Coast Swing Online)",
+  ],
+  [
+    "Free Spin",
+    "https://www.youtube.com/watch?v=MyZsVRB89ik",
+    "3 Free Spin Variations for West Coast Swing (West Coast Swing Online)",
+  ],
+  [
+    "Reverse Whip",
+    "https://www.youtube.com/watch?v=OLXJylMWZto",
+    "The Reverse Whip for West Coast Swing (West Coast Swing Online)",
+  ],
+  [
+    "Reverse Whip",
+    "https://www.youtube.com/watch?v=Pok2kEhxLbw",
+    "Reverse Whip + 2 Basic Variations (West Coast Swing Online)",
+  ],
+  [
+    "Reverse Whip",
+    "https://www.youtube.com/watch?v=2Zvz7e_MXXo",
+    "The Reverse Whip & Variations (Filipe de Barros)",
+  ],
+  [
+    "Continuous Whip",
+    "https://www.youtube.com/watch?v=DqqWs68b1LE",
+    "The Extended Whip for WCS (West Coast Swing Online)",
+  ],
+  [
+    "Continuous Whip",
+    "https://www.youtube.com/watch?v=ltIXNvs--bo",
+    "Continuous Basket Whip – WCS Guide #47 (Rising Tide Swing Dance Studio)",
+  ],
+  [
+    "Barrel Roll",
+    "https://www.youtube.com/watch?v=lDKsWDw5dxk",
+    "Barrel Roll Rock & Go – WCS Guide #80 (Rising Tide Swing Dance Studio)",
+  ],
+  [
+    "Hip Catch",
+    "https://www.youtube.com/watch?v=IPo2KD5jOQ0",
+    "The Hip Catch: A Guide! (Filipe de Barros)",
+  ],
+  [
+    "Hip Catch",
+    "https://www.youtube.com/watch?v=lXYYpK4cm3k",
+    "Upgrade Your Hip Catch: Basic + 3 Creative Variations (Filipe de Barros)",
+  ],
+  [
+    "Cuddle",
+    "https://www.youtube.com/watch?v=5O1VkJgiYFQ",
+    "Roll In to Sweetheart Position (West Coast Swing Online)",
+  ],
+  [
+    "Swivels",
+    "https://www.youtube.com/watch?v=CxmxOcX97zc",
+    "Swivels & Sweeps for West Coast Swing (West Coast Swing Online)",
+  ],
+  [
+    "Body Roll",
+    "https://www.youtube.com/watch?v=I-eRBXV0V6c",
+    "Body Rolls for Leaders and Followers (West Coast Swing Online)",
+  ],
+  [
+    "Whip with Hand Change",
+    "https://www.youtube.com/watch?v=N1xwmyM5pI4",
+    "Open Reverse Whip with Leader's Turn – WCS Guide #162 (Rising Tide Swing Dance Studio)",
+  ],
+  [
+    "Basket Whip",
+    "https://www.youtube.com/watch?v=XrjWjMDHUTg",
+    "The Basket Whip for West Coast Swing (West Coast Swing Online)",
+  ],
+  [
+    "Basket Whip",
+    "https://www.youtube.com/watch?v=uOLZLX4kT2c",
+    "Basket Whip + 4 Sweet Variations (West Coast Swing Online)",
   ],
 ];
 
