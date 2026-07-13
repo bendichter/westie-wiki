@@ -287,7 +287,15 @@ Because everything happens on the "wrong" side, the reverse whip is a favorite t
     tags: ["whip family", "wraps & cuddles", "8-count"],
     description: `A whip variation in which the follower is caught in a wrap (cuddle/sweetheart position — follower's back to the leader's front, arms crossed) at the whip's midpoint, then released down the slot.
 
-Distinguished from the basket whip mainly by the entry and the height/shape of the wrap; scene naming here is famously inconsistent, so expect these two names to blur together in classes. The exit can unwind (follower turns out) or release straight, and both are commonly taught.`,
+Distinguished from the basket whip mainly by the entry and the height/shape of the wrap; scene naming here is famously inconsistent, so expect these two names to blur together in classes. The exit can unwind (follower turns out) or release straight, and both are commonly taught.
+
+## One taught route in
+
+Matt and Maggie (Daily Dance Services) teach a two-sets-of-six version: a **half whip** ending in a right-to-left handhold, then rolling the follower into a wrap on the leader's left side facing down the slot, with a tuck-turn exit turning the follower out clockwise.[^1] Their key lead point: open your line and ask for the follower's free hand as the roll-in starts — collect it too late and the tuck exit is gone.[^2] Because back-to-back 6-count chunks come fast, they stress resetting the connection at the end of each piece.[^3]
+
+[^1]: Matt & Maggie, Daily Dance Services, ["Half Whip Wrap & Tuck Turn"](https://www.youtube.com/watch?v=TTHHevW2r7E&t=73s) at 1:13–1:47.
+[^2]: Matt & Maggie, Daily Dance Services, ["Half Whip Wrap & Tuck Turn"](https://www.youtube.com/watch?v=TTHHevW2r7E&t=353s) at 5:53–6:17.
+[^3]: Matt & Maggie, Daily Dance Services, ["Half Whip Wrap & Tuck Turn"](https://www.youtube.com/watch?v=TTHHevW2r7E&t=411s) at 6:51.`,
   },
   {
     name: "Whip with Inside Turn",
@@ -425,7 +433,17 @@ Brian B teaches the roll into sweetheart position from a right-to-right handhold
     tags: ["fundamentals", "styling & footwork"],
     description: `A syncopation unit — kick, then a quick ball-change weight transfer — borrowed from vernacular jazz and used constantly in WCS as anchor-step play, filler during extensions, and leader footwork during whips.
 
-Not a pattern on its own, but documented here because it's among the first footwork variations taught, and because "throw a kick ball change on your anchor" is the classic first step into improvised footwork.`,
+Not a pattern on its own, but documented here because it's among the first footwork variations taught, and because "throw a kick ball change on your anchor" is the classic first step into improvised footwork.
+
+## Common notes
+
+- Syncopations like this are **neither led nor followed** — either partner (or both) can dance one on their own while the other keeps regular rhythm.[^1]
+- Technique from DrDanceRight: the full unit is "kick, ball, foot flat," and the kick stays compact — kicked *down and up* with a little snap in the knee, not out.[^2]
+- Keep the top still while the feet play — "the mark of a better dancer is to always keep the top very still." In practice the follower often joins in on the second repetition, once she's seen the leader do it.[^3]
+
+[^1]: DrDanceRight, ["West Coast Swing 403: Syncopation 1"](https://www.youtube.com/watch?v=RPI-toEPBJI&t=6s) at 0:06.
+[^2]: DrDanceRight, ["West Coast Swing 403: Syncopation 1"](https://www.youtube.com/watch?v=RPI-toEPBJI&t=27s) at 0:27–1:07.
+[^3]: DrDanceRight, ["West Coast Swing 403: Syncopation 1"](https://www.youtube.com/watch?v=RPI-toEPBJI&t=186s) at 3:06–3:39.`,
   },
   {
     name: "Swivels",
@@ -652,6 +670,16 @@ export const SEED_RESOURCES: [string, string, string][] = [
     "Basket Whip",
     "https://www.youtube.com/watch?v=uOLZLX4kT2c",
     "Basket Whip + 4 Sweet Variations (West Coast Swing Online)",
+  ],
+  [
+    "Kick Ball Change",
+    "https://www.youtube.com/watch?v=RPI-toEPBJI",
+    "WCS 403: Syncopation 1 – Kick Ball Change (DrDanceRight)",
+  ],
+  [
+    "Wrapped Whip",
+    "https://www.youtube.com/watch?v=TTHHevW2r7E",
+    "Half Whip Wrap & Tuck Turn (Daily Dance Services)",
   ],
 ];
 
