@@ -372,6 +372,37 @@ Usually entered from a left side pass or inside roll setup. The signature feelin
 [^3]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["WCS Guide #80 – Barrel Roll Rock & Go!"](https://www.youtube.com/watch?v=lDKsWDw5dxk&t=173s) at 2:53.`,
   },
   {
+    name: "One Footed Spin",
+    aliases: ["One Foot Spin", "Pirouette"],
+    difficulty: "advanced",
+    tags: ["spins & turns", "connection & technique"],
+    description: `A spin danced on a single foot — the partnered cousin of the ballet pirouette[^1] — usually danced by the follower, most often on the right foot, with the leader's hand keeping a light connection overhead. Multiple rotations on one foot are among the showiest skills in WCS, and among the most drilled.
+
+## The setup
+
+The lead comes from the leader's right hand — to the follower's left, or right-to-right off a hand change. Counts 1–2 stay calm, then on 3 the leader gives a small "up" that sets the follower onto the spinning foot, and the rotation happens in place before stepping out.[^2]
+
+## Technique commonly taught
+
+Brian B teaches one-footed spins as three keys — balance, rotation around the connection, and creating rotation — in that order.[^1]
+
+- **Balance before everything.** Find the balance point over the "three-toe base" (the first three toes) with the heel up, then drill quarter turns, half turns, and finally full turns, finishing each one balanced. If you can't stand on one foot for ten seconds, more turns won't help.[^3]
+- **Less energy than you think.** "A hundred out of a hundred times everyone has too much energy." Use the least energy that completes the turn — that's what preserves balance. As Brian B puts it, the first turn is free; the second is where the skill starts.[^4]
+- **Extra turns come from the flare.** Let the free leg flare slightly on the first rotation, then pull it in — the ice-skater trick: rotation speeds up as the radius shrinks. Where the leg tucks (ankle, crossed, figure-four) matters less than the pull-in itself.[^5]
+- **The leader circles the head.** During the spin the leader's hand traces a small circle around the follower's head so that, from the follower's side, the arm effectively stays in one place — never pushing the follower under their own arm.[^6]
+- **A quiet hand beats a busy one.** Analyzing Ben Morris's lead, Nerdy WCS notes the hand change on 2 and a compression prep on 3, after which the hand *stops traveling through space* — it stays put and lets the follower come around before anything changes height.[^7]
+- **Spotting is personal.** Down-the-line and a fixed front are the common answers, and when the leader travels around the spinning follower, the follower spots the *leader* — which is why those revolutions aren't clean full turns.[^8]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["3 Keys to One Footed Spins"](https://www.youtube.com/watch?v=tW7Yv1KZogs&t=43s) at 0:43.
+[^2]: Brian B & Megan, West Coast Swing Online, ["3 Keys to One Footed Spins"](https://www.youtube.com/watch?v=tW7Yv1KZogs&t=875s) at 14:35.
+[^3]: Brian B & Megan, West Coast Swing Online, ["3 Keys to One Footed Spins"](https://www.youtube.com/watch?v=tW7Yv1KZogs&t=173s) at 2:53–5:20.
+[^4]: Brian B & Megan, West Coast Swing Online, ["3 Keys to One Footed Spins"](https://www.youtube.com/watch?v=tW7Yv1KZogs&t=474s) at 7:54–8:51.
+[^5]: Brian B & Megan, West Coast Swing Online, ["3 Keys to One Footed Spins"](https://www.youtube.com/watch?v=tW7Yv1KZogs&t=591s) at 9:51–12:07.
+[^6]: Brian B & Megan, West Coast Swing Online, ["One footed spins for #wcs"](https://www.youtube.com/watch?v=HIavlzCSIDc&t=16s) at 0:16.
+[^7]: Cassie Winter & Alicia Marshall, Nerdy West Coast Swing, ["Spin Technique | One Foot Spins in West Coast Swing"](https://www.youtube.com/watch?v=KYRStjChChw&t=802s) at 13:22–13:56.
+[^8]: Cassie Winter & Alicia Marshall, Nerdy West Coast Swing, ["Spin Technique | One Foot Spins in West Coast Swing"](https://www.youtube.com/watch?v=KYRStjChChw&t=245s) at 4:05; Brian B at [15:56](https://www.youtube.com/watch?v=tW7Yv1KZogs&t=956s).`,
+  },
+  {
     name: "Hip Catch",
     aliases: ["Hip Check Catch"],
     difficulty: "intermediate",
@@ -672,6 +703,21 @@ export const SEED_RESOURCES: [string, string, string][] = [
     "https://www.youtube.com/watch?v=TTHHevW2r7E",
     "Half Whip Wrap & Tuck Turn (Daily Dance Services)",
   ],
+  [
+    "One Footed Spin",
+    "https://www.youtube.com/watch?v=tW7Yv1KZogs",
+    "3 Keys to One Footed Spins (West Coast Swing Online)",
+  ],
+  [
+    "One Footed Spin",
+    "https://www.youtube.com/watch?v=HIavlzCSIDc",
+    "One Footed Spins for WCS (West Coast Swing Online)",
+  ],
+  [
+    "One Footed Spin",
+    "https://www.youtube.com/watch?v=KYRStjChChw",
+    "Spin Technique | One Foot Spins in WCS (Nerdy West Coast Swing)",
+  ],
 ];
 
 export const SEED_RELATIONS: [string, string, RelationKind][] = [
@@ -695,6 +741,7 @@ export const SEED_RELATIONS: [string, string, RelationKind][] = [
   ["Left Side Pass with Outside Turn", "Left Side Pass", "variation"],
   ["Free Spin", "Right Side Pass", "variation"],
   ["Free Spin", "Sugar Tuck", "related"],
+  ["One Footed Spin", "Free Spin", "related"],
   ["Barrel Roll", "Inside Roll", "prerequisite"],
   ["Whip with Inside Turn", "Whip", "prerequisite"],
   ["Continuous Whip", "Whip", "prerequisite"],
