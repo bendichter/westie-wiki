@@ -461,6 +461,12 @@ async function main() {
   await expectText(page, user1.username);
   await shot(page, "14-collaborative-history");
 
+  log("contributor leaderboard ranks the test user");
+  await page.goto(`${BASE}/contributors`);
+  await expectText(page, "Contributors");
+  await expectText(page, user1.username);
+  await expectText(page, "archivist");
+
   log("login page works for returning user");
   await page.getByRole("button", { name: "Log out" }).click();
   await page.waitForURL(`${BASE}/`);
