@@ -18,10 +18,12 @@ export function CommentSection({
   moveId,
   comments,
   currentUserId,
+  currentUserIsAdmin = false,
 }: {
   moveId: number;
   comments: CommentItem[];
   currentUserId: number | null;
+  currentUserIsAdmin?: boolean;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, pending] = useActionState<CommentFormState, FormData>(addComment, {
@@ -46,7 +48,7 @@ export function CommentSection({
               <div className="flex items-baseline gap-2 text-sm font-display">
                 <Link href={`/users/${c.username}`} className="font-bold text-ink hover:underline">{c.username}</Link>
                 <span className="text-muted text-xs">{c.timeAgoLabel}</span>
-                {currentUserId === c.userId ? (
+                {currentUserId === c.userId || currentUserIsAdmin ? (
                   <form action={deleteComment} className="ml-auto">
                     <input type="hidden" name="commentId" value={c.id} />
                     <button

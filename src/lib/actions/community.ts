@@ -15,6 +15,7 @@ import {
   RELATION_KINDS,
   type RelationKind,
 } from "@/db/schema";
+import { isAdmin } from "@/lib/admin";
 import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 
 export type CommentFormState = { error: string | null; success?: boolean };
@@ -41,7 +42,7 @@ export async function deleteComment(formData: FormData): Promise<void> {
   if (!user) return;
   const commentId = Number(formData.get("commentId"));
   const comment = db.select().from(comments).where(eq(comments.id, commentId)).get();
-  if (!comment || comment.userId !== user.id) return;
+  if (!comment || (comment.userId !== user.id && !isAdmin(user))) return;
 
   db.update(comments).set({ deleted: 1 }).where(eq(comments.id, commentId)).run();
   const move = db.select().from(moves).where(eq(moves.id, comment.moveId)).get();

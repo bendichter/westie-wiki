@@ -13,7 +13,9 @@ import { SponsorSlot } from "@/components/SponsorSlot";
 import { VariantManager } from "@/components/VariantManager";
 import { VideoCard } from "@/components/VideoCard";
 import { ButtonLink, DifficultyBadge, EmptyState, TagChip } from "@/components/ui";
+import { adminDeleteMove } from "@/lib/actions/admin";
 import { removeRelation, toggleFavorite } from "@/lib/actions/community";
+import { isAdmin } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import {
   getAliases,
@@ -102,6 +104,7 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
   if (!move) notFound();
 
   const user = await getCurrentUser();
+  const userIsAdmin = isAdmin(user);
   const aliases = getAliases(move.id);
   const tags = getMoveTags(move.id);
   const related = getRelatedMoves(move.id);
@@ -256,7 +259,7 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
             </div>
           </section>
 
-          <CommentSection moveId={move.id} comments={comments} currentUserId={user?.id ?? null} />
+          <CommentSection moveId={move.id} comments={comments} currentUserId={user?.id ?? null} currentUserIsAdmin={userIsAdmin} />
         </div>
 
         {/* pattern card sidebar */}
@@ -320,6 +323,18 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
           <div className="mt-8">
             <SponsorSlot limit={1} />
           </div>
+
+          {userIsAdmin ? (
+            <form action={adminDeleteMove} className="mt-8">
+              <input type="hidden" name="moveId" value={move.id} />
+              <button
+                type="submit"
+                className="cursor-pointer rounded-md border border-danger/40 bg-panel px-3 py-1.5 font-display text-xs font-semibold text-danger hover:bg-danger/10"
+              >
+                Delete move (admin — restorable)
+              </button>
+            </form>
+          ) : null}
 
           <div className="mt-8 pt-5 border-t border-line text-sm text-muted font-display space-y-1">
             <p>

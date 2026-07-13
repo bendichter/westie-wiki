@@ -516,7 +516,44 @@ async function main() {
   await page.goto(`${BASE}/admin/sponsors`);
   await sponsorRow.getByText("1 clicks").waitFor();
 
+  log("analytics beacon records views; admin dashboard shows them");
+  await page.goto(`${BASE}/moves/whip`);
+  await page.waitForTimeout(600);
+  await page.goto(`${BASE}/admin/analytics`);
+  await expectText(page, "Daily views");
+  await expectText(page, "/moves/whip");
+
+  log("admin can soft-delete and restore a move");
+  await page.goto(`${BASE}/moves/whip`);
+  await page.getByRole("button", { name: /Delete move \(admin/ }).click();
+  await page.waitForURL(`${BASE}/moves`);
+  const gone = await page.request.get(`${BASE}/moves/whip`);
+  if (gone.status() !== 404) throw new Error(`deleted move returned ${gone.status()}`);
+  await page.goto(`${BASE}/admin/moderation`);
+  await page.getByRole("button", { name: "Restore" }).click();
+  await page.waitForTimeout(600);
+  const back = await page.request.get(`${BASE}/moves/whip`);
+  if (back.status() !== 200) throw new Error(`restored move returned ${back.status()}`);
+
+  log("admin can block and unblock an account");
+  await page.goto(`${BASE}/admin/moderation`);
+  const blockRow = page.locator("li", { hasText: user2.username });
+  await blockRow.getByRole("button", { name: "Block" }).click();
+  await blockRow.getByText("blocked").waitFor();
+  // blocked user cannot log in
+  const ctx2 = await page.context().browser()!.newContext();
+  const p2 = await ctx2.newPage();
+  await p2.goto(`${BASE}/login`);
+  await p2.getByLabel("Email").fill(user2.email);
+  await p2.getByLabel("Password").fill(user2.password);
+  await p2.getByRole("button", { name: "Log in" }).click();
+  await p2.getByText("This account has been disabled").waitFor();
+  await ctx2.close();
+  await blockRow.getByRole("button", { name: "Unblock" }).click();
+  await blockRow.getByText("blocked").waitFor({ state: "detached" });
+
   log("paused sponsor disappears from the slot");
+  await page.goto(`${BASE}/admin/sponsors`);
   await sponsorRow.getByRole("button", { name: "Pause" }).click();
   await sponsorRow.getByText("paused").waitFor();
   await page.goto(`${BASE}/`);

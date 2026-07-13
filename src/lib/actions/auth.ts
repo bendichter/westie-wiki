@@ -75,6 +75,9 @@ export async function login(_prev: AuthFormState, formData: FormData): Promise<A
   if (!user || !verifyPassword(password, user.passwordHash)) {
     return { error: "Incorrect email or password." };
   }
+  if (user.blockedAt != null) {
+    return { error: "This account has been disabled. Contact the site admin if you think that's a mistake." };
+  }
 
   await createSession(user.id);
   redirect(safeNextPath(formData.get("next")));

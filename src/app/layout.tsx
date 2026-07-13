@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Source_Serif_4, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
+import { Hit } from "@/components/Hit";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -56,6 +57,7 @@ export default function RootLayout({
             },
           }}
         />
+        <Hit />
         <SiteHeader />
         <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8">{children}</main>
         <SiteFooter />

@@ -13,6 +13,8 @@ export const users = sqliteTable(
     createdAt: integer("created_at").notNull(),
     // set once the address is confirmed; editing requires it
     emailVerifiedAt: integer("email_verified_at"),
+    // set when an admin blocks the account; blocked users cannot log in
+    blockedAt: integer("blocked_at"),
     // optional public profile fields
     displayName: text("display_name"),
     city: text("city"),
@@ -395,6 +397,18 @@ export const learned = sqliteTable(
     checkedAt: integer("checked_at").notNull(),
   },
   (t) => [primaryKey({ columns: [t.userId, t.curriculumId, t.moveId] })]
+);
+
+// privacy-preserving page-view counts: one row per (path, day), no visitor data
+export const pageViews = sqliteTable(
+  "page_views",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    path: text("path").notNull(),
+    day: text("day").notNull(), // YYYY-MM-DD (UTC)
+    count: integer("count").notNull().default(0),
+  },
+  (t) => [uniqueIndex("page_views_path_day_idx").on(t.path, t.day)]
 );
 
 export const sponsors = sqliteTable("sponsors", {

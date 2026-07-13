@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { asc } from "drizzle-orm";
 import { db } from "@/db";
 import { sponsors } from "@/db/schema";
+import { AdminNav } from "@/components/AdminNav";
 import { SponsorAdminForm } from "@/components/SponsorAdminForm";
 import { EmptyState, PageTitle } from "@/components/ui";
 import { deleteSponsor, toggleSponsor } from "@/lib/actions/sponsors";
@@ -23,6 +24,7 @@ export default async function SponsorsAdminPage() {
       <PageTitle sub="Sponsor cards appear on the home page and every move page. Active sponsors show in position order; when none are active, a house ad invites new ones.">
         Sponsors
       </PageTitle>
+      <AdminNav active="/admin/sponsors" />
 
       {rows.length === 0 ? (
         <div className="mb-8">
