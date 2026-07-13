@@ -113,6 +113,13 @@
       "when": 1783966563537,
       "tag": "0015_fluffy_wolverine",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "6",
+      "when": 1783967037852,
+      "tag": "0016_cross_hand_orientations",
+      "breakpoints": true
     }
   ]
 }
