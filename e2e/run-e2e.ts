@@ -320,6 +320,16 @@ async function main() {
   await page.goto(`${BASE}/dances`);
   await expectText(page, "3 moves marked");
 
+  log("edit the dance's song from the dance page");
+  await page.goto(danceUrl);
+  await page.getByRole("button", { name: "edit song" }).click();
+  await page.getByLabel("Song", { exact: true }).fill("Corrected Song");
+  await page.getByLabel("Artist", { exact: true }).fill("Corrected Artist");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await expectText(page, "Corrected Song");
+  await page.goto(`${BASE}/moves/sugar-push`);
+  await expectText(page, "Corrected Song");
+
   log("dance appears on the dancer page and move page");
   await page.goto(`${BASE}/dancers/lead-${run}`);
   await expectText(page, "Advanced Jack & Jill");

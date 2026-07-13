@@ -188,6 +188,30 @@ export async function addAnnotation(
   return { error: null, success: true };
 }
 
+/** Set or correct a dance's song and artist. Open to any verified member. */
+export async function updateDanceSong(
+  _prev: AnnotationFormState,
+  formData: FormData
+): Promise<AnnotationFormState> {
+  const user = await getCurrentUser();
+  const danceId = Number(formData.get("danceId"));
+  const dance = db.select().from(dances).where(eq(dances.id, danceId)).get();
+  if (!dance) return { error: "This dance no longer exists." };
+  if (!user) redirect(`/login?next=/dances/${dance.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+
+  const song = String(formData.get("song") ?? "").trim().slice(0, 120);
+  const artist = String(formData.get("artist") ?? "").trim().slice(0, 120);
+
+  db.update(dances)
+    .set({ song: song || null, artist: artist || null })
+    .where(eq(dances.id, dance.id))
+    .run();
+
+  revalidatePath(`/dances/${dance.slug}`);
+  return { error: null, success: true };
+}
+
 export async function deleteAnnotation(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
   if (!user) return;

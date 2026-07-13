@@ -5,6 +5,7 @@ import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { moves, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
+import { EditDanceSongForm } from "@/components/EditDanceSongForm";
 import { JsonLd } from "@/components/JsonLd";
 import { CountChip } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
@@ -113,15 +114,14 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
               </Link>
             </>
           ) : null}
-          {dance.song || dance.artist ? (
-            <>
-              {event ? " · " : ""}
-              <span aria-hidden>♪</span> {dance.song}
-              {dance.song && dance.artist ? " — " : ""}
-              {dance.artist}
-            </>
-          ) : null}
-          {(event || dance.song || dance.artist) ? " · " : ""}
+          {event ? " · " : ""}
+          <EditDanceSongForm
+            danceId={dance.id}
+            song={dance.song}
+            artist={dance.artist}
+            canEdit={!!user}
+          />
+          {" · "}
           registered by{" "}
           {addedBy ? (
             <Link href={`/users/${addedBy.username}`} className="hover:underline">
