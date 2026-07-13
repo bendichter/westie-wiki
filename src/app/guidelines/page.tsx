@@ -111,6 +111,11 @@ export default function GuidelinesPage() {
             qualify, even when it&apos;s public.
           </li>
           <li>
+            Instructional videos that were properly shared on YouTube by their creators are
+            welcome for explaining a move — tutorials are published to be watched. Cite them in
+            a move&apos;s &ldquo;Learn more&rdquo; section or link them as clips.
+          </li>
+          <li>
             <strong>Don&apos;t link workshop recaps.</strong> Recap videos are recorded for the
             attendees&apos; personal review and are generally not meant to be shared — that
             stays true even when someone has uploaded one publicly.
