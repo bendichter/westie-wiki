@@ -11,6 +11,9 @@ const globalForDb = globalThis as unknown as { __wcsDb?: ReturnType<typeof creat
 function createDb() {
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   const sqlite = new Database(dbPath);
+  // parallel build workers and concurrent requests share this file — wait
+  // for locks instead of throwing SQLITE_BUSY
+  sqlite.pragma("busy_timeout = 5000");
   sqlite.pragma("journal_mode = WAL");
   sqlite.pragma("foreign_keys = ON");
   return drizzle(sqlite, { schema });
