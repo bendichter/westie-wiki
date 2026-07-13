@@ -1,5 +1,6 @@
 import "server-only";
-import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
+import { likeContains } from "@/lib/like";
+import { and, asc, count, desc, eq, inArray, or } from "drizzle-orm";
 import { db } from "@/db";
 import {
   danceDancers,
@@ -86,15 +87,53 @@ export type DanceListItem = ReturnType<typeof listDances>[number];
  * Dance cards, optionally restricted to a dancer's dances, an event's dances,
  * or the dances in which a move has been annotated.
  */
-export function listDances(filter?: { dancerId?: number; eventId?: number; moveId?: number }) {
+export function listDances(filter?: {
+  dancerId?: number;
+  eventId?: number;
+  moveId?: number;
+  query?: string;
+}) {
   let idFilter: number[] | null = null;
+  const query = filter?.query?.trim();
+  if (query) {
+    // match song/artist, dancer name, event name, competition, or video title
+    const bySong = db
+      .selectDistinct({ id: danceSongs.danceId })
+      .from(danceSongs)
+      .where(or(likeContains(danceSongs.song, query), likeContains(danceSongs.artist, query)))
+      .all()
+      .map((r) => r.id);
+    const byDancer = db
+      .selectDistinct({ id: danceDancers.danceId })
+      .from(danceDancers)
+      .innerJoin(dancers, eq(dancers.id, danceDancers.dancerId))
+      .where(likeContains(dancers.name, query))
+      .all()
+      .map((r) => r.id);
+    const byEvent = db
+      .selectDistinct({ id: dances.id })
+      .from(dances)
+      .innerJoin(events, eq(events.id, dances.eventId))
+      .where(likeContains(events.name, query))
+      .all()
+      .map((r) => r.id);
+    const byDance = db
+      .selectDistinct({ id: dances.id })
+      .from(dances)
+      .where(or(likeContains(dances.title, query), likeContains(dances.competition, query)))
+      .all()
+      .map((r) => r.id);
+    const matched = [...new Set([...bySong, ...byDancer, ...byEvent, ...byDance])];
+    idFilter = matched;
+  }
   if (filter?.dancerId != null) {
-    idFilter = db
+    const ids = db
       .select({ danceId: danceDancers.danceId })
       .from(danceDancers)
       .where(eq(danceDancers.dancerId, filter.dancerId))
       .all()
       .map((r) => r.danceId);
+    idFilter = idFilter ? idFilter.filter((id) => ids.includes(id)) : ids;
   }
   if (filter?.moveId != null) {
     const ids = db

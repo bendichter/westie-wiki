@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { and, eq, or, sql, type SQL } from "drizzle-orm";
+import { and, eq, inArray, or, sql, type SQL } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import { db } from "@/db";
-import { curricula, dancers, events, moveAliases, moves } from "@/db/schema";
+import { curricula, dancers, danceSongs, dances, events, moveAliases, moves } from "@/db/schema";
 import { DifficultyBadge, EmptyState, PageTitle } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Search", robots: { index: false } };
@@ -19,7 +19,7 @@ export default async function SearchPage({
   if (!query) {
     return (
       <div className="max-w-2xl">
-        <PageTitle sub="Search moves, alternative names, descriptions, dancers, events, and curricula.">
+        <PageTitle sub="Search moves, alternative names, descriptions, dances, songs, dancers, events, and curricula.">
           Search
         </PageTitle>
         <form action="/search" className="flex gap-2">
@@ -88,6 +88,31 @@ export default async function SearchPage({
     }
   }
 
+  // dances whose songs, title, or competition match
+  const songMatches = db
+    .selectDistinct({ danceId: danceSongs.danceId, song: danceSongs.song, artist: danceSongs.artist })
+    .from(danceSongs)
+    .where(or(matches(danceSongs.song), matches(danceSongs.artist)))
+    .limit(15)
+    .all();
+  const titleMatches = db
+    .selectDistinct({ id: dances.id })
+    .from(dances)
+    .where(or(matches(dances.title), matches(dances.competition)))
+    .limit(15)
+    .all();
+  const danceIds = [...new Set([...songMatches.map((r) => r.danceId), ...titleMatches.map((r) => r.id)])].slice(0, 15);
+  const songByDance = new Map(songMatches.map((r) => [r.danceId, r]));
+  const danceResults =
+    danceIds.length > 0
+      ? db
+          .select({ id: dances.id, slug: dances.slug, title: dances.title, competition: dances.competition })
+          .from(dances)
+          .where(inArray(dances.id, danceIds))
+          .all()
+          .map((d) => ({ ...d, matchedSong: songByDance.get(d.id) ?? null }))
+      : [];
+
   const dancerResults = db.select().from(dancers).where(matches(dancers.name)).limit(15).all();
   const eventResults = db.select().from(events).where(matches(events.name)).limit(15).all();
   const curriculumResults = db
@@ -98,7 +123,11 @@ export default async function SearchPage({
     .all();
 
   const total =
-    moveResults.length + dancerResults.length + eventResults.length + curriculumResults.length;
+    moveResults.length +
+    danceResults.length +
+    dancerResults.length +
+    eventResults.length +
+    curriculumResults.length;
 
   return (
     <div className="max-w-3xl">
@@ -144,6 +173,33 @@ export default async function SearchPage({
                     </Link>
                     <DifficultyBadge difficulty={move.difficulty} />
                     {via ? <span className="text-sm text-muted font-display">{via}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {danceResults.length > 0 ? (
+            <section>
+              <h2 className="text-lg font-bold mb-3">Dances</h2>
+              <ul className="divide-y divide-line border border-line rounded-lg bg-panel">
+                {danceResults.map((d) => (
+                  <li key={d.id} className="px-4 py-3 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                    <Link
+                      href={`/dances/${d.slug}`}
+                      className="font-display font-bold text-denim hover:underline"
+                    >
+                      {d.title ?? "Untitled dance"}
+                    </Link>
+                    {d.matchedSong ? (
+                      <span className="text-sm text-muted font-display">
+                        ♪ {d.matchedSong.song}
+                        {d.matchedSong.song && d.matchedSong.artist ? " — " : ""}
+                        {d.matchedSong.artist}
+                      </span>
+                    ) : d.competition ? (
+                      <span className="text-sm text-muted font-display">{d.competition}</span>
+                    ) : null}
                   </li>
                 ))}
               </ul>

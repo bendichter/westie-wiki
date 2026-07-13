@@ -335,6 +335,15 @@ async function main() {
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await expectText(page, "1st place");
 
+  log("search finds the dance by song and artist");
+  await page.goto(`${BASE}/search?q=Second Song`);
+  await expectText(page, "Dances");
+  await expectText(page, "Second Song");
+  await page.goto(`${BASE}/dances?q=Dance Artist`);
+  await expectText(page, `Lead ${run}`);
+  await page.goto(`${BASE}/dances?q=zzzz-no-match`);
+  await expectText(page, "No dances matching");
+
   log("edit the dance's songs from the dance page");
   await page.goto(danceUrl);
   await expectText(page, "Second Song");
