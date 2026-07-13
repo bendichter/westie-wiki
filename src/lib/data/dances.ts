@@ -5,6 +5,7 @@ import {
   danceDancers,
   dancers,
   dances,
+  danceSongs,
   events,
   moves,
   users,
@@ -30,6 +31,15 @@ export function getDanceDancers(danceId: number) {
     .where(eq(danceDancers.danceId, danceId))
     .all()
     .sort((a, b) => (a.role === "leader" ? -1 : 0) - (b.role === "leader" ? -1 : 0));
+}
+
+export function getDanceSongs(danceId: number) {
+  return db
+    .select({ song: danceSongs.song, artist: danceSongs.artist })
+    .from(danceSongs)
+    .where(eq(danceSongs.danceId, danceId))
+    .orderBy(asc(danceSongs.position), asc(danceSongs.id))
+    .all();
 }
 
 export function getDanceEvent(danceId: number) {
@@ -108,8 +118,6 @@ export function listDances(filter?: { dancerId?: number; eventId?: number; moveI
       slug: dances.slug,
       youtubeId: dances.youtubeId,
       title: dances.title,
-      song: dances.song,
-      artist: dances.artist,
       competition: dances.competition,
       createdAt: dances.createdAt,
       eventName: events.name,
@@ -127,5 +135,6 @@ export function listDances(filter?: { dancerId?: number; eventId?: number; moveI
   return rows.map((row) => ({
     ...row,
     dancers: getDanceDancers(row.id),
+    songs: getDanceSongs(row.id),
   }));
 }

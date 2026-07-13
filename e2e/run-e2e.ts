@@ -42,6 +42,7 @@ function cleanupPreviousRuns() {
     DELETE FROM video_dancers WHERE video_id IN (SELECT id FROM videos WHERE dance_id IS NOT NULL);
     DELETE FROM videos WHERE dance_id IS NOT NULL;
     DELETE FROM dance_dancers;
+    DELETE FROM dance_songs;
     DELETE FROM dances;
     DELETE FROM sponsors;
   `);
@@ -211,8 +212,8 @@ async function main() {
   await page.getByRole("button", { name: "Save clip" }).click();
   await expectText(page, "0:30 → 1:00");
 
-  log("dancer page groups clips by move");
-  await page.goto(`${BASE}/dancers/lead-${run}`);
+  log("dancer page groups clips by move under the Moves tab");
+  await page.goto(`${BASE}/dancers/lead-${run}?tab=moves`);
   await expectText(page, moveName);
   await expectText(page, "0:30 → 1:00");
   await shot(page, "09-dancer-page");
@@ -280,6 +281,9 @@ async function main() {
   await page.getByLabel("Competition").fill("Advanced Jack & Jill");
   await page.getByLabel("Song", { exact: true }).fill("Dance Song");
   await page.getByLabel("Artist", { exact: true }).fill("Dance Artist");
+  await page.getByRole("button", { name: "+ Another song" }).click();
+  await page.locator('input[name="songName"]').nth(1).fill("Second Song");
+  await page.locator('input[name="songArtist"]').nth(1).fill("Second Artist");
   await page.getByRole("button", { name: "Register and start marking" }).click();
   await page.waitForURL(/\/dances\//);
   await expectText(page, "Advanced Jack & Jill");
@@ -320,19 +324,22 @@ async function main() {
   await page.goto(`${BASE}/dances`);
   await expectText(page, "3 moves marked");
 
-  log("edit the dance's song from the dance page");
+  log("edit the dance's songs from the dance page");
   await page.goto(danceUrl);
-  await page.getByRole("button", { name: "edit song" }).click();
-  await page.getByLabel("Song", { exact: true }).fill("Corrected Song");
-  await page.getByLabel("Artist", { exact: true }).fill("Corrected Artist");
+  await expectText(page, "Second Song");
+  await page.getByRole("button", { name: "edit songs" }).click();
+  await page.locator('form input[name="songName"]').first().fill("Corrected Song");
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await expectText(page, "Corrected Song");
   await page.goto(`${BASE}/moves/sugar-push`);
   await expectText(page, "Corrected Song");
+  await expectText(page, "Second Song");
 
-  log("dance appears on the dancer page and move page");
+  log("dance appears on the dancer page (Dances tab default) and move page");
   await page.goto(`${BASE}/dancers/lead-${run}`);
   await expectText(page, "Advanced Jack & Jill");
+  await page.getByRole("tab", { name: /Moves/ }).click();
+  await expectText(page, "0:30 → 1:00");
   await page.goto(`${BASE}/moves/sugar-push`);
   await expectText(page, "Seen in dances");
   await expectText(page, `Lead ${run} & Follow ${run}`);

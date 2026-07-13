@@ -143,8 +143,6 @@ export const dances = sqliteTable(
     youtubeId: text("youtube_id").notNull(),
     title: text("title"),
     note: text("note"),
-    song: text("song"),
-    artist: text("artist"),
     // competition/division, e.g. "Advanced Jack & Jill", "Classic", "Strictly Swing"
     competition: text("competition"),
     eventId: integer("event_id").references(() => events.id),
@@ -154,6 +152,21 @@ export const dances = sqliteTable(
     createdAt: integer("created_at").notNull(),
   },
   (t) => [uniqueIndex("dances_slug_idx").on(t.slug), index("dances_event_idx").on(t.eventId)]
+);
+
+export const danceSongs = sqliteTable(
+  "dance_songs",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    danceId: integer("dance_id")
+      .notNull()
+      .references(() => dances.id),
+    // play order within the video — extended dances often run 2-3 songs
+    position: integer("position").notNull().default(0),
+    song: text("song").notNull().default(""),
+    artist: text("artist").notNull().default(""),
+  },
+  (t) => [index("dance_songs_dance_idx").on(t.danceId)]
 );
 
 export const videos = sqliteTable(

@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers, dances, events, moves, users, videoDancers, videos } from "@/db/schema";
+import { dancers, dances, danceSongs, events, moves, users, videoDancers, videos } from "@/db/schema";
 import type { VideoWithLabels } from "./moves";
 
 export type ClipWithMove = VideoWithLabels & { moveId: number; moveName: string; moveSlug: string };
@@ -15,8 +15,7 @@ function hydrateClips(
     title: string | null;
     note: string | null;
     danceSlug: string | null;
-    danceSong: string | null;
-    danceArtist: string | null;
+    danceId: number | null;
     createdAt: number;
     addedBy: number;
     addedByName: string;
@@ -30,6 +29,18 @@ function hydrateClips(
   }[]
 ): ClipWithMove[] {
   if (rows.length === 0) return [];
+
+  const danceIds = [...new Set(rows.map((r) => r.danceId).filter((id): id is number => id != null))];
+  const songRows =
+    danceIds.length > 0
+      ? db
+          .select({ danceId: danceSongs.danceId, song: danceSongs.song, artist: danceSongs.artist, position: danceSongs.position })
+          .from(danceSongs)
+          .where(inArray(danceSongs.danceId, danceIds))
+          .all()
+          .sort((a, b) => a.position - b.position)
+      : [];
+
   const dancerRows = db
     .select({
       videoId: videoDancers.videoId,
@@ -51,8 +62,7 @@ function hydrateClips(
     title: r.title,
     note: r.note,
     danceSlug: r.danceSlug,
-    danceSong: r.danceSong,
-    danceArtist: r.danceArtist,
+    danceSongs: songRows.filter((sr) => sr.danceId === r.danceId).map(({ song, artist }) => ({ song, artist })),
     createdAt: r.createdAt,
     addedBy: r.addedBy,
     addedByName: r.addedByName,
@@ -75,8 +85,7 @@ const clipSelection = {
   title: videos.title,
   note: videos.note,
   danceSlug: dances.slug,
-  danceSong: dances.song,
-  danceArtist: dances.artist,
+  danceId: dances.id,
   createdAt: videos.createdAt,
   addedBy: videos.addedBy,
   addedByName: users.username,

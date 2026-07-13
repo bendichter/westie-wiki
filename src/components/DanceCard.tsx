@@ -33,11 +33,17 @@ export function DanceCard({ dance }: { dance: DanceListItem }) {
               </span>
             ) : null}
           </div>
-          {dance.song || dance.artist ? (
+          {dance.songs.length > 0 ? (
             <div className="mt-1 font-display text-sm text-muted">
-              <span aria-hidden>♪</span> {dance.song}
-              {dance.song && dance.artist ? " — " : ""}
-              {dance.artist}
+              <span aria-hidden>♪</span>{" "}
+              {dance.songs.map((s, i) => (
+                <span key={i}>
+                  {s.song}
+                  {s.song && s.artist ? " — " : ""}
+                  {s.artist}
+                  {i < dance.songs.length - 1 ? " · " : ""}
+                </span>
+              ))}
             </div>
           ) : null}
         </div>

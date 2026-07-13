@@ -14,6 +14,7 @@ import {
   getDanceBySlug,
   getDanceDancers,
   getDanceEvent,
+  getDanceSongs,
 } from "@/lib/data/dances";
 import { formatDate } from "@/lib/format";
 
@@ -50,6 +51,7 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
   const user = await getCurrentUser();
   const danceDancerList = getDanceDancers(dance.id);
   const event = getDanceEvent(dance.id);
+  const songs = getDanceSongs(dance.id);
   const annotations = getDanceAnnotations(dance.id);
   const addedBy = db.select({ username: users.username }).from(users).where(eq(users.id, dance.addedBy)).get();
   const moveNames = db
@@ -104,7 +106,7 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
           </h1>
           {dance.competition ? <CountChip>{dance.competition}</CountChip> : null}
         </div>
-        <p className="mt-1 font-display text-[15px] text-muted">
+        <div className="mt-1 font-display text-[15px] text-muted">
           {event ? (
             <>
               at{" "}
@@ -115,12 +117,7 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
             </>
           ) : null}
           {event ? " · " : ""}
-          <EditDanceSongForm
-            danceId={dance.id}
-            song={dance.song}
-            artist={dance.artist}
-            canEdit={!!user}
-          />
+          <EditDanceSongForm danceId={dance.id} songs={songs} canEdit={!!user} />
           {" · "}
           registered by{" "}
           {addedBy ? (
@@ -131,7 +128,7 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
             "unknown"
           )}{" "}
           on {formatDate(dance.createdAt)}
-        </p>
+        </div>
         {dance.note ? <p className="mt-1 font-display text-[15px] text-ink-soft">{dance.note}</p> : null}
         {dance.title ? (
           <p className="mt-0.5 truncate font-display text-xs text-muted" title={dance.title}>

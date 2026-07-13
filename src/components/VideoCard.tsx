@@ -75,12 +75,17 @@ export function VideoCard({
               </Link>
             </div>
           ) : null}
-          {video.danceSong || video.danceArtist ? (
+          {video.danceSongs.length > 0 ? (
             <div className="text-muted">
               <span aria-hidden>♪</span>{" "}
-              {video.danceSong ? <span className="text-ink-soft">{video.danceSong}</span> : null}
-              {video.danceSong && video.danceArtist ? " — " : null}
-              {video.danceArtist}
+              {video.danceSongs.map((s, i) => (
+                <span key={i}>
+                  <span className="text-ink-soft">{s.song}</span>
+                  {s.song && s.artist ? " — " : ""}
+                  {s.artist}
+                  {i < video.danceSongs.length - 1 ? " · " : ""}
+                </span>
+              ))}
             </div>
           ) : null}
           {video.note ? <p className="text-ink-soft">{video.note}</p> : null}

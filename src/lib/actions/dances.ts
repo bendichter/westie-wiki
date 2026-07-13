@@ -8,6 +8,7 @@ import {
   danceDancers,
   dancers,
   dances,
+  danceSongs,
   events,
   moves,
   VIDEO_ROLES,
@@ -69,8 +70,7 @@ export async function createDance(_prev: DanceFormState, formData: FormData): Pr
   const eventName = String(formData.get("eventName") ?? "").trim();
   const eventYearRaw = String(formData.get("eventYear") ?? "").trim();
   const eventYear = /^\d{4}$/.test(eventYearRaw) ? Number(eventYearRaw) : null;
-  const song = String(formData.get("song") ?? "").trim().slice(0, 120);
-  const artist = String(formData.get("artist") ?? "").trim().slice(0, 120);
+  const songs = parseSongRows(formData);
   const competition = String(formData.get("competition") ?? "").trim().slice(0, 80);
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
 
@@ -93,8 +93,6 @@ export async function createDance(_prev: DanceFormState, formData: FormData): Pr
       youtubeId: parsed.id,
       title,
       note: note || null,
-      song: song || null,
-      artist: artist || null,
       competition: competition || null,
       eventId: eventName ? findOrCreateEvent(eventName, eventYear) : null,
       addedBy: user.id,
@@ -110,6 +108,8 @@ export async function createDance(_prev: DanceFormState, formData: FormData): Pr
     seen.add(dancerId);
     db.insert(danceDancers).values({ danceId: dance.id, dancerId, role: d.role }).run();
   }
+
+  replaceSongs(dance.id, songs);
 
   redirect(`/dances/${dance.slug}`);
 }
@@ -188,8 +188,28 @@ export async function addAnnotation(
   return { error: null, success: true };
 }
 
-/** Set or correct a dance's song and artist. Open to any verified member. */
-export async function updateDanceSong(
+// songs arrive as parallel arrays: songName[] + songArtist[]; a row counts if either is set
+function parseSongRows(formData: FormData): { song: string; artist: string }[] {
+  const names = formData.getAll("songName").map((v) => String(v).trim().slice(0, 120));
+  const artists = formData.getAll("songArtist").map((v) => String(v).trim().slice(0, 120));
+  const rows: { song: string; artist: string }[] = [];
+  for (let i = 0; i < Math.max(names.length, artists.length); i++) {
+    const song = names[i] ?? "";
+    const artist = artists[i] ?? "";
+    if (song || artist) rows.push({ song, artist });
+  }
+  return rows.slice(0, 10);
+}
+
+function replaceSongs(danceId: number, rows: { song: string; artist: string }[]) {
+  db.delete(danceSongs).where(eq(danceSongs.danceId, danceId)).run();
+  rows.forEach((row, position) => {
+    db.insert(danceSongs).values({ danceId, position, song: row.song, artist: row.artist }).run();
+  });
+}
+
+/** Set or correct a dance's songs (extended videos often play several). */
+export async function updateDanceSongs(
   _prev: AnnotationFormState,
   formData: FormData
 ): Promise<AnnotationFormState> {
@@ -200,13 +220,7 @@ export async function updateDanceSong(
   if (!user) redirect(`/login?next=/dances/${dance.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
-  const song = String(formData.get("song") ?? "").trim().slice(0, 120);
-  const artist = String(formData.get("artist") ?? "").trim().slice(0, 120);
-
-  db.update(dances)
-    .set({ song: song || null, artist: artist || null })
-    .where(eq(dances.id, dance.id))
-    .run();
+  replaceSongs(dance.id, parseSongRows(formData));
 
   revalidatePath(`/dances/${dance.slug}`);
   return { error: null, success: true };

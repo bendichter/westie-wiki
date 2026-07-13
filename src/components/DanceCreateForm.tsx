@@ -7,6 +7,8 @@ import { FieldHint, FormError, Input, Label, PrimaryButton, Select } from "./ui"
 export function DanceCreateForm({ dancerNames }: { dancerNames: string[] }) {
   const [dancerRows, setDancerRows] = useState([0, 1]);
   const nextRow = useRef(2);
+  const [songRows, setSongRows] = useState([0]);
+  const nextSongRow = useRef(1);
   const [state, formAction, pending] = useActionState<DanceFormState, FormData>(createDance, {
     error: null,
   });
@@ -118,15 +120,34 @@ export function DanceCreateForm({ dancerNames }: { dancerNames: string[] }) {
         <FieldHint>The division or contest this dance was part of, if any.</FieldHint>
       </div>
 
-      <div className="grid max-w-md grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="song">Song</Label>
-          <Input id="song" name="song" maxLength={120} placeholder="Optional" />
+      <div className="max-w-md">
+        <Label>Songs</Label>
+        <div className="space-y-2">
+          {songRows.map((rowId) => (
+            <div key={rowId} className="flex gap-2">
+              <Input name="songName" maxLength={120} placeholder="Song" aria-label="Song" />
+              <Input name="songArtist" maxLength={120} placeholder="Artist" aria-label="Artist" />
+              {songRows.length > 1 ? (
+                <button
+                  type="button"
+                  aria-label="Remove song row"
+                  onClick={() => setSongRows((rows) => rows.filter((r) => r !== rowId))}
+                  className="cursor-pointer px-2 text-muted hover:text-danger"
+                >
+                  ✕
+                </button>
+              ) : null}
+            </div>
+          ))}
         </div>
-        <div>
-          <Label htmlFor="artist">Artist</Label>
-          <Input id="artist" name="artist" maxLength={120} placeholder="Optional" />
-        </div>
+        <button
+          type="button"
+          onClick={() => setSongRows((rows) => [...rows, nextSongRow.current++])}
+          className="mt-2 cursor-pointer font-display text-sm text-denim hover:underline"
+        >
+          + Another song
+        </button>
+        <FieldHint>Extended videos often play more than one song — list them in order.</FieldHint>
       </div>
 
       <div>

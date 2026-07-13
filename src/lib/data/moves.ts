@@ -5,6 +5,7 @@ import {
   comments,
   dancers,
   dances,
+  danceSongs,
   events,
   moveAliases,
   moveRelations,
@@ -104,8 +105,7 @@ export type VideoWithLabels = {
   title: string | null;
   note: string | null;
   danceSlug: string | null;
-  danceSong: string | null;
-  danceArtist: string | null;
+  danceSongs: { song: string; artist: string }[];
   createdAt: number;
   addedBy: number;
   addedByName: string;
@@ -123,8 +123,7 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
       title: videos.title,
       note: videos.note,
       danceSlug: dances.slug,
-      danceSong: dances.song,
-      danceArtist: dances.artist,
+      danceId: dances.id,
       createdAt: videos.createdAt,
       addedBy: videos.addedBy,
       addedByName: users.username,
@@ -142,6 +141,17 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     .all();
 
   if (rows.length === 0) return [];
+
+  const danceIds = [...new Set(rows.map((r) => r.danceId).filter((id): id is number => id != null))];
+  const songRows =
+    danceIds.length > 0
+      ? db
+          .select({ danceId: danceSongs.danceId, song: danceSongs.song, artist: danceSongs.artist, position: danceSongs.position })
+          .from(danceSongs)
+          .where(inArray(danceSongs.danceId, danceIds))
+          .all()
+          .sort((a, b) => a.position - b.position)
+      : [];
 
   const dancerRows = db
     .select({
@@ -164,8 +174,7 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     title: r.title,
     note: r.note,
     danceSlug: r.danceSlug,
-    danceSong: r.danceSong,
-    danceArtist: r.danceArtist,
+    danceSongs: songRows.filter((sr) => sr.danceId === r.danceId).map(({ song, artist }) => ({ song, artist })),
     createdAt: r.createdAt,
     addedBy: r.addedBy,
     addedByName: r.addedByName,
