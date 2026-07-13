@@ -567,6 +567,29 @@ async function main() {
   await blockRow.getByRole("button", { name: "Unblock" }).click();
   await blockRow.getByText("blocked").waitFor({ state: "detached" });
 
+  log("member reports a clip; admin sees and dismisses it");
+  await page.goto(moveUrl);
+  await page.getByRole("button", { name: "Report", exact: true }).first().click();
+  await page.getByLabel("Report reason").fill("Testing the report flow");
+  await page.getByRole("button", { name: "Send report" }).click();
+  await expectText(page, "Reported — an admin will review.");
+  await page.goto(`${BASE}/admin/moderation`);
+  await expectText(page, "Testing the report flow");
+  await page.getByRole("button", { name: "Dismiss" }).click();
+  await expectText(page, "No open reports");
+
+  log("reported dance can be removed by admin");
+  await page.goto(danceUrl);
+  await page.getByRole("button", { name: "Report", exact: true }).first().click();
+  await page.getByLabel("Report reason").fill("Workshop recap, please remove");
+  await page.getByRole("button", { name: "Send report" }).click();
+  await expectText(page, "Reported — an admin will review.");
+  await page.goto(`${BASE}/admin/moderation`);
+  await page.getByRole("button", { name: "Remove dance" }).click();
+  await expectText(page, "No open reports");
+  const danceGone = await page.request.get(danceUrl);
+  if (danceGone.status() !== 404) throw new Error(`removed dance returned ${danceGone.status()}`);
+
   log("paused sponsor disappears from the slot");
   await page.goto(`${BASE}/admin/sponsors`);
   await sponsorRow.getByRole("button", { name: "Pause" }).click();

@@ -7,6 +7,7 @@ import { moves, moveVariants, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
 import { EditDanceSongForm } from "@/components/EditDanceSongForm";
 import { EditPlacementForm } from "@/components/EditPlacementForm";
+import { ReportForm } from "@/components/ReportForm";
 import { JsonLd } from "@/components/JsonLd";
 import { CountChip } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
@@ -142,6 +143,11 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
           )}{" "}
           on {formatDate(dance.createdAt)}
         </div>
+        {user ? (
+          <div className="mt-1">
+            <ReportForm danceId={dance.id} />
+          </div>
+        ) : null}
         {dance.note ? <p className="mt-1 font-display text-[15px] text-ink-soft">{dance.note}</p> : null}
         {dance.title ? (
           <p className="mt-0.5 truncate font-display text-xs text-muted" title={dance.title}>

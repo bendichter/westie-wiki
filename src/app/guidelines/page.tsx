@@ -121,8 +121,10 @@ export default function GuidelinesPage() {
             stays true even when someone has uploaded one publicly.
           </li>
           <li>
-            If you appear in a linked video and want it removed, say so in the move&apos;s
-            discussion thread or contact an admin — it will be taken down, no questions asked.
+            See a video that breaks these rules? Use the <strong>Report</strong> link on the
+            clip or dance — admins review every report. And if you appear in a linked video and
+            want it removed, report it or say so in the discussion thread — it will be taken
+            down, no questions asked.
           </li>
         </ul>
 

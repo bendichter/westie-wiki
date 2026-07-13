@@ -418,6 +418,26 @@ export const learned = sqliteTable(
   (t) => [primaryKey({ columns: [t.userId, t.curriculumId, t.moveId] })]
 );
 
+// guideline-violation reports against a clip or a dance. targetLabel is a
+// snapshot so resolved reports stay legible after the target is removed.
+export const reports = sqliteTable(
+  "reports",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    videoId: integer("video_id").references(() => videos.id),
+    danceId: integer("dance_id").references(() => dances.id),
+    targetLabel: text("target_label").notNull(),
+    reason: text("reason").notNull(),
+    reporterId: integer("reporter_id")
+      .notNull()
+      .references(() => users.id),
+    createdAt: integer("created_at").notNull(),
+    resolvedAt: integer("resolved_at"),
+    resolution: text("resolution", { enum: ["removed", "dismissed"] }),
+  },
+  (t) => [index("reports_video_idx").on(t.videoId), index("reports_dance_idx").on(t.danceId)]
+);
+
 // privacy-preserving page-view counts: one row per (path, day), no visitor data
 export const pageViews = sqliteTable(
   "page_views",

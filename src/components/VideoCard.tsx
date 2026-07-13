@@ -5,6 +5,7 @@ import { formatTimestamp } from "@/lib/time";
 import { youtubeWatchUrl } from "@/lib/youtube";
 import { CountChip } from "./ui";
 import { EditClipForm } from "./EditClipForm";
+import { ReportForm } from "./ReportForm";
 import { LiteYouTube } from "./LiteYouTube";
 
 export function VideoCard({
@@ -132,6 +133,7 @@ export function VideoCard({
                 variants={variants}
               />
             ) : null}
+            {currentUserId != null ? <ReportForm videoId={video.id} /> : null}
             {currentUserId === video.addedBy ? (
               <form action={deleteVideo} className="ml-auto">
                 <input type="hidden" name="videoId" value={video.id} />
