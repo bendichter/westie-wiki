@@ -54,6 +54,27 @@ export default function GuidelinesPage() {
           </li>
         </ul>
 
+        <h2>Variants: parameters vs. patterns</h2>
+        <ul>
+          <li>
+            Handholds and minor parameterizations (two-hand vs. right-to-left vs.
+            right-to-right, one-hand styling, a different exit) belong in a{" "}
+            <strong>&ldquo;Common variations&rdquo; section of the move&apos;s description</strong> —
+            they&apos;re parameters of the pattern, not new patterns.
+          </li>
+          <li>
+            When a clip shows a specific variant, say so in the clip&apos;s{" "}
+            <strong>note</strong> (&ldquo;two-hand hold&rdquo;, &ldquo;R2R, hand-change
+            exit&rdquo;). Notes show on the clip card, so learners can find an example of the
+            exact variant.
+          </li>
+          <li>
+            A variant earns its <em>own page</em> only when it has its own skeleton — new
+            geometry, counts, or skill (Basket Whip yes; two-hand sugar push no). Link it with a
+            variation-of relation.
+          </li>
+        </ul>
+
         <h2>Names and aliases</h2>
         <ul>
           <li>

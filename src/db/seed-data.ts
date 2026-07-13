@@ -28,6 +28,16 @@ A 6-count pattern danced in the slot. The follower travels toward the leader, re
 
 The sugar push is the purest expression of WCS **elastic connection**: extension into compression into extension. Commonly taught points include keeping the arms relaxed so the connection moves your body (not your shoulders), and letting the compression on 3&4 come from body positioning rather than pushing with the hands.
 
+## Common variations
+
+The skeleton stays the same across handholds — list the variant in a clip's note when you spot one:
+
+- **Two-hand** — both hands connected; the most common classroom version, with compression split across both arms.
+- **Right-to-left (standard one-hand)** — leader's left to follower's right; frees a hand for styling and hand changes.
+- **Right-to-right (handshake)** — sets up tucks, hand changes behind the back, and crossed-hand shapes.
+- **Left-to-left** — less common; usually a deliberate setup for a specific next pattern.
+- **One-hand with resistance styling, no-hands (body-lead) push** — advanced connection play on the same geometry.
+
 ## Naming
 
 Widely also called the **push break**, especially in scenes with roots in East Coast Swing pedagogy. Both names are heard at every event; neither is wrong.`,
