@@ -8,7 +8,7 @@ import { AddVideoForm } from "@/components/AddVideoForm";
 import { CommentSection } from "@/components/CommentSection";
 import { JsonLd } from "@/components/JsonLd";
 import { DefaultHandholdPicker } from "@/components/DefaultHandholdPicker";
-import { Markdown } from "@/components/Markdown";
+import { MoveMarkdown } from "@/components/MoveMarkdown";
 import { RelationEditor } from "@/components/RelationEditor";
 import { ResourceSection } from "@/components/ResourceSection";
 import { SponsorSlot } from "@/components/SponsorSlot";
@@ -223,7 +223,7 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
         <div className="min-w-0 space-y-10">
           <section>
             {move.description.trim() ? (
-              <Markdown>{move.description}</Markdown>
+              <MoveMarkdown selfSlug={move.slug}>{move.description}</MoveMarkdown>
             ) : (
               <EmptyState title="No description yet">
                 Know this move?{" "}

@@ -83,7 +83,9 @@ export function MoveForm({ mode, initial }: MoveFormProps) {
         <FieldHint>
           Markdown supported, including citations: write{" "}
           <code>claim[^1]</code> in the text and <code>[^1]: source</code> on its own line at the
-          bottom. Describe, don&apos;t prescribe — and write roles, not genders. See the{" "}
+          bottom. Link other moves inline with <code>[[Sugar Push]]</code> or{" "}
+          <code>[[Sugar Push|sugar pushes]]</code>. Describe, don&apos;t prescribe — and write
+          roles, not genders. See the{" "}
           <a href="/guidelines" target="_blank" className="text-denim underline">
             contribution guidelines
           </a>

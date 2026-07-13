@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DiffView } from "@/components/DiffView";
-import { Markdown } from "@/components/Markdown";
+import { MoveMarkdown } from "@/components/MoveMarkdown";
 import { CountChip, DifficultyBadge, PrimaryButton } from "@/components/ui";
 import { restoreRevision } from "@/lib/actions/moves";
 import { getCurrentUser } from "@/lib/auth";
@@ -131,7 +131,7 @@ export default async function RevisionPage({
           <p className="text-muted font-display mt-1">also known as: {aliases.join(" · ")}</p>
         ) : null}
         <div className="mt-4">
-          <Markdown>{revision.description}</Markdown>
+          <MoveMarkdown>{revision.description}</MoveMarkdown>
         </div>
       </section>
     </div>

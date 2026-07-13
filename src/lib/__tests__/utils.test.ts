@@ -178,3 +178,40 @@ describe("platformLabel", () => {
     expect(platformLabel("not a url")).toBe("link");
   });
 });
+
+describe("linkifyMoves", () => {
+  const index = new Map([
+    ["sugar push", "sugar-push"],
+    ["push break", "sugar-push"],
+    ["whip", "whip"],
+  ]);
+  it("links known moves and aliases, case-insensitively", async () => {
+    const { linkifyMoves } = await import("../move-links");
+    expect(linkifyMoves("try a [[Sugar Push]] first", index)).toBe(
+      "try a [Sugar Push](/moves/sugar-push) first"
+    );
+    expect(linkifyMoves("aka the [[push break]]", index)).toBe(
+      "aka the [push break](/moves/sugar-push)"
+    );
+  });
+  it("supports custom label with pipe", async () => {
+    const { linkifyMoves } = await import("../move-links");
+    expect(linkifyMoves("chain [[Whip|whips]] together", index)).toBe(
+      "chain [whips](/moves/whip) together"
+    );
+  });
+  it("renders unknown names and self-links as plain text", async () => {
+    const { linkifyMoves } = await import("../move-links");
+    expect(linkifyMoves("the [[Ripcord]] is gone", index)).toBe("the Ripcord is gone");
+    expect(linkifyMoves("a [[Whip]] variation", index, "whip")).toBe("a Whip variation");
+  });
+  it("handles multiple links and leaves normal brackets alone", async () => {
+    const { linkifyMoves } = await import("../move-links");
+    expect(linkifyMoves("[[Sugar Push]] into [[Whip]]", index)).toBe(
+      "[Sugar Push](/moves/sugar-push) into [Whip](/moves/whip)"
+    );
+    expect(linkifyMoves("see [the guide](/guidelines) [^1]", index)).toBe(
+      "see [the guide](/guidelines) [^1]"
+    );
+  });
+});

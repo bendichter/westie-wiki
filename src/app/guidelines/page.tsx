@@ -163,6 +163,11 @@ export default function GuidelinesPage() {
           </li>
           <li>Markdown is supported: use <code>##</code> headings, lists, and bold sparingly.</li>
           <li>
+            Cross-link other moves inline with double brackets: <code>[[Sugar Push]]</code> links
+            the move by name (aliases work too), and <code>[[Sugar Push|sugar pushes]]</code>{" "}
+            customizes the shown text. Unknown names render as plain text, so links never break.
+          </li>
+          <li>
             Cite specific claims Wikipedia-style with footnotes: write{" "}
             <code>most teachers cue the tuck on 3[^1]</code> in the text, and{" "}
             <code>[^1]: Skippy Blair, Dance Terminology Notebook</code> (links welcome) on its

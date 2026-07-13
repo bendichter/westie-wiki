@@ -297,3 +297,22 @@ export function getLatestRevisionNo(moveId: number): number {
     .get();
   return row?.revisionNo ?? 0;
 }
+
+/** Lowercased move names and aliases -> slug, for [[wiki-style]] cross-links. */
+export function getMoveLinkIndex(): Map<string, string> {
+  const index = new Map<string, string>();
+  const rows = db
+    .select({ slug: moves.slug, name: moves.name })
+    .from(moves)
+    .where(eq(moves.deleted, 0))
+    .all();
+  const aliasRows = db
+    .select({ name: moveAliases.name, slug: moves.slug })
+    .from(moveAliases)
+    .innerJoin(moves, and(eq(moves.id, moveAliases.moveId), eq(moves.deleted, 0)))
+    .all();
+  // aliases first so a real move name always wins a collision
+  for (const a of aliasRows) index.set(a.name.toLowerCase(), a.slug);
+  for (const m of rows) index.set(m.name.toLowerCase(), m.slug);
+  return index;
+}

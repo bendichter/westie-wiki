@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Markdown } from "@/components/Markdown";
+import { MoveMarkdown } from "@/components/MoveMarkdown";
 import { VideoCard } from "@/components/VideoCard";
 import { ButtonLink, DifficultyBadge, EmptyState } from "@/components/ui";
 import { toggleLearned } from "@/lib/actions/community";
@@ -68,7 +68,7 @@ export default async function CurriculumPage({ params }: { params: Promise<{ slu
 
       {curriculum.description ? (
         <div className="mt-5">
-          <Markdown>{curriculum.description}</Markdown>
+          <MoveMarkdown>{curriculum.description}</MoveMarkdown>
         </div>
       ) : null}
 
@@ -153,7 +153,7 @@ export default async function CurriculumPage({ params }: { params: Promise<{ slu
                     <div className="text-[10px] uppercase tracking-widest text-muted font-display font-bold mb-1">
                       Learner notes
                     </div>
-                    <Markdown>{step.notes}</Markdown>
+                    <MoveMarkdown>{step.notes}</MoveMarkdown>
                   </div>
                 ) : null}
 

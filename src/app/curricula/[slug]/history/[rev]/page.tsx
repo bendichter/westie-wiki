@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DiffView } from "@/components/DiffView";
-import { Markdown } from "@/components/Markdown";
+import { MoveMarkdown } from "@/components/MoveMarkdown";
 import { CountChip, PrimaryButton } from "@/components/ui";
 import { restoreCurriculumRevision } from "@/lib/actions/curricula";
 import { getCurrentUser } from "@/lib/auth";
@@ -130,7 +130,7 @@ export default async function CurriculumRevisionPage({
         <h2 className="text-2xl font-bold">{revision.title}</h2>
         {revision.description ? (
           <div className="mt-2">
-            <Markdown>{revision.description}</Markdown>
+            <MoveMarkdown>{revision.description}</MoveMarkdown>
           </div>
         ) : null}
         {items.length > 0 ? (
