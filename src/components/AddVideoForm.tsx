@@ -16,10 +16,12 @@ export function AddVideoForm({
   moveId,
   dancerNames,
   variants,
+  handholds,
 }: {
   moveId: number;
   dancerNames: string[];
   variants: { id: number; name: string }[];
+  handholds: { id: number; name: string }[];
 }) {
   const [open, setOpen] = useState(false);
   const [dancerRows, setDancerRows] = useState([0, 1]);
@@ -153,19 +155,32 @@ export function AddVideoForm({
         </div>
       </div>
 
-      {variants.length > 0 ? (
-        <div className="max-w-64">
-          <Label htmlFor="variantId">Variant</Label>
-          <Select id="variantId" name="variantId" defaultValue="">
+      <div className="grid max-w-xl gap-4 sm:grid-cols-2">
+        {variants.length > 0 ? (
+          <div>
+            <Label htmlFor="variantId">Variant</Label>
+            <Select id="variantId" name="variantId" defaultValue="">
+              <option value="">Not specified</option>
+              {variants.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+        ) : null}
+        <div>
+          <Label htmlFor="handholdId">Handhold</Label>
+          <Select id="handholdId" name="handholdId" defaultValue="">
             <option value="">Not specified</option>
-            {variants.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
+            {handholds.map((h) => (
+              <option key={h.id} value={h.id}>
+                {h.name}
               </option>
             ))}
           </Select>
         </div>
-      ) : null}
+      </div>
 
       <div>
         <Label htmlFor="note">Note</Label>

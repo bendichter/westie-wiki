@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers, dances, danceSongs, events, moves, moveVariants, users, videoDancers, videos } from "@/db/schema";
+import { dancers, dances, danceSongs, events, handholds, moves, moveVariants, users, videoDancers, videos } from "@/db/schema";
 import type { VideoWithLabels } from "./moves";
 
 export type ClipWithMove = VideoWithLabels & { moveId: number; moveName: string; moveSlug: string };
@@ -18,6 +18,8 @@ function hydrateClips(
     danceId: number | null;
     variantId: number | null;
     variantName: string | null;
+    handholdId: number | null;
+    handholdName: string | null;
     createdAt: number;
     addedBy: number;
     addedByName: string;
@@ -67,6 +69,8 @@ function hydrateClips(
     danceSongs: songRows.filter((sr) => sr.danceId === r.danceId).map(({ song, artist }) => ({ song, artist })),
     variantId: r.variantId,
     variantName: r.variantName,
+    handholdId: r.handholdId,
+    handholdName: r.handholdName,
     createdAt: r.createdAt,
     addedBy: r.addedBy,
     addedByName: r.addedByName,
@@ -92,6 +96,8 @@ const clipSelection = {
   danceId: dances.id,
   variantId: videos.variantId,
   variantName: moveVariants.name,
+  handholdId: videos.handholdId,
+  handholdName: handholds.name,
   createdAt: videos.createdAt,
   addedBy: videos.addedBy,
   addedByName: users.username,
@@ -114,6 +120,7 @@ export function getDancerClips(dancerId: number): ClipWithMove[] {
     .leftJoin(events, eq(events.id, videos.eventId))
     .leftJoin(dances, eq(dances.id, videos.danceId))
     .leftJoin(moveVariants, eq(moveVariants.id, videos.variantId))
+    .leftJoin(handholds, eq(handholds.id, videos.handholdId))
     .where(and(eq(videoDancers.dancerId, dancerId), eq(moves.deleted, 0)))
     .orderBy(desc(videos.createdAt))
     .all();
@@ -129,6 +136,7 @@ export function getEventClips(eventId: number): ClipWithMove[] {
     .leftJoin(events, eq(events.id, videos.eventId))
     .leftJoin(dances, eq(dances.id, videos.danceId))
     .leftJoin(moveVariants, eq(moveVariants.id, videos.variantId))
+    .leftJoin(handholds, eq(handholds.id, videos.handholdId))
     .where(and(eq(videos.eventId, eventId), eq(moves.deleted, 0)))
     .orderBy(desc(videos.createdAt))
     .all();

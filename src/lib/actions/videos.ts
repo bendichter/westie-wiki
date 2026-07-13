@@ -4,13 +4,19 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers, events, moves, moveVariants, VIDEO_ROLES, videoDancers, videos, type VideoRole } from "@/db/schema";
+import { dancers, events, handholds, moves, moveVariants, VIDEO_ROLES, videoDancers, videos, type VideoRole } from "@/db/schema";
 import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
 import { fetchYoutubeTitle, parseYoutubeUrl } from "@/lib/youtube";
 
 export type VideoFormState = { error: string | null; success?: boolean };
+
+function parseHandholdId(formData: FormData): number | null {
+  const raw = Number(formData.get("handholdId"));
+  if (!Number.isInteger(raw) || raw <= 0) return null;
+  return db.select({ id: handholds.id }).from(handholds).where(eq(handholds.id, raw)).get()?.id ?? null;
+}
 
 /** A clip's variant must be one of its move's official variants; anything else becomes null. */
 function parseVariantId(formData: FormData, moveId: number): number | null {
@@ -94,6 +100,7 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
   const variantId = parseVariantId(formData, move.id);
+  const handholdId = parseHandholdId(formData);
   const title = await fetchYoutubeTitle(parsed.id);
 
   const video = db
@@ -106,6 +113,7 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
       title,
       note: note || null,
       variantId,
+      handholdId,
       eventId: eventName ? findOrCreateEvent(eventName, eventYear) : null,
       addedBy: user.id,
       createdAt: Date.now(),
@@ -164,9 +172,10 @@ export async function updateVideoClip(
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
   const variantId = parseVariantId(formData, video.moveId);
+  const handholdId = parseHandholdId(formData);
 
   db.update(videos)
-    .set({ startSec, endSec, note: note || null, variantId })
+    .set({ startSec, endSec, note: note || null, variantId, handholdId })
     .where(eq(videos.id, videoId))
     .run();
 

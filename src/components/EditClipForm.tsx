@@ -12,6 +12,8 @@ export function EditClipForm({
   note,
   variantId,
   variants,
+  handholdId,
+  handholds,
 }: {
   videoId: number;
   startSec: number;
@@ -19,6 +21,8 @@ export function EditClipForm({
   note: string | null;
   variantId?: number | null;
   variants?: { id: number; name: string }[];
+  handholdId?: number | null;
+  handholds?: { id: number; name: string }[];
 }) {
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState<VideoFormState, FormData>(
@@ -82,6 +86,21 @@ export function EditClipForm({
             {variants.map((v) => (
               <option key={v.id} value={v.id}>
                 {v.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+      ) : null}
+      {handholds && handholds.length > 0 ? (
+        <div>
+          <label htmlFor={`clip-handhold-${videoId}`} className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
+            Handhold
+          </label>
+          <Select id={`clip-handhold-${videoId}`} name="handholdId" defaultValue={handholdId ?? ""} className="!py-1.5 text-sm">
+            <option value="">Not specified</option>
+            {handholds.map((h) => (
+              <option key={h.id} value={h.id}>
+                {h.name}
               </option>
             ))}
           </Select>

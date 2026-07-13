@@ -6,6 +6,7 @@ import {
   dancers,
   dances,
   danceSongs,
+  handholds,
   moveResources,
   moveVariants,
   events,
@@ -47,6 +48,10 @@ export function getMoveTags(moveId: number) {
     .where(eq(moveTags.moveId, moveId))
     .orderBy(asc(tags.name))
     .all();
+}
+
+export function getHandholds() {
+  return db.select().from(handholds).orderBy(asc(handholds.position), asc(handholds.id)).all();
 }
 
 export function getMoveResources(moveId: number) {
@@ -135,6 +140,8 @@ export type VideoWithLabels = {
   danceSongs: { song: string; artist: string }[];
   variantId: number | null;
   variantName: string | null;
+  handholdId: number | null;
+  handholdName: string | null;
   createdAt: number;
   addedBy: number;
   addedByName: string;
@@ -155,6 +162,8 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
       danceId: dances.id,
       variantId: videos.variantId,
       variantName: moveVariants.name,
+      handholdId: videos.handholdId,
+      handholdName: handholds.name,
       createdAt: videos.createdAt,
       addedBy: videos.addedBy,
       addedByName: users.username,
@@ -168,6 +177,7 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     .leftJoin(events, eq(events.id, videos.eventId))
     .leftJoin(dances, eq(dances.id, videos.danceId))
     .leftJoin(moveVariants, eq(moveVariants.id, videos.variantId))
+    .leftJoin(handholds, eq(handholds.id, videos.handholdId))
     .where(eq(videos.moveId, moveId))
     .orderBy(asc(videos.createdAt))
     .all();
@@ -209,6 +219,8 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     danceSongs: songRows.filter((sr) => sr.danceId === r.danceId).map(({ song, artist }) => ({ song, artist })),
     variantId: r.variantId,
     variantName: r.variantName,
+    handholdId: r.handholdId,
+    handholdName: r.handholdName,
     createdAt: r.createdAt,
     addedBy: r.addedBy,
     addedByName: r.addedByName,

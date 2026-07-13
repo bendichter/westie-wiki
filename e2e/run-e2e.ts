@@ -161,11 +161,18 @@ async function main() {
 
   log("add an official variant to the move");
   await page.getByRole("button", { name: "+ Add a variant" }).click();
-  await page.getByLabel("Variant name").fill("Two-hand");
-  await page.getByLabel("Variant note").fill("Both hands connected.");
+  await page.getByLabel("Variant name").fill("With hand-change exit");
+  await page.getByLabel("Variant note").fill("Ends with a hand change.");
   await page.getByRole("button", { name: "Add variant" }).click();
   await expectText(page, "Official variants");
-  await expectText(page, "Both hands connected.");
+  await expectText(page, "Ends with a hand change.");
+
+  log("set the move's default handhold");
+  await page.getByRole("button", { name: "edit", exact: true }).click();
+  await page.getByLabel("Default handhold").selectOption({ label: "Two-hand" });
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await expectText(page, "Default handhold");
+  await expectText(page, "Two-hand");
 
   // --- edit move + revision history ---
   log("edit the move");
@@ -208,11 +215,13 @@ async function main() {
   await page.getByLabel("Event", { exact: true }).fill(`Test Event ${run.toUpperCase()}`);
   await page.getByLabel("Year").fill("2025");
   await page.getByLabel("Note").fill("Automated test clip");
-  await page.locator('select[name="variantId"]').selectOption({ label: "Two-hand" });
+  await page.locator('select[name="variantId"]').selectOption({ label: "With hand-change exit" });
+  await page.locator('select[name="handholdId"]').first().selectOption({ label: "Right-to-right (handshake)" });
   await page.getByRole("button", { name: "Add video" }).click();
   await expectText(page, "0:30 → 1:00");
   await expectText(page, `Lead ${run}`);
-  await expectText(page, "Two-hand");
+  await expectText(page, "With hand-change exit");
+  await expectText(page, "Right-to-right (handshake)");
   await shot(page, "08-video-added");
 
   log("edit clip timing on an existing video");
@@ -330,7 +339,8 @@ async function main() {
     await page.getByLabel("Start").fill(start);
     if (end) await page.getByLabel("End (optional)").fill(end);
     if (move === moveName) {
-      await page.getByLabel("Variant (optional)").selectOption({ label: "Two-hand" });
+      await page.getByLabel("Variant (optional)").selectOption({ label: "With hand-change exit" });
+      await page.getByLabel("Handhold (optional)").selectOption({ label: "Two-hand" });
     }
     await page.getByRole("button", { name: "Add move" }).click();
     await expectText(page, move);

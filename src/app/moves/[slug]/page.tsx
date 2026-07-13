@@ -7,6 +7,7 @@ import { dancers, favorites, moveRelations, moves } from "@/db/schema";
 import { AddVideoForm } from "@/components/AddVideoForm";
 import { CommentSection } from "@/components/CommentSection";
 import { JsonLd } from "@/components/JsonLd";
+import { DefaultHandholdPicker } from "@/components/DefaultHandholdPicker";
 import { Markdown } from "@/components/Markdown";
 import { RelationEditor } from "@/components/RelationEditor";
 import { ResourceSection } from "@/components/ResourceSection";
@@ -20,6 +21,7 @@ import { isAdmin } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import {
   getAliases,
+  getHandholds,
   getLatestRevisionNo,
   getMoveBySlug,
   getMoveComments,
@@ -120,6 +122,8 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
   const seenInDances = listDances({ moveId: move.id });
   const variants = getMoveVariants(move.id);
   const resources = getMoveResources(move.id).map((r) => ({ ...r, platform: platformLabel(r.url) }));
+  const allHandholds = getHandholds();
+  const defaultHandhold = allHandholds.find((h) => h.id === move.defaultHandholdId) ?? null;
 
   const isFavorite = user
     ? !!db
@@ -245,13 +249,13 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
             ) : (
               <div className="grid gap-5 sm:grid-cols-2">
                 {videos.map((v) => (
-                  <VideoCard key={v.id} video={v} currentUserId={user?.id ?? null} variants={variants} />
+                  <VideoCard key={v.id} video={v} currentUserId={user?.id ?? null} variants={variants} handholds={allHandholds} />
                 ))}
               </div>
             )}
             <div className="mt-5">
               {user ? (
-                <AddVideoForm moveId={move.id} dancerNames={allDancerNames} variants={variants} />
+                <AddVideoForm moveId={move.id} dancerNames={allDancerNames} variants={variants} handholds={allHandholds} />
               ) : (
                 <p className="text-sm text-muted font-display">
                   <Link href={`/login?next=/moves/${move.slug}`} className="text-denim underline">
@@ -298,6 +302,12 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
             />
             <RelationGroup title="Related" items={related.related} currentUserCanEdit={!!user} relationIds={relationIds} />
             <RelationGroup title="Leads into" items={related.unlocks} currentUserCanEdit={false} />
+            <DefaultHandholdPicker
+              moveId={move.id}
+              current={defaultHandhold}
+              handholds={allHandholds}
+              canEdit={!!user}
+            />
             <VariantManager moveId={move.id} variants={variants} canEdit={!!user} />
           </dl>
 

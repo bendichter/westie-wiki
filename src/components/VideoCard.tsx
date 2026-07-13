@@ -13,11 +13,13 @@ export function VideoCard({
   currentUserId,
   showMove,
   variants,
+  handholds,
 }: {
   video: VideoWithLabels & { moveName?: string; moveSlug?: string };
   currentUserId: number | null;
   showMove?: boolean;
   variants?: { id: number; name: string }[];
+  handholds?: { id: number; name: string }[];
 }) {
   const clipLabel =
     video.endSec != null
@@ -50,9 +52,10 @@ export function VideoCard({
         </div>
 
         <div className="mt-2.5 text-sm font-display space-y-1">
-          {video.variantName ? (
-            <div>
-              <CountChip>{video.variantName}</CountChip>
+          {video.variantName || video.handholdName ? (
+            <div className="flex flex-wrap gap-1.5">
+              {video.variantName ? <CountChip>{video.variantName}</CountChip> : null}
+              {video.handholdName ? <CountChip>{video.handholdName}</CountChip> : null}
             </div>
           ) : null}
           {showMove && video.moveSlug ? (
@@ -131,6 +134,8 @@ export function VideoCard({
                 note={video.note}
                 variantId={video.variantId}
                 variants={variants}
+                handholdId={video.handholdId}
+                handholds={handholds}
               />
             ) : null}
             {currentUserId != null ? <ReportForm videoId={video.id} /> : null}

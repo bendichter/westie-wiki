@@ -62,6 +62,18 @@ export const passwordResetTokens = sqliteTable(
 export const DIFFICULTIES = ["beginner", "intermediate", "advanced"] as const;
 export type Difficulty = (typeof DIFFICULTIES)[number];
 
+// the universal handhold vocabulary — global, seeded, deliberately small
+export const handholds = sqliteTable(
+  "handholds",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull(),
+    note: text("note"),
+    position: integer("position").notNull().default(0),
+  },
+  (t) => [uniqueIndex("handholds_name_idx").on(t.name)]
+);
+
 export const moves = sqliteTable(
   "moves",
   {
@@ -70,6 +82,8 @@ export const moves = sqliteTable(
     name: text("name").notNull(),
     description: text("description").notNull().default(""),
     difficulty: text("difficulty", { enum: DIFFICULTIES }),
+    // the handhold this move is most commonly taught with, if any
+    defaultHandholdId: integer("default_handhold_id").references(() => handholds.id),
     createdBy: integer("created_by")
       .notNull()
       .references(() => users.id),
@@ -203,6 +217,8 @@ export const videos = sqliteTable(
     eventId: integer("event_id").references(() => events.id),
     // which official variant of the move this clip shows, if tagged
     variantId: integer("variant_id").references(() => moveVariants.id),
+    // which handhold the clip shows, if labeled
+    handholdId: integer("handhold_id").references(() => handholds.id),
     // set when this clip is an annotation within a registered dance
     danceId: integer("dance_id").references(() => dances.id),
     addedBy: integer("added_by")

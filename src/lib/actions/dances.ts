@@ -9,6 +9,7 @@ import {
   dancers,
   dances,
   danceSongs,
+  handholds,
   moveVariants,
   events,
   moves,
@@ -169,6 +170,12 @@ export async function addAnnotation(
           .get()?.id ?? null)
       : null;
 
+  const handholdRaw = Number(formData.get("handholdId"));
+  const handholdId =
+    Number.isInteger(handholdRaw) && handholdRaw > 0
+      ? (db.select({ id: handholds.id }).from(handholds).where(eq(handholds.id, handholdRaw)).get()?.id ?? null)
+      : null;
+
   const video = db
     .insert(videos)
     .values({
@@ -179,6 +186,7 @@ export async function addAnnotation(
       title: dance.title,
       note: note || null,
       variantId,
+      handholdId,
       eventId: dance.eventId,
       danceId: dance.id,
       addedBy: user.id,

@@ -53,6 +53,7 @@ export function DanceAnnotator({
   annotations,
   moveNames,
   variantsByMove,
+  handholds,
   currentUserId,
 }: {
   danceId: number;
@@ -60,6 +61,7 @@ export function DanceAnnotator({
   annotations: AnnotationItem[];
   moveNames: string[];
   variantsByMove: Record<string, { id: number; name: string }[]>;
+  handholds: { id: number; name: string }[];
   currentUserId: number | null;
 }) {
   const playerHostRef = useRef<HTMLDivElement>(null);
@@ -228,6 +230,19 @@ export function DanceAnnotator({
                   </select>
                 </div>
               ) : null}
+              <div className="w-48">
+                <label htmlFor="annotate-handhold" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
+                  Handhold <span className="font-normal text-muted">(optional)</span>
+                </label>
+                <select id="annotate-handhold" name="handholdId" defaultValue="" className={inputClass("cursor-pointer")}>
+                  <option value="">Not specified</option>
+                  {handholds.map((h) => (
+                    <option key={h.id} value={h.id}>
+                      {h.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="flex-1">
                 <label htmlFor="annotate-note" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
                   Note <span className="font-normal text-muted">(optional)</span>

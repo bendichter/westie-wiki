@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { moves, moveVariants, users } from "@/db/schema";
+import { handholds as handholdsTable, moves, moveVariants, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
 import { EditDanceSongForm } from "@/components/EditDanceSongForm";
 import { EditPlacementForm } from "@/components/EditPlacementForm";
@@ -63,6 +63,12 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
     .orderBy(asc(moves.name))
     .all()
     .map((r) => r.name);
+
+  const allHandholds = db
+    .select({ id: handholdsTable.id, name: handholdsTable.name })
+    .from(handholdsTable)
+    .orderBy(asc(handholdsTable.position), asc(handholdsTable.id))
+    .all();
 
   const variantsByMove: Record<string, { id: number; name: string }[]> = {};
   for (const row of db
@@ -163,6 +169,7 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
         annotations={annotations}
         moveNames={moveNames}
         variantsByMove={variantsByMove}
+        handholds={allHandholds}
         currentUserId={user?.id ?? null}
       />
     </div>

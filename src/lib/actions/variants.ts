@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { moves, moveVariants, videos } from "@/db/schema";
+import { handholds, moves, moveVariants, videos } from "@/db/schema";
 import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 
 export type VariantFormState = { error: string | null; success?: boolean };
@@ -38,6 +38,29 @@ export async function addVariant(
     .values({ moveId: move.id, name, note: note || null, createdAt: Date.now() })
     .run();
 
+  revalidatePath(`/moves/${move.slug}`);
+  return { error: null, success: true };
+}
+
+/** Set (or clear) the handhold a move is most commonly taught with. */
+export async function setDefaultHandhold(
+  _prev: VariantFormState,
+  formData: FormData
+): Promise<VariantFormState> {
+  const user = await getCurrentUser();
+  const moveId = Number(formData.get("moveId"));
+  const move = db.select().from(moves).where(and(eq(moves.id, moveId), eq(moves.deleted, 0))).get();
+  if (!move) return { error: "This move no longer exists." };
+  if (!user) redirect(`/login?next=/moves/${move.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+
+  const raw = Number(formData.get("handholdId"));
+  const handholdId =
+    Number.isInteger(raw) && raw > 0
+      ? (db.select({ id: handholds.id }).from(handholds).where(eq(handholds.id, raw)).get()?.id ?? null)
+      : null;
+
+  db.update(moves).set({ defaultHandholdId: handholdId }).where(eq(moves.id, move.id)).run();
   revalidatePath(`/moves/${move.slug}`);
   return { error: null, success: true };
 }
