@@ -17,6 +17,7 @@ import {
   events,
   moveAliases,
   moveRelations,
+  moveResources,
   moveRevisions,
   moves,
   moveTags,
@@ -25,7 +26,7 @@ import {
   videoDancers,
   videos,
 } from "./schema";
-import { SEED_CURRICULA, SEED_MOVES, SEED_RELATIONS } from "./seed-data";
+import { SEED_CURRICULA, SEED_MOVES, SEED_RELATIONS, SEED_RESOURCES } from "./seed-data";
 import { hashPassword } from "../lib/auth-crypto";
 import { slugify } from "../lib/slug";
 
@@ -128,6 +129,17 @@ for (const [from, to, kind] of SEED_RELATIONS) {
     .run();
 }
 console.log(`Seeded ${SEED_RELATIONS.length} relations.`);
+
+// --- instructional resources ("Learn more") ---
+for (const [moveName, url, title] of SEED_RESOURCES) {
+  const moveId = moveIdByName.get(moveName);
+  if (moveId == null) {
+    console.warn(`Resource skipped (unknown move): ${moveName}`);
+    continue;
+  }
+  db.insert(moveResources).values({ moveId, url, title, addedBy: archivist.id, createdAt: now }).run();
+}
+console.log(`Seeded ${SEED_RESOURCES.length} resources.`);
 
 // --- dancers & events ---
 const ROLE_BY_DANCER: Record<string, "leader" | "follower"> = {

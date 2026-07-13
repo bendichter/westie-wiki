@@ -26,7 +26,7 @@ A 6-count pattern danced in the slot. The follower travels toward the leader, re
 
 ## What it teaches
 
-The sugar push is the purest expression of WCS **elastic connection**: extension into compression into extension. Commonly taught points include keeping the arms relaxed so the connection moves your body (not your shoulders), and letting the compression on 3&4 come from body positioning rather than pushing with the hands.
+The sugar push is the purest expression of WCS **elastic connection**: extension into compression into extension. Commonly taught points include keeping the arms relaxed so the connection moves your body (not your shoulders), and letting the compression on 3&4 come from body positioning rather than pushing with the hands. Despite the name, there is no actual push: Thibault and Nicole Ramirez teach it as absorbing the follower's energy and sending it back out, warning that "sugar push is a little bit of a misnomer — we don't actually want to push our partners."[^1] Brian B teaches the same idea with a roller-skates image: if the follower were on skates, they would roll in until the connection stopped them, and roll back out only when sent.[^2]
 
 ## Common variations
 
@@ -40,7 +40,11 @@ The skeleton stays the same across handholds — list the variant in a clip's no
 
 ## Naming
 
-Widely also called the **push break**, especially in scenes with roots in East Coast Swing pedagogy. Both names are heard at every event; neither is wrong.`,
+Widely also called the **push break**, especially in scenes with roots in East Coast Swing pedagogy. Both names are heard at every event; neither is wrong. The "sugar" traces back to Lindy Hop: strictly, a sugar push includes a **sugar foot** — a follower swivel on the way in — and the swivel-free version is technically a push break, named for the leader breaking away to open position. Over the years the distinction eroded and the two names now describe the same pattern.[^3]
+
+[^1]: Thibault & Nicole Ramirez, ["Sugar Push – The Heart of West Coast Swing"](https://www.youtube.com/watch?v=mM86VQ_hViw&t=172s) at 2:52.
+[^2]: Brian B & Megan, West Coast Swing Online, ["How to Dance the West Coast Swing Basic Steps"](https://www.youtube.com/watch?v=dfVpwMLqm-o&t=283s) at 4:43.
+[^3]: Brian B, West Coast Swing Online, ["How to Dance the West Coast Swing Basic Steps"](https://www.youtube.com/watch?v=dfVpwMLqm-o&t=368s) at 6:08–7:24.`,
   },
   {
     name: "Left Side Pass",
@@ -55,12 +59,16 @@ Widely also called the **push break**, especially in scenes with roots in East C
 - **3&4**: follower passes the leader and turns to face back down the slot
 - **5&6**: anchor
 
-The leader redirects the follower's momentum down the slot rather than pulling — a common teaching image is "opening a door" and letting the follower walk through.
+The leader redirects the follower's momentum down the slot rather than pulling — a common teaching image is "opening a door" and letting the follower walk through. Robert Royston teaches the lead as saying "after you" at a doorway: the leader steps completely out of the way on count 1 and invites the follower past the left side.[^1]
 
 ## Common notes
 
 - Followers generally keep their travel on the slot; a drifting left side pass is one of the most common beginner habits.
-- The leader's hand stays low and relaxed ("in the toolbox") — high hands early in this pattern usually mean an accidental inside roll is coming.`,
+- The leader's hand stays low and relaxed ("in the toolbox") — high hands early in this pattern usually mean an accidental inside roll is coming.
+- Brian B describes the leader's path as *curling out of the slot* on 1–2, letting the follower pass on 3&4, then rejoining the slot on the other side for the anchor.[^2]
+
+[^1]: Robert Royston, ["How to Do the Left Side Pass | Swing Dance"](https://www.youtube.com/watch?v=k7D6Uv8Y0E8&t=43s) (Howcast) at 0:43.
+[^2]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=195s) at 3:15.`,
   },
   {
     name: "Right Side Pass",
@@ -78,7 +86,14 @@ The leader redirects the follower's momentum down the slot rather than pulling �
 ## Common notes
 
 - The arch is an invitation, not a crank: most instruction emphasizes that the leader's raised hand stays quiet and the follower turns themselves.
-- Danced without the raised arm (a simple pass on the right side), the same slot geometry is often just called a *side pass* or *outside pass* depending on the scene.`,
+- Danced without the raised arm (a simple pass on the right side), the same slot geometry is often just called a *side pass* or *outside pass* depending on the scene.
+- The follower's footwork is identical to the left side pass — Brian B calls this "the bonus" of learning the passes together, though the raised hand makes it feel different.[^1]
+- As the partners pass, the feet should cross rather than close: Robert Royston teaches that one foot stays crossed in front of the other on the passing triple.[^2]
+- Brian B's tip for followers is "getting skinny" — turning the shoulders slightly while passing so the joined hand clears the head easily instead of dragging across the leader's forearm.[^3]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=363s) at 6:03.
+[^2]: Robert Royston, ["How to Do the Underarm Turn | Swing Dance"](https://www.youtube.com/watch?v=bSu7QJZ5SLU&t=65s) (Howcast) at 1:05.
+[^3]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=423s) at 7:03.`,
   },
   {
     name: "Whip",
@@ -94,17 +109,20 @@ The leader redirects the follower's momentum down the slot rather than pulling �
 - **5–6**: follower travels back down the slot the way they came, leader posts
 - **7&8**: anchor
 
-The follower's path is sometimes described as a "down-and-back" on a single track: the whip sends them past the leader, turns them around at the end of the slot, and brings them home.
+The follower's path is sometimes described as a "down-and-back" on a single track: the whip sends them past the leader, turns them around at the end of the slot, and brings them home. Thibault and Nicole Ramirez describe the shape as a paper clip or hairpin turn — very linear, with the leader staying "mostly the base" while the follower travels in and out to finish with a stretch.[^2] It is one of the three basic families of WCS patterns: pushes, passes, and whips.[^3]
 
 ## What it teaches
 
-Whips are where **stretch** becomes unavoidable: the redirection on 3&4 and the leverage on 5–6 only feel good when both partners maintain elastic connection through their bodies. Rushing count 4 is the classic whip mistake — most teachers drill "wait for the stretch."
+Whips are where **stretch** becomes unavoidable: the redirection on 3&4 and the leverage on 5–6 only feel good when both partners maintain elastic connection through their bodies. Rushing count 4 is the classic whip mistake — most teachers drill "wait for the stretch." Brian B teaches followers to *delay* count 4 and roll through the step heel to toe: landing hard between the leader's feet kills the connection the leader needs for the exit.[^4]
 
 ## Naming
 
 Some older curricula count the whip's second half differently or teach a "coaster" ending; the 8-count structure above is the one most commonly taught today.[^1]
 
-[^1]: See e.g. [West Coast Swing Online's basic patterns guide](https://www.westcoastswingonline.com/west-coast-swing-basic-patterns/), which teaches the whip as the fourth core pattern with this structure.`,
+[^1]: See e.g. [West Coast Swing Online's basic patterns guide](https://www.westcoastswingonline.com/west-coast-swing-basic-patterns/), which teaches the whip as the fourth core pattern with this structure.
+[^2]: Thibault & Nicole Ramirez, ["Whip – The Signature 8-Count Move of WCS"](https://www.youtube.com/watch?v=EPupCziC9bY&t=266s) at 4:26.
+[^3]: Thibault & Nicole Ramirez, ["Whip – The Signature 8-Count Move of WCS"](https://www.youtube.com/watch?v=EPupCziC9bY&t=48s) at 0:48.
+[^4]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=1198s) at 19:58.`,
   },
   {
     name: "Sugar Tuck",
@@ -121,7 +139,14 @@ Danced like a sugar push through counts 1–2, but on **3&4** the leader rotates
 
 - The tuck is a rotation of the follower's frame, not an arm pull; the free turn comes from the follower unwinding the stored rotation.
 - Often the first pattern where followers practice **spotting** and controlled free spins.
-- Frequently danced with one hand, two hands, or with a hand change behind the leader's back as a styling variation.`,
+- Frequently danced with one hand, two hands, or with a hand change behind the leader's back as a styling variation.
+- Because the leader's hand finishes over the top of the grip, the tuck is commonly followed by an underarm turn (right side pass) to fix the handhold — Brian B calls this fix "magic, and for no extra charge."[^1]
+- Raising the lead hand does double duty: Brian B teaches that the raise itself closes the distance between the partners as the tuck sets up.[^2]
+- Robert Royston points out the tuck's leverage as a variation factory: led with the left hand up, right hand up, both hands, or no hands (a free spin), "once you learn the sugar tuck you immediately have four more moves."[^3]
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=598s) at 9:58.
+[^2]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=575s) at 9:35.
+[^3]: Robert Royston, ["How to Do the Sugar Tuck | Swing Dance"](https://www.youtube.com/watch?v=AzV0eeolJ20&t=68s) (Howcast) at 1:08.`,
   },
   {
     name: "Starter Step",
@@ -130,7 +155,14 @@ Danced like a sugar push through counts 1–2, but on **3&4** the leader rotates
     tags: ["fundamentals", "connection & technique"],
     description: `The little two-triple pattern many dancers use to begin a dance: side triple, side triple (or rock-and-triple), establishing connection and the slot before the first real pattern.
 
-Not universal — plenty of dancers start straight into a sugar push or side pass — but common enough in classes that learners should recognize it. Its real job is a **connection check**: settling weight, matching hand pressure, and agreeing on timing before anything travels.`,
+Not universal — plenty of dancers start straight into a sugar push or side pass — but common enough in classes that learners should recognize it. Its real job is a **connection check**: settling weight, matching hand pressure, and agreeing on timing before anything travels.
+
+## One taught version
+
+Thibault and Nicole Ramirez teach the starter step from closed position: the partners first "tap the tempo" in place (walk-touch on the beat) for as long as the leader likes, then dance two triple steps — the first to the side, the second opening the position — flowing directly into a left side pass.[^1] For the follower, the first triple is the signal: taps can continue indefinitely, but "as soon as we start with the triples, that tells me that the dance has now started."[^2]
+
+[^1]: Thibault & Nicole Ramirez, ["Starter Step – How to Begin Your West Coast Swing"](https://www.youtube.com/watch?v=5NCgLVFecwI&t=50s) at 0:50.
+[^2]: Thibault & Nicole Ramirez, ["Starter Step – How to Begin Your West Coast Swing"](https://www.youtube.com/watch?v=5NCgLVFecwI&t=175s) at 2:55.`,
   },
   {
     name: "Anchor Step",
@@ -146,9 +178,14 @@ The anchor is what makes West Coast Swing elastic. Without a real anchor, patter
 ## Technique notes commonly taught
 
 - Weight stays back over the anchor leg; resist drifting forward toward your partner.
+- Brian B defines the **anchored position** by the connection, not the feet: at the end of the anchor both partners' centers are moved away from each other with connection maintained through the arms, so that when the leader's center moves, the follower moves.[^1]
 - The anchor is *rhythm-flexible*: advanced dancers replace the standard triple with holds, drags, syncopations, and play — as long as the connection stays anchored.
+- The anchor can also be **extended**: Sean and Alyssa McKeever teach a step–brush–flick variation that lengthens the anchor by two beats, noting that "sometimes we need to extend a six count pattern to fit the music."[^2]
 
-Strictly speaking this is a **building block** rather than a pattern, but it gets its own page because so much technique instruction centers on it.`,
+Strictly speaking this is a **building block** rather than a pattern, but it gets its own page because so much technique instruction centers on it.
+
+[^1]: Brian B & Megan, West Coast Swing Online, ["How to Dance the West Coast Swing Basic Steps"](https://www.youtube.com/watch?v=dfVpwMLqm-o&t=331s) at 5:31.
+[^2]: Sean & Alyssa McKeever, ["Brush & Flick – WEST COAST SWING Anchor Variation"](https://www.youtube.com/watch?v=djR6DkMX3FU&t=11s) at 0:11 and 2:56.`,
   },
   {
     name: "Throwout",
@@ -189,12 +226,22 @@ The lead is finished **before** the spin begins: rotation is offered on the setu
   },
   {
     name: "Basket Whip",
-    aliases: ["Basket"],
+    aliases: ["Basket", "Locked Whip"],
     difficulty: "intermediate",
     tags: ["whip family", "wraps & cuddles", "8-count"],
     description: `A whip variation danced with two hands in which the follower is turned at the post into a wrapped ("basket") position facing away from the leader, then unwound home.
 
-The wrap happens around counts **3&4–5** with both hands held low; the exit typically unwinds the follower on **5–6** before the anchor. A friendly first "shape" whip: the geometry is showy but the timing stays plain whip timing. Watch for cranked shoulders — the wrap should sit at the follower's waist, led from body rotation.`,
+The wrap happens around counts **3&4–5** with both hands held low; the exit typically unwinds the follower on **5–6** before the anchor. A friendly first "shape" whip: the geometry is showy but the timing stays plain whip timing. Watch for cranked shoulders — the wrap should sit at the follower's waist, led from body rotation.
+
+## Common notes
+
+- Regionally also called the **locked whip**: Robert Royston notes "some places in the country call this a basket whip. Locked whip, basket whip — same thing."[^1]
+- The follower's path is dead straight — all the way forward with no turn, then straight back — while the leader dances the same footwork as a basic whip.[^2]
+- Keep the basket relaxed: the leader's hand rests at the follower's hip and the free hand stays off the body rather than clamping the wrap shut.[^3]
+
+[^1]: Robert Royston, ["How to Do Locked Whip in West Coast | Swing Dance"](https://www.youtube.com/watch?v=v6ifac32Pww&t=13s) (Howcast) at 0:13.
+[^2]: Robert Royston, ["How to Do Locked Whip in West Coast | Swing Dance"](https://www.youtube.com/watch?v=v6ifac32Pww&t=25s) (Howcast) at 0:25.
+[^3]: Robert Royston, ["How to Do Locked Whip in West Coast | Swing Dance"](https://www.youtube.com/watch?v=v6ifac32Pww&t=52s) (Howcast) at 0:52.`,
   },
   {
     name: "Reverse Whip",
@@ -221,7 +268,17 @@ Distinguished from the basket whip mainly by the entry and the height/shape of t
     tags: ["whip family", "spins & turns", "8-count"],
     description: `A whip in which the follower takes an inside (counter-clockwise) turn on counts **5–6** as they travel back down the slot.
 
-The turn is prepped by the leader's raised hand around the post; the follower's travel and the whip timing don't change. Often the first whip variation taught because it isolates one new skill — turning while maintaining whip geometry — without changing the pattern's skeleton.`,
+The turn is prepped by the leader's raised hand around the post; the follower's travel and the whip timing don't change. Often the first whip variation taught because it isolates one new skill — turning while maintaining whip geometry — without changing the pattern's skeleton.
+
+## Common notes
+
+- The name is literal: Robert Royston defines an *inside* turn as the lead hand passing inside — between the two partners — where an outside turn sends the lead hand away from the body.[^1]
+- The prep starts early: the lead hand begins rising on "3-and" into count 4, so the follower knows she's going underneath before the turn arrives on 5.[^2]
+- Create room at the redirection — crossing the hand in front crowds the partnership if the partners are too close on the "3-and."[^3]
+
+[^1]: Robert Royston, ["How to Do a Whip with an Inside Turn | Swing Dance"](https://www.youtube.com/watch?v=TMpTWmn7jQM&t=43s) (Howcast) at 0:43.
+[^2]: Robert Royston, ["How to Do a Whip with an Inside Turn | Swing Dance"](https://www.youtube.com/watch?v=TMpTWmn7jQM&t=36s) (Howcast) at 0:36.
+[^3]: Robert Royston, ["How to Do a Whip with an Inside Turn | Swing Dance"](https://www.youtube.com/watch?v=TMpTWmn7jQM&t=68s) (Howcast) at 1:08.`,
   },
   {
     name: "Whip with Outside Turn",
@@ -230,7 +287,15 @@ The turn is prepped by the leader's raised hand around the post; the follower's 
     tags: ["whip family", "spins & turns", "8-count"],
     description: `The mirror of the whip with inside turn: the follower takes an outside (clockwise) turn on counts **5–6** while returning down the slot.
 
-Commonly used to set up spins, hand changes, or free-spin exits. The classic error is starting the turn on 4 instead of after the post — the redirection has to finish before the rotation begins.`,
+Commonly used to set up spins, hand changes, or free-spin exits. The classic error is starting the turn on 4 instead of after the post — the redirection has to finish before the rotation begins.
+
+## Common notes
+
+- The lead arm stays **long and open** through the redirection for a single turn; Robert Royston warns that bringing the arm in and tightening it up usually turns the single into a double turn (fine, but know which one you led).[^1]
+- In the double-turn version each step is a half rotation, and either version finishes with an underarm turn to fix the handhold.[^2]
+
+[^1]: Robert Royston, ["How to Do Whip w/ a Single Outside Turn | Swing Dance"](https://www.youtube.com/watch?v=UGs-q6lc-Cc&t=54s) (Howcast) at 0:54.
+[^2]: Robert Royston, ["How to Do Whip w/ a Single Outside Turn | Swing Dance"](https://www.youtube.com/watch?v=UGs-q6lc-Cc&t=81s) (Howcast) at 1:21.`,
   },
   {
     name: "Continuous Whip",
@@ -328,6 +393,95 @@ Mostly a connective-tissue pattern: hand changes are how leaders set up the *nex
 // "prerequisite": learn toMove before fromMove
 // "variation": fromMove is a variation of toMove
 // "related": symmetric
+/** [move name, url, title] — instructional videos surfaced as "Learn more" on move pages. */
+export const SEED_RESOURCES: [string, string, string][] = [
+  [
+    "Sugar Push",
+    "https://www.youtube.com/watch?v=mM86VQ_hViw",
+    "Sugar Push – The Heart of West Coast Swing (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Sugar Push",
+    "https://www.youtube.com/watch?v=dfVpwMLqm-o",
+    "How to Dance the West Coast Swing Basic Steps (West Coast Swing Online)",
+  ],
+  [
+    "Sugar Push",
+    "https://www.youtube.com/watch?v=cKcamMuk3sA",
+    "West Coast Swing Basic Steps // Beginner WCS (West Coast Swing Online)",
+  ],
+  [
+    "Left Side Pass",
+    "https://www.youtube.com/watch?v=k7D6Uv8Y0E8",
+    "How to Do the Left Side Pass (Robert Royston, Howcast)",
+  ],
+  [
+    "Left Side Pass",
+    "https://www.youtube.com/watch?v=cKcamMuk3sA",
+    "West Coast Swing Basic Steps // Beginner WCS (West Coast Swing Online)",
+  ],
+  [
+    "Right Side Pass",
+    "https://www.youtube.com/watch?v=bSu7QJZ5SLU",
+    "How to Do the Underarm Turn (Robert Royston, Howcast)",
+  ],
+  [
+    "Right Side Pass",
+    "https://www.youtube.com/watch?v=cKcamMuk3sA",
+    "West Coast Swing Basic Steps // Beginner WCS (West Coast Swing Online)",
+  ],
+  [
+    "Whip",
+    "https://www.youtube.com/watch?v=EPupCziC9bY",
+    "Whip – The Signature 8-Count Move of WCS (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Whip",
+    "https://www.youtube.com/watch?v=dfVpwMLqm-o",
+    "How to Dance the West Coast Swing Basic Steps (West Coast Swing Online)",
+  ],
+  [
+    "Starter Step",
+    "https://www.youtube.com/watch?v=5NCgLVFecwI",
+    "Starter Step – How to Begin Your West Coast Swing (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Sugar Tuck",
+    "https://www.youtube.com/watch?v=AzV0eeolJ20",
+    "How to Do the Sugar Tuck (Robert Royston, Howcast)",
+  ],
+  [
+    "Sugar Tuck",
+    "https://www.youtube.com/watch?v=cKcamMuk3sA",
+    "West Coast Swing Basic Steps // Beginner WCS (West Coast Swing Online)",
+  ],
+  [
+    "Whip with Inside Turn",
+    "https://www.youtube.com/watch?v=TMpTWmn7jQM",
+    "How to Do a Whip with an Inside Turn (Robert Royston, Howcast)",
+  ],
+  [
+    "Whip with Outside Turn",
+    "https://www.youtube.com/watch?v=UGs-q6lc-Cc",
+    "How to Do Whip w/ a Single Outside Turn (Robert Royston, Howcast)",
+  ],
+  [
+    "Basket Whip",
+    "https://www.youtube.com/watch?v=v6ifac32Pww",
+    "How to Do Locked Whip in West Coast (Robert Royston, Howcast)",
+  ],
+  [
+    "Anchor Step",
+    "https://www.youtube.com/watch?v=djR6DkMX3FU",
+    "Brush & Flick – WCS Anchor Variation (Sean & Alyssa McKeever)",
+  ],
+  [
+    "Inside Roll",
+    "https://www.youtube.com/watch?v=cKcamMuk3sA",
+    "West Coast Swing Basic Steps // Beginner WCS (West Coast Swing Online)",
+  ],
+];
+
 export const SEED_RELATIONS: [string, string, RelationKind][] = [
   ["Sugar Tuck", "Sugar Push", "variation"],
   ["Sugar Tuck", "Sugar Push", "prerequisite"],
