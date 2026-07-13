@@ -21,6 +21,7 @@ const moveName = `Test Move ${run.toUpperCase()}`;
 const curriculumTitle = `Test Path ${run.toUpperCase()}`;
 
 let step = "";
+let failurePage: import("playwright").Page | null = null;
 function log(s: string) {
   step = s;
   console.log(`▸ ${s}`);
@@ -72,6 +73,7 @@ async function main() {
   cleanupPreviousRuns();
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  failurePage = page;
   page.setDefaultTimeout(20000);
 
   // --- public browsing ---
@@ -151,6 +153,14 @@ async function main() {
   const moveUrl = page.url();
   await shot(page, "05-move-created");
 
+  log("add an official variant to the move");
+  await page.getByRole("button", { name: "+ Add a variant" }).click();
+  await page.getByLabel("Variant name").fill("Two-hand");
+  await page.getByLabel("Variant note").fill("Both hands connected.");
+  await page.getByRole("button", { name: "Add variant" }).click();
+  await expectText(page, "Official variants");
+  await expectText(page, "Both hands connected.");
+
   // --- edit move + revision history ---
   log("edit the move");
   await page.goto(`${moveUrl}/edit`);
@@ -192,9 +202,11 @@ async function main() {
   await page.getByLabel("Event", { exact: true }).fill(`Test Event ${run.toUpperCase()}`);
   await page.getByLabel("Year").fill("2025");
   await page.getByLabel("Note").fill("Automated test clip");
+  await page.locator('select[name="variantId"]').selectOption({ label: "Two-hand" });
   await page.getByRole("button", { name: "Add video" }).click();
   await expectText(page, "0:30 → 1:00");
   await expectText(page, `Lead ${run}`);
+  await expectText(page, "Two-hand");
   await shot(page, "08-video-added");
 
   log("edit clip timing on an existing video");
@@ -302,6 +314,9 @@ async function main() {
     await page.getByLabel("Move", { exact: true }).fill(move);
     await page.getByLabel("Start").fill(start);
     if (end) await page.getByLabel("End (optional)").fill(end);
+    if (move === moveName) {
+      await page.getByLabel("Variant (optional)").selectOption({ label: "Two-hand" });
+    }
     await page.getByRole("button", { name: "Add move" }).click();
     await expectText(page, move);
     await page.waitForTimeout(400);
@@ -549,8 +564,12 @@ async function main() {
   console.log("\n✅ All E2E flows passed.");
 }
 
-main().catch((err) => {
+main().catch(async (err) => {
   console.error(`\n❌ FAILED at step: ${step}`);
   console.error(err);
+  if (failurePage) {
+    await failurePage.screenshot({ path: `${SHOTS}/FAILURE.png`, fullPage: true }).catch(() => {});
+    console.error(`Failure screenshot: ${SHOTS}/FAILURE.png`);
+  }
   process.exit(1);
 });

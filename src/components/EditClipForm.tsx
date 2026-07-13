@@ -3,18 +3,22 @@
 import { useActionState, useState } from "react";
 import { updateVideoClip, type VideoFormState } from "@/lib/actions/videos";
 import { formatTimestamp } from "@/lib/time";
-import { FormError, Input, PrimaryButton } from "./ui";
+import { FormError, Input, PrimaryButton, Select } from "./ui";
 
 export function EditClipForm({
   videoId,
   startSec,
   endSec,
   note,
+  variantId,
+  variants,
 }: {
   videoId: number;
   startSec: number;
   endSec: number | null;
   note: string | null;
+  variantId?: number | null;
+  variants?: { id: number; name: string }[];
 }) {
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState<VideoFormState, FormData>(
@@ -68,6 +72,21 @@ export function EditClipForm({
           />
         </div>
       </div>
+      {variants && variants.length > 0 ? (
+        <div>
+          <label htmlFor={`clip-variant-${videoId}`} className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
+            Variant
+          </label>
+          <Select id={`clip-variant-${videoId}`} name="variantId" defaultValue={variantId ?? ""} className="!py-1.5 text-sm">
+            <option value="">Not specified</option>
+            {variants.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+      ) : null}
       <div>
         <label htmlFor={`clip-note-${videoId}`} className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">Note</label>
         <Input id={`clip-note-${videoId}`} name="note" defaultValue={note ?? ""} maxLength={500} className="!py-1.5 text-sm" />

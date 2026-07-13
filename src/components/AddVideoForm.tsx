@@ -15,9 +15,11 @@ import {
 export function AddVideoForm({
   moveId,
   dancerNames,
+  variants,
 }: {
   moveId: number;
   dancerNames: string[];
+  variants: { id: number; name: string }[];
 }) {
   const [open, setOpen] = useState(false);
   const [dancerRows, setDancerRows] = useState([0, 1]);
@@ -142,6 +144,20 @@ export function AddVideoForm({
           <Input id="eventYear" name="eventYear" placeholder="2024" inputMode="numeric" className="font-mono" />
         </div>
       </div>
+
+      {variants.length > 0 ? (
+        <div className="max-w-64">
+          <Label htmlFor="variantId">Variant</Label>
+          <Select id="variantId" name="variantId" defaultValue="">
+            <option value="">Not specified</option>
+            {variants.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+      ) : null}
 
       <div>
         <Label htmlFor="note">Note</Label>

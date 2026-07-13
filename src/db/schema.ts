@@ -90,6 +90,21 @@ export const moveAliases = sqliteTable(
   (t) => [index("move_aliases_move_idx").on(t.moveId)]
 );
 
+export const moveVariants = sqliteTable(
+  "move_variants",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    moveId: integer("move_id")
+      .notNull()
+      .references(() => moves.id),
+    // e.g. "Two-hand", "Right-to-right (handshake)" — curated per move
+    name: text("name").notNull(),
+    note: text("note"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("move_variants_move_idx").on(t.moveId)]
+);
+
 export const moveRevisions = sqliteTable(
   "move_revisions",
   {
@@ -184,6 +199,8 @@ export const videos = sqliteTable(
     title: text("title"),
     note: text("note"),
     eventId: integer("event_id").references(() => events.id),
+    // which official variant of the move this clip shows, if tagged
+    variantId: integer("variant_id").references(() => moveVariants.id),
     // set when this clip is an annotation within a registered dance
     danceId: integer("dance_id").references(() => dances.id),
     addedBy: integer("added_by")

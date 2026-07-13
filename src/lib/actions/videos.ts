@@ -4,13 +4,25 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers, events, moves, VIDEO_ROLES, videoDancers, videos, type VideoRole } from "@/db/schema";
+import { dancers, events, moves, moveVariants, VIDEO_ROLES, videoDancers, videos, type VideoRole } from "@/db/schema";
 import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
 import { fetchYoutubeTitle, parseYoutubeUrl } from "@/lib/youtube";
 
 export type VideoFormState = { error: string | null; success?: boolean };
+
+/** A clip's variant must be one of its move's official variants; anything else becomes null. */
+function parseVariantId(formData: FormData, moveId: number): number | null {
+  const raw = Number(formData.get("variantId"));
+  if (!Number.isInteger(raw) || raw <= 0) return null;
+  const variant = db
+    .select({ id: moveVariants.id })
+    .from(moveVariants)
+    .where(and(eq(moveVariants.id, raw), eq(moveVariants.moveId, moveId)))
+    .get();
+  return variant?.id ?? null;
+}
 
 function findOrCreateDancer(name: string): number {
   const trimmed = name.trim();
@@ -81,6 +93,7 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
   const eventYear = /^\d{4}$/.test(eventYearRaw) ? Number(eventYearRaw) : null;
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+  const variantId = parseVariantId(formData, move.id);
   const title = await fetchYoutubeTitle(parsed.id);
 
   const video = db
@@ -92,6 +105,7 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
       endSec,
       title,
       note: note || null,
+      variantId,
       eventId: eventName ? findOrCreateEvent(eventName, eventYear) : null,
       addedBy: user.id,
       createdAt: Date.now(),
@@ -149,9 +163,10 @@ export async function updateVideoClip(
   }
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+  const variantId = parseVariantId(formData, video.moveId);
 
   db.update(videos)
-    .set({ startSec, endSec, note: note || null })
+    .set({ startSec, endSec, note: note || null, variantId })
     .where(eq(videos.id, videoId))
     .run();
 

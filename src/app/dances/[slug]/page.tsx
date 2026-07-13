@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { moves, users } from "@/db/schema";
+import { moves, moveVariants, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
 import { EditDanceSongForm } from "@/components/EditDanceSongForm";
 import { EditPlacementForm } from "@/components/EditPlacementForm";
@@ -62,6 +62,17 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
     .orderBy(asc(moves.name))
     .all()
     .map((r) => r.name);
+
+  const variantsByMove: Record<string, { id: number; name: string }[]> = {};
+  for (const row of db
+    .select({ moveName: moves.name, id: moveVariants.id, name: moveVariants.name })
+    .from(moveVariants)
+    .innerJoin(moves, eq(moves.id, moveVariants.moveId))
+    .where(eq(moves.deleted, 0))
+    .orderBy(asc(moveVariants.name))
+    .all()) {
+    (variantsByMove[row.moveName] ??= []).push({ id: row.id, name: row.name });
+  }
 
   const heading =
     danceDancerList.length > 0
@@ -145,6 +156,7 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
         youtubeId={dance.youtubeId}
         annotations={annotations}
         moveNames={moveNames}
+        variantsByMove={variantsByMove}
         currentUserId={user?.id ?? null}
       />
     </div>

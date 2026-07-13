@@ -6,6 +6,7 @@ import {
   dancers,
   dances,
   danceSongs,
+  moveVariants,
   events,
   moveAliases,
   moveRelations,
@@ -44,6 +45,15 @@ export function getMoveTags(moveId: number) {
     .innerJoin(tags, eq(tags.id, moveTags.tagId))
     .where(eq(moveTags.moveId, moveId))
     .orderBy(asc(tags.name))
+    .all();
+}
+
+export function getMoveVariants(moveId: number) {
+  return db
+    .select()
+    .from(moveVariants)
+    .where(eq(moveVariants.moveId, moveId))
+    .orderBy(asc(moveVariants.name))
     .all();
 }
 
@@ -106,6 +116,8 @@ export type VideoWithLabels = {
   note: string | null;
   danceSlug: string | null;
   danceSongs: { song: string; artist: string }[];
+  variantId: number | null;
+  variantName: string | null;
   createdAt: number;
   addedBy: number;
   addedByName: string;
@@ -124,6 +136,8 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
       note: videos.note,
       danceSlug: dances.slug,
       danceId: dances.id,
+      variantId: videos.variantId,
+      variantName: moveVariants.name,
       createdAt: videos.createdAt,
       addedBy: videos.addedBy,
       addedByName: users.username,
@@ -136,6 +150,7 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     .innerJoin(users, eq(users.id, videos.addedBy))
     .leftJoin(events, eq(events.id, videos.eventId))
     .leftJoin(dances, eq(dances.id, videos.danceId))
+    .leftJoin(moveVariants, eq(moveVariants.id, videos.variantId))
     .where(eq(videos.moveId, moveId))
     .orderBy(asc(videos.createdAt))
     .all();
@@ -175,6 +190,8 @@ export function getMoveVideos(moveId: number): VideoWithLabels[] {
     note: r.note,
     danceSlug: r.danceSlug,
     danceSongs: songRows.filter((sr) => sr.danceId === r.danceId).map(({ song, artist }) => ({ song, artist })),
+    variantId: r.variantId,
+    variantName: r.variantName,
     createdAt: r.createdAt,
     addedBy: r.addedBy,
     addedByName: r.addedByName,

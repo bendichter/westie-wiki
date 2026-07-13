@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { Markdown } from "@/components/Markdown";
 import { RelationEditor } from "@/components/RelationEditor";
 import { SponsorSlot } from "@/components/SponsorSlot";
+import { VariantManager } from "@/components/VariantManager";
 import { VideoCard } from "@/components/VideoCard";
 import { ButtonLink, DifficultyBadge, EmptyState, TagChip } from "@/components/ui";
 import { removeRelation, toggleFavorite } from "@/lib/actions/community";
@@ -20,6 +21,7 @@ import {
   getMoveBySlug,
   getMoveComments,
   getMoveTags,
+  getMoveVariants,
   getMoveVideos,
   getRelatedMoves,
   type MoveLink,
@@ -110,6 +112,7 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
   }));
   const latestRevision = getLatestRevisionNo(move.id);
   const seenInDances = listDances({ moveId: move.id });
+  const variants = getMoveVariants(move.id);
 
   const isFavorite = user
     ? !!db
@@ -235,13 +238,13 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
             ) : (
               <div className="grid gap-5 sm:grid-cols-2">
                 {videos.map((v) => (
-                  <VideoCard key={v.id} video={v} currentUserId={user?.id ?? null} />
+                  <VideoCard key={v.id} video={v} currentUserId={user?.id ?? null} variants={variants} />
                 ))}
               </div>
             )}
             <div className="mt-5">
               {user ? (
-                <AddVideoForm moveId={move.id} dancerNames={allDancerNames} />
+                <AddVideoForm moveId={move.id} dancerNames={allDancerNames} variants={variants} />
               ) : (
                 <p className="text-sm text-muted font-display">
                   <Link href={`/login?next=/moves/${move.slug}`} className="text-denim underline">
@@ -281,6 +284,7 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
             />
             <RelationGroup title="Related" items={related.related} currentUserCanEdit={!!user} relationIds={relationIds} />
             <RelationGroup title="Leads into" items={related.unlocks} currentUserCanEdit={false} />
+            <VariantManager moveId={move.id} variants={variants} canEdit={!!user} />
           </dl>
 
           {user ? (

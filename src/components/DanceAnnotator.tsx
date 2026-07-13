@@ -52,12 +52,14 @@ export function DanceAnnotator({
   youtubeId,
   annotations,
   moveNames,
+  variantsByMove,
   currentUserId,
 }: {
   danceId: number;
   youtubeId: string;
   annotations: AnnotationItem[];
   moveNames: string[];
+  variantsByMove: Record<string, { id: number; name: string }[]>;
   currentUserId: number | null;
 }) {
   const playerHostRef = useRef<HTMLDivElement>(null);
@@ -66,6 +68,7 @@ export function DanceAnnotator({
   const formRef = useRef<HTMLFormElement>(null);
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
+  const [moveName, setMoveName] = useState("");
   const [playerReady, setPlayerReady] = useState(false);
 
   useEffect(() => {
@@ -92,6 +95,7 @@ export function DanceAnnotator({
         formRef.current?.reset();
         setStart("");
         setEnd("");
+        setMoveName("");
         moveInputRef.current?.focus();
       }
       return result;
@@ -148,6 +152,7 @@ export function DanceAnnotator({
                   required
                   placeholder="e.g. Whip"
                   ref={moveInputRef}
+                  onChange={(e) => setMoveName(e.target.value)}
                   className={inputClass()}
                 />
                 <datalist id="annotate-move-suggestions">
@@ -208,6 +213,21 @@ export function DanceAnnotator({
             </div>
 
             <div className="flex items-end gap-3">
+              {(variantsByMove[moveName] ?? []).length > 0 ? (
+                <div className="w-52">
+                  <label htmlFor="annotate-variant" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
+                    Variant <span className="font-normal text-muted">(optional)</span>
+                  </label>
+                  <select id="annotate-variant" name="variantId" defaultValue="" className={inputClass("cursor-pointer")}>
+                    <option value="">Not specified</option>
+                    {(variantsByMove[moveName] ?? []).map((v) => (
+                      <option key={v.id} value={v.id}>
+                        {v.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
               <div className="flex-1">
                 <label htmlFor="annotate-note" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
                   Note <span className="font-normal text-muted">(optional)</span>

@@ -52,7 +52,7 @@ attributes all starter content to it. The seed refuses to run twice.
 | `npm run db:generate`| regenerate SQL migrations after schema changes    |
 | `npm run db:migrate` | apply migrations                                  |
 | `npm run db:seed`    | load starter content (no-op if moves exist)       |
-| `npx tsx e2e/run-e2e.ts` | full end-to-end suite in headless Chromium (needs `npx playwright install chromium` and a running server) |
+| `npx tsx e2e/run-e2e.ts` | full end-to-end suite in headless Chromium (needs `npx playwright install chromium`; run against `npm run build && npm start` — the dev server gets flaky under repeated suite runs) |
 
 ## Architecture
 

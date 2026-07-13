@@ -3,6 +3,7 @@ import { deleteVideo } from "@/lib/actions/videos";
 import type { VideoWithLabels } from "@/lib/data/moves";
 import { formatTimestamp } from "@/lib/time";
 import { youtubeWatchUrl } from "@/lib/youtube";
+import { CountChip } from "./ui";
 import { EditClipForm } from "./EditClipForm";
 import { LiteYouTube } from "./LiteYouTube";
 
@@ -10,10 +11,12 @@ export function VideoCard({
   video,
   currentUserId,
   showMove,
+  variants,
 }: {
   video: VideoWithLabels & { moveName?: string; moveSlug?: string };
   currentUserId: number | null;
   showMove?: boolean;
+  variants?: { id: number; name: string }[];
 }) {
   const clipLabel =
     video.endSec != null
@@ -46,6 +49,11 @@ export function VideoCard({
         </div>
 
         <div className="mt-2.5 text-sm font-display space-y-1">
+          {video.variantName ? (
+            <div>
+              <CountChip>{video.variantName}</CountChip>
+            </div>
+          ) : null}
           {showMove && video.moveSlug ? (
             <div>
               <Link href={`/moves/${video.moveSlug}`} className="font-bold text-denim hover:underline">
@@ -120,6 +128,8 @@ export function VideoCard({
                 startSec={video.startSec}
                 endSec={video.endSec}
                 note={video.note}
+                variantId={video.variantId}
+                variants={variants}
               />
             ) : null}
             {currentUserId === video.addedBy ? (

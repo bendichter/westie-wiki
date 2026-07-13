@@ -9,6 +9,7 @@ import {
   dancers,
   dances,
   danceSongs,
+  moveVariants,
   events,
   moves,
   VIDEO_ROLES,
@@ -158,6 +159,15 @@ export async function addAnnotation(
   }
 
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+  const variantRaw = Number(formData.get("variantId"));
+  const variantId =
+    Number.isInteger(variantRaw) && variantRaw > 0
+      ? (db
+          .select({ id: moveVariants.id })
+          .from(moveVariants)
+          .where(and(eq(moveVariants.id, variantRaw), eq(moveVariants.moveId, move.id)))
+          .get()?.id ?? null)
+      : null;
 
   const video = db
     .insert(videos)
@@ -168,6 +178,7 @@ export async function addAnnotation(
       endSec,
       title: dance.title,
       note: note || null,
+      variantId,
       eventId: dance.eventId,
       danceId: dance.id,
       addedBy: user.id,

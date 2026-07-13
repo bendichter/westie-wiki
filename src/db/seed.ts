@@ -10,6 +10,7 @@ import { count } from "drizzle-orm";
 import { db } from "./index";
 import {
   curricula,
+  moveVariants,
   curriculumItems,
   curriculumRevisions,
   dancers,
@@ -102,6 +103,22 @@ for (const seedMove of SEED_MOVES) {
     .run();
 }
 console.log(`Seeded ${SEED_MOVES.length} moves.`);
+
+// official variants for the flagship example
+const sugarPushId = moveIdByName.get("Sugar Push");
+if (sugarPushId != null) {
+  const SUGAR_PUSH_VARIANTS: [string, string][] = [
+    ["Two-hand", "Both hands connected; the common classroom version."],
+    ["Right-to-left (one-hand)", "Leader's left to follower's right; the standard open hold."],
+    ["Right-to-right (handshake)", "Sets up tucks and behind-the-back hand changes."],
+    ["Left-to-left", "Usually a deliberate setup for the next pattern."],
+    ["No-hands (body lead)", "Advanced connection play on the same geometry."],
+  ];
+  for (const [name, note] of SUGAR_PUSH_VARIANTS) {
+    db.insert(moveVariants).values({ moveId: sugarPushId, name, note, createdAt: now }).run();
+  }
+  console.log(`Seeded ${SUGAR_PUSH_VARIANTS.length} Sugar Push variants.`);
+}
 
 // --- relations ---
 for (const [from, to, kind] of SEED_RELATIONS) {
