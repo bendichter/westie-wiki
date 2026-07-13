@@ -26,6 +26,7 @@ export function DanceCard({ dance }: { dance: DanceListItem }) {
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-display text-sm text-muted">
             {dance.competition ? <CountChip>{dance.competition}</CountChip> : null}
+            {dance.placement ? <CountChip>{dance.placement}</CountChip> : null}
             {dance.eventName ? (
               <span>
                 {dance.eventName}

@@ -1,0 +1,1 @@
+ALTER TABLE `dances` ADD `placement` text;

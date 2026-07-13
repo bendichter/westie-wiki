@@ -119,6 +119,7 @@ export function listDances(filter?: { dancerId?: number; eventId?: number; moveI
       youtubeId: dances.youtubeId,
       title: dances.title,
       competition: dances.competition,
+      placement: dances.placement,
       createdAt: dances.createdAt,
       eventName: events.name,
       eventYear: events.year,

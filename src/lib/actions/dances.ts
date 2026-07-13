@@ -72,6 +72,7 @@ export async function createDance(_prev: DanceFormState, formData: FormData): Pr
   const eventYear = /^\d{4}$/.test(eventYearRaw) ? Number(eventYearRaw) : null;
   const songs = parseSongRows(formData);
   const competition = String(formData.get("competition") ?? "").trim().slice(0, 80);
+  const placement = String(formData.get("placement") ?? "").trim().slice(0, 40);
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
 
   const title = await fetchYoutubeTitle(parsed.id);
@@ -94,6 +95,7 @@ export async function createDance(_prev: DanceFormState, formData: FormData): Pr
       title,
       note: note || null,
       competition: competition || null,
+      placement: placement || null,
       eventId: eventName ? findOrCreateEvent(eventName, eventYear) : null,
       addedBy: user.id,
       createdAt: Date.now(),
@@ -206,6 +208,25 @@ function replaceSongs(danceId: number, rows: { song: string; artist: string }[])
   rows.forEach((row, position) => {
     db.insert(danceSongs).values({ danceId, position, song: row.song, artist: row.artist }).run();
   });
+}
+
+/** Set or correct a dance's placement (optional — not every dance is a competition). */
+export async function updateDancePlacement(
+  _prev: AnnotationFormState,
+  formData: FormData
+): Promise<AnnotationFormState> {
+  const user = await getCurrentUser();
+  const danceId = Number(formData.get("danceId"));
+  const dance = db.select().from(dances).where(eq(dances.id, danceId)).get();
+  if (!dance) return { error: "This dance no longer exists." };
+  if (!user) redirect(`/login?next=/dances/${dance.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+
+  const placement = String(formData.get("placement") ?? "").trim().slice(0, 40);
+  db.update(dances).set({ placement: placement || null }).where(eq(dances.id, dance.id)).run();
+
+  revalidatePath(`/dances/${dance.slug}`);
+  return { error: null, success: true };
 }
 
 /** Set or correct a dance's songs (extended videos often play several). */

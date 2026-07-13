@@ -281,6 +281,7 @@ async function main() {
   await page.getByLabel("Event", { exact: true }).fill(`Test Event ${run.toUpperCase()}`);
   await page.getByLabel("Year").fill("2025");
   await page.getByLabel("Competition").fill("Advanced Jack & Jill");
+  await page.getByLabel("Placement").fill("2nd place");
   await page.getByLabel("Song", { exact: true }).fill("Dance Song");
   await page.getByLabel("Artist", { exact: true }).fill("Dance Artist");
   await page.getByRole("button", { name: "+ Another song" }).click();
@@ -325,6 +326,14 @@ async function main() {
   log("dances list shows the mapped dance");
   await page.goto(`${BASE}/dances`);
   await expectText(page, "3 moves marked");
+
+  log("placement shows and can be edited inline");
+  await page.goto(danceUrl);
+  await expectText(page, "2nd place");
+  await page.getByRole("button", { name: "edit", exact: true }).click();
+  await page.getByLabel("Placement").fill("1st place");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await expectText(page, "1st place");
 
   log("edit the dance's songs from the dance page");
   await page.goto(danceUrl);

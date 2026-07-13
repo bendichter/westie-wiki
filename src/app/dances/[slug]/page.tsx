@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { moves, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
 import { EditDanceSongForm } from "@/components/EditDanceSongForm";
+import { EditPlacementForm } from "@/components/EditPlacementForm";
 import { JsonLd } from "@/components/JsonLd";
 import { CountChip } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
@@ -105,6 +106,7 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
               : heading}
           </h1>
           {dance.competition ? <CountChip>{dance.competition}</CountChip> : null}
+          <EditPlacementForm danceId={dance.id} placement={dance.placement} canEdit={!!user} />
         </div>
         <div className="mt-1 font-display text-[15px] text-muted">
           {event ? (

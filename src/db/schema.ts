@@ -145,6 +145,8 @@ export const dances = sqliteTable(
     note: text("note"),
     // competition/division, e.g. "Advanced Jack & Jill", "Classic", "Strictly Swing"
     competition: text("competition"),
+    // optional result, e.g. "1st place", "Finalist" — many dances aren't competitions
+    placement: text("placement"),
     eventId: integer("event_id").references(() => events.id),
     addedBy: integer("added_by")
       .notNull()

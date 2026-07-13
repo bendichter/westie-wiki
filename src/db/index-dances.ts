@@ -23,6 +23,7 @@ type DanceEntry = {
   event: string | null;
   eventYear: number | null;
   competition: string | null;
+  placement?: string | null;
   note?: string | null;
 };
 
@@ -235,7 +236,8 @@ const DANCES: DanceEntry[] = [
     event: "Summer Hummer",
     eventYear: 2024,
     competition: "Champions Jack & Jill",
-    note: "1st place",
+    placement: "1st place",
+    note: null,
   },
   {
     youtubeId: "wT_I0fgBkXk",
@@ -247,7 +249,8 @@ const DANCES: DanceEntry[] = [
     event: "Summer Hummer",
     eventYear: 2024,
     competition: "Champions Jack & Jill",
-    note: "2nd place",
+    placement: "2nd place",
+    note: null,
   },
   {
     youtubeId: "sz6GhXI11NE",
@@ -295,7 +298,8 @@ const DANCES: DanceEntry[] = [
     event: "Boogie by the Bay",
     eventYear: 2023,
     competition: "Champions Strictly Swing",
-    note: "2nd place",
+    placement: "2nd place",
+    note: null,
   },
   {
     youtubeId: "AzuqLfm-duE",
@@ -319,7 +323,8 @@ const DANCES: DanceEntry[] = [
     event: "The US Open Swing Dance Championships",
     eventYear: 2024,
     competition: "Classic",
-    note: "1st place routine",
+    placement: "1st place",
+    note: null,
   },
   {
     youtubeId: "qUCVWwVmrLg",
@@ -499,7 +504,8 @@ const DANCES: DanceEntry[] = [
     event: "Swingtzerland",
     eventYear: 2017,
     competition: "Champions Jack & Jill",
-    note: "3rd place",
+    placement: "3rd place",
+    note: null,
   },
   {
     youtubeId: "HI23ZSnaNgg",
@@ -547,7 +553,8 @@ const DANCES: DanceEntry[] = [
     event: "Rock The Barn",
     eventYear: 2023,
     competition: "Switch Jack & Jill",
-    note: "1st place; switch division — roles alternate",
+    placement: "1st place",
+    note: "Switch division — roles alternate",
   },
   {
     youtubeId: "LqQGd-joikI",
@@ -621,7 +628,8 @@ const DANCES: DanceEntry[] = [
     event: "The Open Swing Dance Championships",
     eventYear: 2022,
     competition: "Champions Jack & Jill",
-    note: "1st place",
+    placement: "1st place",
+    note: null,
   },
   {
     youtubeId: "Nuessx9D23c",
@@ -669,7 +677,8 @@ const DANCES: DanceEntry[] = [
     event: "Swingtzerland",
     eventYear: 2017,
     competition: "Champions Jack & Jill",
-    note: "1st place",
+    placement: "1st place",
+    note: null,
   },
   {
     youtubeId: "QZ5qd4wU01Y",
@@ -801,7 +810,8 @@ const DANCES: DanceEntry[] = [
     event: "Desert City Swing",
     eventYear: null,
     competition: "Champions Jack & Jill",
-    note: "3rd place",
+    placement: "3rd place",
+    note: null,
   },
 ];
 
@@ -846,7 +856,15 @@ function findOrCreateEvent(name: string, year: number | null): number {
 let added = 0;
 let skipped = 0;
 for (const entry of DANCES) {
-  if (db.select({ id: dances.id }).from(dances).where(eq(dances.youtubeId, entry.youtubeId)).get()) {
+  const existingDance = db
+    .select()
+    .from(dances)
+    .where(eq(dances.youtubeId, entry.youtubeId))
+    .get();
+  if (existingDance) {
+    if (entry.placement && existingDance.placement == null) {
+      db.update(dances).set({ placement: entry.placement }).where(eq(dances.id, existingDance.id)).run();
+    }
     skipped++;
     continue;
   }
@@ -866,6 +884,7 @@ for (const entry of DANCES) {
       title: entry.title,
       note: entry.note ?? null,
       competition: entry.competition,
+      placement: entry.placement ?? null,
       eventId: entry.event ? findOrCreateEvent(entry.event, entry.eventYear) : null,
       addedBy: archivist.id,
       createdAt: Date.now(),

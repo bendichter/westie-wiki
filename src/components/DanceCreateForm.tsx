@@ -120,6 +120,25 @@ export function DanceCreateForm({ dancerNames }: { dancerNames: string[] }) {
         <FieldHint>The division or contest this dance was part of, if any.</FieldHint>
       </div>
 
+      <div className="max-w-48">
+        <Label htmlFor="placement">Placement</Label>
+        <Input
+          id="placement"
+          name="placement"
+          maxLength={40}
+          list="placement-suggestions"
+          placeholder="Optional"
+        />
+        <datalist id="placement-suggestions">
+          {["1st place", "2nd place", "3rd place", "4th place", "5th place", "Finalist", "Semifinalist"].map(
+            (v) => (
+              <option key={v} value={v} />
+            )
+          )}
+        </datalist>
+        <FieldHint>How this dance placed, if it was a competition.</FieldHint>
+      </div>
+
       <div className="max-w-md">
         <Label>Songs</Label>
         <div className="space-y-2">
