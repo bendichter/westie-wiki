@@ -166,8 +166,6 @@ export async function addAnnotation(
       endSec,
       title: dance.title,
       note: note || null,
-      song: dance.song,
-      artist: dance.artist,
       eventId: dance.eventId,
       danceId: dance.id,
       addedBy: user.id,

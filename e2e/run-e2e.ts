@@ -191,13 +191,9 @@ async function main() {
   await page.getByLabel("Event", { exact: true }).fill(`Test Event ${run.toUpperCase()}`);
   await page.getByLabel("Year").fill("2025");
   await page.getByLabel("Note").fill("Automated test clip");
-  await page.getByLabel("Song").fill("Test Song");
-  await page.getByLabel("Artist").fill("Test Artist");
   await page.getByRole("button", { name: "Add video" }).click();
   await expectText(page, "0:30 → 1:00");
   await expectText(page, `Lead ${run}`);
-  await expectText(page, "Test Song");
-  await expectText(page, "Test Artist");
   await shot(page, "08-video-added");
 
   log("edit clip timing on an existing video");
@@ -208,14 +204,12 @@ async function main() {
   await page.getByRole("button", { name: "Save clip" }).click();
   await expectText(page, "0:10 → 0:50");
 
-  log("restore original clip timing and annotate the song");
+  log("restore original clip timing");
   await page.getByRole("button", { name: "Edit clip" }).first().click();
   await page.getByLabel("Clip start").fill("0:30");
   await page.getByLabel("Clip end").fill("1:00");
-  await page.getByLabel("Song").fill("Renamed Song");
   await page.getByRole("button", { name: "Save clip" }).click();
   await expectText(page, "0:30 → 1:00");
-  await expectText(page, "Renamed Song");
 
   log("dancer page groups clips by move");
   await page.goto(`${BASE}/dancers/lead-${run}`);
@@ -314,7 +308,7 @@ async function main() {
   await page.getByRole("button", { name: "Add move" }).click();
   await expectText(page, "pick one from the suggestions");
 
-  log("annotation appears on the move page with inherited labels");
+  log("annotation appears on the move page with the dance's song");
   await page.goto(`${BASE}/moves/sugar-push`);
   await expectText(page, "0:15 → 0:19");
   await expectText(page, "Dance Song");

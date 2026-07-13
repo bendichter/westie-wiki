@@ -10,15 +10,11 @@ export function EditClipForm({
   startSec,
   endSec,
   note,
-  song,
-  artist,
 }: {
   videoId: number;
   startSec: number;
   endSec: number | null;
   note: string | null;
-  song: string | null;
-  artist: string | null;
 }) {
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState<VideoFormState, FormData>(
@@ -70,16 +66,6 @@ export function EditClipForm({
             placeholder="e.g. 1:45"
             className="font-mono !py-1.5 text-sm"
           />
-        </div>
-      </div>
-      <div className="flex gap-2">
-        <div className="flex-1">
-          <label htmlFor={`clip-song-${videoId}`} className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">Song</label>
-          <Input id={`clip-song-${videoId}`} name="song" defaultValue={song ?? ""} maxLength={120} placeholder="Optional" className="!py-1.5 text-sm" />
-        </div>
-        <div className="flex-1">
-          <label htmlFor={`clip-artist-${videoId}`} className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">Artist</label>
-          <Input id={`clip-artist-${videoId}`} name="artist" defaultValue={artist ?? ""} maxLength={120} placeholder="Optional" className="!py-1.5 text-sm" />
         </div>
       </div>
       <div>

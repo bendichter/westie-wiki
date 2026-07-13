@@ -168,8 +168,6 @@ export const videos = sqliteTable(
     endSec: integer("end_sec"),
     title: text("title"),
     note: text("note"),
-    song: text("song"),
-    artist: text("artist"),
     eventId: integer("event_id").references(() => events.id),
     // set when this clip is an annotation within a registered dance
     danceId: integer("dance_id").references(() => dances.id),

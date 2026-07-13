@@ -75,12 +75,12 @@ export function VideoCard({
               </Link>
             </div>
           ) : null}
-          {video.song || video.artist ? (
+          {video.danceSong || video.danceArtist ? (
             <div className="text-muted">
               <span aria-hidden>♪</span>{" "}
-              {video.song ? <span className="text-ink-soft">{video.song}</span> : null}
-              {video.song && video.artist ? " — " : null}
-              {video.artist}
+              {video.danceSong ? <span className="text-ink-soft">{video.danceSong}</span> : null}
+              {video.danceSong && video.danceArtist ? " — " : null}
+              {video.danceArtist}
             </div>
           ) : null}
           {video.note ? <p className="text-ink-soft">{video.note}</p> : null}
@@ -115,8 +115,6 @@ export function VideoCard({
                 startSec={video.startSec}
                 endSec={video.endSec}
                 note={video.note}
-                song={video.song}
-                artist={video.artist}
               />
             ) : null}
             {currentUserId === video.addedBy ? (

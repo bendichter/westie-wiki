@@ -143,17 +143,6 @@ export function AddVideoForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 max-w-md">
-        <div>
-          <Label htmlFor="song">Song</Label>
-          <Input id="song" name="song" maxLength={120} placeholder="Optional" />
-        </div>
-        <div>
-          <Label htmlFor="artist">Artist</Label>
-          <Input id="artist" name="artist" maxLength={120} placeholder="Optional" />
-        </div>
-      </div>
-
       <div>
         <Label htmlFor="note">Note</Label>
         <Input
