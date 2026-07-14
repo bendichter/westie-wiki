@@ -209,6 +209,76 @@ export async function addAnnotation(
   return { error: null, success: true };
 }
 
+/** Edit an existing annotation in place (wiki-style: any verified member). */
+export async function updateAnnotation(
+  _prev: AnnotationFormState,
+  formData: FormData
+): Promise<AnnotationFormState> {
+  const user = await getCurrentUser();
+  const videoId = Number(formData.get("videoId"));
+  const clip = db.select().from(videos).where(eq(videos.id, videoId)).get();
+  if (!clip || clip.danceId == null) return { error: "This annotation no longer exists." };
+  const dance = db.select().from(dances).where(eq(dances.id, clip.danceId)).get();
+  if (!dance) return { error: "This dance no longer exists." };
+  if (!user) redirect(`/login?next=/dances/${dance.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+
+  const previousMove = db.select().from(moves).where(eq(moves.id, clip.moveId)).get();
+
+  const moveName = String(formData.get("moveName") ?? "").trim();
+  const move = db
+    .select()
+    .from(moves)
+    .where(and(eq(moves.name, moveName), eq(moves.deleted, 0)))
+    .get();
+  if (!move) {
+    return { error: `No move named "${moveName}" — pick one from the suggestions, or document it first.` };
+  }
+
+  const startRaw = String(formData.get("start") ?? "").trim();
+  const endRaw = String(formData.get("end") ?? "").trim();
+  if (!startRaw) return { error: "Mark a start time first." };
+  const startSec = parseTimestamp(startRaw);
+  if (startSec == null) return { error: `Couldn't read the start time "${startRaw}". Use formats like 90 or 1:30.` };
+
+  let endSec: number | null = null;
+  if (endRaw) {
+    const t = parseTimestamp(endRaw);
+    if (t == null) return { error: `Couldn't read the end time "${endRaw}". Use formats like 105 or 1:45.` };
+    endSec = t;
+  }
+  if (endSec != null && endSec <= startSec) {
+    return { error: "The end time must be after the start time." };
+  }
+
+  const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+  const variantRaw = Number(formData.get("variantId"));
+  const variantId =
+    Number.isInteger(variantRaw) && variantRaw > 0
+      ? (db
+          .select({ id: moveVariants.id })
+          .from(moveVariants)
+          .where(and(eq(moveVariants.id, variantRaw), eq(moveVariants.moveId, move.id)))
+          .get()?.id ?? null)
+      : null;
+
+  const handholdRaw = Number(formData.get("handholdId"));
+  const handholdId =
+    Number.isInteger(handholdRaw) && handholdRaw > 0
+      ? (db.select({ id: handholds.id }).from(handholds).where(eq(handholds.id, handholdRaw)).get()?.id ?? null)
+      : null;
+
+  db.update(videos)
+    .set({ moveId: move.id, startSec, endSec, note: note || null, variantId, handholdId })
+    .where(eq(videos.id, clip.id))
+    .run();
+
+  revalidatePath(`/dances/${dance.slug}`);
+  revalidatePath(`/moves/${move.slug}`);
+  if (previousMove && previousMove.id !== move.id) revalidatePath(`/moves/${previousMove.slug}`);
+  return { error: null, success: true };
+}
+
 // songs arrive as parallel arrays: songName[] + songArtist[]; a row counts if either is set
 function parseSongRows(formData: FormData): { song: string; artist: string }[] {
   const names = formData.getAll("songName").map((v) => String(v).trim().slice(0, 120));

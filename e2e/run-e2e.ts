@@ -349,6 +349,26 @@ async function main() {
   await expectText(page, "(3)");
   await shot(page, "16-dance-annotated");
 
+  log("clicking a timeline segment loads it into the form for editing");
+  await page.getByRole("button", { name: "0:15–0:19" }).click();
+  await expectText(page, "Edit this move");
+  if ((await page.getByLabel("Move", { exact: true }).inputValue()) !== "Sugar Push") {
+    throw new Error("edit form did not populate the move name");
+  }
+  if ((await page.getByLabel("Start").inputValue()) !== "0:15") {
+    throw new Error("edit form did not populate the start time");
+  }
+  await page.getByLabel("End (optional)").fill("0:20");
+  await page.getByRole("button", { name: "Edit", exact: true }).click();
+  await expectText(page, "0:15–0:20");
+
+  log("loop buttons are enabled once start and end are set");
+  await page.getByRole("button", { name: "0:15–0:20" }).click();
+  const loopButton = page.getByRole("button", { name: "↻ loop", exact: true });
+  if (await loopButton.isDisabled()) throw new Error("loop button should be enabled with start+end");
+  await page.getByRole("button", { name: "Cancel" }).click();
+  await expectText(page, "Mark a move");
+
   log("unknown move name is rejected with guidance");
   await page.getByLabel("Move", { exact: true }).fill("Not A Real Move");
   await page.getByLabel("Start").fill("1:00");
@@ -357,7 +377,7 @@ async function main() {
 
   log("annotation appears on the move page with the dance's song");
   await page.goto(`${BASE}/moves/sugar-push`);
-  await expectText(page, "0:15 → 0:19");
+  await expectText(page, "0:15 → 0:20");
   await expectText(page, "Dance Song");
   await expectText(page, "From a mapped dance");
   await page.getByRole("link", { name: "From a mapped dance" }).first().click();
