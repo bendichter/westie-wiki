@@ -86,6 +86,7 @@ export function DanceAnnotator({
   const [note, setNote] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loopRate, setLoopRate] = useState<number | null>(null);
+  const [removing, setRemoving] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
 
   useEffect(() => {
@@ -176,6 +177,20 @@ export function DanceAnnotator({
   function jumpTo(seconds: number) {
     playerRef.current?.seekTo(seconds, true);
     playerRef.current?.playVideo();
+  }
+
+  /** Delete the annotation currently loaded in the edit form (owner only). */
+  async function removeEditingAnnotation() {
+    if (editingId == null || removing) return;
+    setRemoving(true);
+    try {
+      const fd = new FormData();
+      fd.set("videoId", String(editingId));
+      await deleteAnnotation(fd);
+      clearForm();
+    } finally {
+      setRemoving(false);
+    }
   }
 
   /** Load an annotation into the form for editing (and cue the player to it). */
@@ -409,6 +424,17 @@ export function DanceAnnotator({
                   Cancel
                 </button>
               ) : null}
+              {editingId != null &&
+              annotations.find((a) => a.id === editingId)?.addedBy === currentUserId ? (
+                <button
+                  type="button"
+                  onClick={removeEditingAnnotation}
+                  disabled={removing}
+                  className="ml-6 cursor-pointer rounded-md border border-danger/40 bg-panel px-3 py-2 font-display text-sm font-semibold text-danger hover:bg-danger/10 disabled:opacity-40"
+                >
+                  {removing ? "Removing…" : "Remove"}
+                </button>
+              ) : null}
             </div>
           </form>
         ) : (
@@ -457,18 +483,7 @@ export function DanceAnnotator({
                   >
                     {a.move.name}
                   </Link>
-                  {currentUserId === a.addedBy ? (
-                    <form action={deleteAnnotation} className="ml-auto">
-                      <input type="hidden" name="videoId" value={a.id} />
-                      <button
-                        type="submit"
-                        aria-label={`Remove ${a.move.name} annotation`}
-                        className="cursor-pointer text-xs text-muted/60 hover:text-danger"
-                      >
-                        ✕
-                      </button>
-                    </form>
-                  ) : null}
+
                 </div>
                 {a.note ? <p className="font-display text-xs text-ink-soft">{a.note}</p> : null}
               </li>

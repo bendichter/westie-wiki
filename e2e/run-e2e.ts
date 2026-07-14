@@ -369,6 +369,18 @@ async function main() {
   await page.getByRole("button", { name: "Cancel" }).click();
   await expectText(page, "Mark a move");
 
+  log("removing an annotation requires clicking into it first");
+  if ((await page.getByText("\u2715").count()) !== 0) throw new Error("timeline should not show inline delete buttons");
+  await page.getByLabel("Move", { exact: true }).fill("Whip");
+  await page.getByLabel("Start").fill("0:50");
+  await page.getByRole("button", { name: "Add move" }).click();
+  await expectText(page, "(4)");
+  await page.getByRole("button", { name: "0:50" }).click();
+  await expectText(page, "Edit this move");
+  await page.getByRole("button", { name: "Remove", exact: true }).click();
+  await expectText(page, "(3)");
+  await expectText(page, "Mark a move");
+
   log("unknown move name is rejected with guidance");
   await page.getByLabel("Move", { exact: true }).fill("Not A Real Move");
   await page.getByLabel("Start").fill("1:00");
