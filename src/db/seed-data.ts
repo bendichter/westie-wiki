@@ -66,9 +66,13 @@ The leader redirects the follower's momentum down the slot rather than pulling �
 - Followers generally keep their travel on the slot; a drifting left side pass is one of the most common beginner habits.
 - The leader's hand stays low and relaxed ("in the toolbox") — high hands early in this pattern usually mean an accidental [[Inside Roll|inside roll]] is coming.
 - Brian B describes the leader's path as *curling out of the slot* on 1–2, letting the follower pass on 3&4, then rejoining the slot on the other side for the anchor.[^2]
+- Thibault and Nicole Ramirez teach the same geometry from the follower's side: the leader is always the one who leaves the slot, clearing the path by count 2 so the follower keeps a straight line.[^3]
+- They also use this first pattern to introduce WCS's defining feel: keep a light elastic tension through 1–2, pass each other, and find the elastic again — "the elasticity is the signature of our dance."[^4]
 
 [^1]: Robert Royston, ["How to Do the Left Side Pass | Swing Dance"](https://www.youtube.com/watch?v=k7D6Uv8Y0E8&t=43s) (Howcast) at 0:43.
-[^2]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=195s) at 3:15.`,
+[^2]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=195s) at 3:15.
+[^3]: Thibault & Nicole Ramirez, ["Left Side Pass – Your First West Coast Swing Move"](https://www.youtube.com/watch?v=GnU7ADF9hP4&t=153s) at 2:33.
+[^4]: Thibault & Nicole Ramirez, ["Left Side Pass – Your First West Coast Swing Move"](https://www.youtube.com/watch?v=GnU7ADF9hP4&t=196s) at 3:16.`,
   },
   {
     name: "Right Side Pass",
@@ -90,10 +94,16 @@ The leader redirects the follower's momentum down the slot rather than pulling �
 - The follower's footwork is identical to the [[Left Side Pass|left side pass]] — Brian B calls this "the bonus" of learning the passes together, though the raised hand makes it feel different.[^1]
 - As the partners pass, the feet should cross rather than close: Robert Royston teaches that one foot stays crossed in front of the other on the passing triple.[^2]
 - Brian B's tip for followers is "getting skinny" — turning the shoulders slightly while passing so the joined hand clears the head easily instead of dragging across the leader's forearm.[^3]
+- Thibault Ramirez's memory hook for the lead: raise the left hand as if placing it beside your nose ("leaders, wipe your nose") to put the follower on your right side.[^4]
+- The handhold pivots during the pass, so followers shouldn't grab: leave space in the hook and let the ring- and middle-finger connection rotate as you go under — the leader releases and re-catches into the natural hold on the way out.[^5]
+- Leaders decide late: count 1 travels down the line either way, and count 2 is where the leader commits to a left side pass or an underarm.[^6]
 
 [^1]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=363s) at 6:03.
 [^2]: Robert Royston, ["How to Do the Underarm Turn | Swing Dance"](https://www.youtube.com/watch?v=bSu7QJZ5SLU&t=65s) (Howcast) at 1:05.
-[^3]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=423s) at 7:03.`,
+[^3]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=423s) at 7:03.
+[^4]: Thibault & Nicole Ramirez, ["Underarm Turn – Learn This Classic WCS Basic"](https://www.youtube.com/watch?v=wIiKVYFA10I&t=46s) at 0:46; the "wipe your nose" cue is from their [Sugar Tuck lesson](https://www.youtube.com/watch?v=ivvl2xtYyBo&t=192s) at 3:12.
+[^5]: Thibault & Nicole Ramirez, ["Underarm Turn – Learn This Classic WCS Basic"](https://www.youtube.com/watch?v=wIiKVYFA10I&t=152s) at 2:32–3:08.
+[^6]: Thibault & Nicole Ramirez, ["Underarm Turn – Learn This Classic WCS Basic"](https://www.youtube.com/watch?v=wIiKVYFA10I&t=199s) at 3:19.`,
   },
   {
     name: "Whip",
@@ -143,10 +153,14 @@ Danced like a sugar push through counts 1–2, but on **3&4** the leader rotates
 - Because the leader's hand finishes over the top of the grip, the tuck is commonly followed by an underarm turn ([[Right Side Pass|right side pass]]) to fix the handhold — Brian B calls this fix "magic, and for no extra charge."[^1]
 - Raising the lead hand does double duty: Brian B teaches that the raise itself closes the distance between the partners as the tuck sets up.[^2]
 - Robert Royston points out the tuck's leverage as a variation factory: led with the left hand up, right hand up, both hands, or no hands (a [[Free Spin|free spin]]), "once you learn the sugar tuck you immediately have four more moves."[^3]
+- The signal lives in the leader's left hand: Thibault Ramirez turns the fingers to face out, telling the follower "you're going to rotate outside" — and the follower compresses on a *high point* for 3&4 before unwinding.[^4]
+- Keep the handhold loose through the turn: release to catch. Nicole demonstrates letting the hand flip free so the leader can reconnect to the palm — holding a grip makes the switch impossible.[^5]
 
 [^1]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=598s) at 9:58.
 [^2]: Brian B & Megan, West Coast Swing Online, ["West Coast Swing Basic Steps // Beginner WCS"](https://www.youtube.com/watch?v=cKcamMuk3sA&t=575s) at 9:35.
-[^3]: Robert Royston, ["How to Do the Sugar Tuck | Swing Dance"](https://www.youtube.com/watch?v=AzV0eeolJ20&t=68s) (Howcast) at 1:08.`,
+[^3]: Robert Royston, ["How to Do the Sugar Tuck | Swing Dance"](https://www.youtube.com/watch?v=AzV0eeolJ20&t=68s) (Howcast) at 1:08.
+[^4]: Thibault & Nicole Ramirez, ["Sugar Tuck – Add Style with This WCS Variation"](https://www.youtube.com/watch?v=ivvl2xtYyBo&t=38s) at 0:38–1:51.
+[^5]: Thibault & Nicole Ramirez, ["Sugar Tuck – Add Style with This WCS Variation"](https://www.youtube.com/watch?v=ivvl2xtYyBo&t=201s) at 3:21–3:46.`,
   },
   {
     name: "Starter Step",
@@ -159,10 +173,11 @@ Not universal — plenty of dancers start straight into a [[Sugar Push|sugar pus
 
 ## One taught version
 
-Thibault and Nicole Ramirez teach the starter step from closed position: the partners first "tap the tempo" in place (walk-touch on the beat) for as long as the leader likes, then dance two triple steps — the first to the side, the second opening the position — flowing directly into a [[Left Side Pass|left side pass]].[^1] For the follower, the first triple is the signal: taps can continue indefinitely, but "as soon as we start with the triples, that tells me that the dance has now started."[^2]
+Thibault and Nicole Ramirez teach the starter step from closed position: the partners first "tap the tempo" in place (walk-touch on the beat) for as long as the leader likes, then dance two triple steps — the first to the side, the second opening the position — flowing directly into a [[Left Side Pass|left side pass]].[^1] For the follower, the first triple is the signal: taps can continue indefinitely, but "as soon as we start with the triples, that tells me that the dance has now started."[^2] Their companion rhythm lesson pins down *when* to start: WCS basics come in 6- and 8-count structures, and the dance starts on a **downbeat** — odd counts are downbeats, even counts the upbeats.[^3]
 
 [^1]: Thibault & Nicole Ramirez, ["Starter Step – How to Begin Your West Coast Swing"](https://www.youtube.com/watch?v=5NCgLVFecwI&t=50s) at 0:50.
-[^2]: Thibault & Nicole Ramirez, ["Starter Step – How to Begin Your West Coast Swing"](https://www.youtube.com/watch?v=5NCgLVFecwI&t=175s) at 2:55.`,
+[^2]: Thibault & Nicole Ramirez, ["Starter Step – How to Begin Your West Coast Swing"](https://www.youtube.com/watch?v=5NCgLVFecwI&t=175s) at 2:55.
+[^3]: Thibault & Nicole Ramirez, ["West Coast Swing Rhythm & Timing – Start Dancing on Beat"](https://www.youtube.com/watch?v=qM0bbXMYjd0&t=76s) at 1:16–1:55.`,
   },
   {
     name: "Anchor Step",
@@ -838,6 +853,41 @@ export const SEED_RESOURCES: [string, string, string][] = [
     "Wrapped Whip",
     "https://www.youtube.com/watch?v=TTHHevW2r7E",
     "Half Whip Wrap & Tuck Turn (Daily Dance Services)",
+  ],
+  [
+    "Left Side Pass",
+    "https://www.youtube.com/watch?v=GnU7ADF9hP4",
+    "Left Side Pass – Your First WCS Move (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Left Side Pass",
+    "https://www.youtube.com/watch?v=zsle7AwtEYk",
+    "Learn to Dance West Coast Swing in 5 Minutes! (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Right Side Pass",
+    "https://www.youtube.com/watch?v=wIiKVYFA10I",
+    "Underarm Turn – Learn This Classic WCS Basic (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Right Side Pass",
+    "https://www.youtube.com/watch?v=zsle7AwtEYk",
+    "Learn to Dance West Coast Swing in 5 Minutes! (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Sugar Tuck",
+    "https://www.youtube.com/watch?v=ivvl2xtYyBo",
+    "Sugar Tuck – Add Style with This WCS Variation (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Starter Step",
+    "https://www.youtube.com/watch?v=qM0bbXMYjd0",
+    "WCS Rhythm & Timing – Start Dancing on Beat (Thibault & Nicole Ramirez)",
+  ],
+  [
+    "Sugar Push",
+    "https://www.youtube.com/watch?v=zsle7AwtEYk",
+    "Learn to Dance West Coast Swing in 5 Minutes! (Thibault & Nicole Ramirez)",
   ],
   [
     "One Footed Spin",
