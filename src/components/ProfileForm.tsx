@@ -6,13 +6,16 @@ import { FieldHint, FormError, Input, Label, PrimaryButton, SecondaryButton, Sel
 
 export function ProfileForm({
   initial,
+  citySuggestions = [],
 }: {
   initial: {
     displayName: string | null;
     city: string | null;
     bio: string | null;
     danceRole: string | null;
+    wsdcNumber: number | null;
   };
+  citySuggestions?: string[];
 }) {
   const [open, setOpen] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -66,7 +69,25 @@ export function ProfileForm({
             maxLength={60}
             defaultValue={initial.city ?? ""}
             placeholder="e.g. Nashville, TN"
+            list="profile-city-suggestions"
           />
+          <datalist id="profile-city-suggestions">
+            {citySuggestions.map((c) => (
+              <option key={c} value={c} />
+            ))}
+          </datalist>
+        </div>
+        <div>
+          <Label htmlFor="wsdcNumber">WSDC #</Label>
+          <Input
+            id="wsdcNumber"
+            name="wsdcNumber"
+            inputMode="numeric"
+            maxLength={7}
+            defaultValue={initial.wsdcNumber ?? ""}
+            placeholder="e.g. 12345"
+          />
+          <FieldHint>Your World Swing Dance Council competitor number, if you have one.</FieldHint>
         </div>
       </div>
 

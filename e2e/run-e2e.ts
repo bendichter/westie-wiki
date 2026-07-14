@@ -347,6 +347,7 @@ async function main() {
     await page.waitForTimeout(400);
   }
   await expectText(page, "(3)");
+  await page.locator("aside").getByText("Two-hand").waitFor({ state: "visible", timeout: 15000 });
   await shot(page, "16-dance-annotated");
 
   log("clicking a timeline segment loads it into the form for editing");
@@ -488,6 +489,7 @@ async function main() {
   await page.getByRole("button", { name: "Edit profile" }).click();
   await page.getByLabel("Name").fill("Test Dancer");
   await page.getByLabel("City").fill("Nashville, TN");
+  await page.getByLabel("WSDC #").fill("12345");
   await page.getByLabel("I dance as").selectOption("switch");
   await page.getByLabel("About you").fill("Automated test dancer since 2026.");
   await page.getByRole("button", { name: "Save profile" }).click();
@@ -497,6 +499,7 @@ async function main() {
   await page.goto(`${BASE}/users/${user1.username}`);
   await expectText(page, "Test Dancer");
   await expectText(page, "Nashville, TN");
+  await expectText(page, "WSDC #12345");
   await expectText(page, "dances both roles");
   await expectText(page, "added a video clip");
   await shot(page, "13b-public-profile");
@@ -554,6 +557,9 @@ async function main() {
   log("house ad shows when no sponsors; admin page hidden from non-admins");
   await page.goto(`${BASE}/`);
   await expectText(page, "Sponsor Westie Wiki");
+  if ((await page.getByRole("link", { name: "Admin", exact: true }).count()) !== 0) {
+    throw new Error("Admin header link leaked to non-admin");
+  }
   const adminRes = await page.goto(`${BASE}/admin/sponsors`);
   if (adminRes && adminRes.status() !== 404) throw new Error("admin page leaked to non-admin");
 
@@ -563,6 +569,7 @@ async function main() {
   await page.getByLabel("Password").fill("westie-demo-1234");
   await page.getByRole("button", { name: "Log in" }).click();
   await page.waitForURL(`${BASE}/`);
+  await page.getByRole("link", { name: "Admin", exact: true }).waitFor({ state: "visible" });
   await page.goto(`${BASE}/admin/sponsors`);
   const sponsorName = `Test Sponsor ${run.toUpperCase()}`;
   await page.getByLabel("Name", { exact: true }).fill(sponsorName);

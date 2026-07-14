@@ -85,6 +85,7 @@ export default async function PublicProfilePage({
 
   const subtitleParts = [
     user.city,
+    user.wsdcNumber != null ? `WSDC #${user.wsdcNumber}` : null,
     user.danceRole ? ROLE_LABELS[user.danceRole] : null,
     `member since ${formatDate(user.createdAt)}`,
     `${editCount} edit${editCount === 1 ? "" : "s"}`,

@@ -10,8 +10,10 @@ import {
   learned,
   moveRevisions,
   moves,
+  users,
   videos,
 } from "@/db/schema";
+import { isNotNull } from "drizzle-orm";
 import { ProfileForm } from "@/components/ProfileForm";
 import { DifficultyBadge, EmptyState, PageTitle } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
@@ -22,6 +24,15 @@ export const metadata: Metadata = { title: "Your profile", robots: { index: fals
 export default async function ProfilePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/profile");
+
+  // cities other members have entered, for the city field's autocomplete
+  const citySuggestions = db
+    .selectDistinct({ city: users.city })
+    .from(users)
+    .where(isNotNull(users.city))
+    .all()
+    .map((r) => r.city!)
+    .sort((a, b) => a.localeCompare(b));
 
   const favoriteMoves = db
     .select({ move: moves, favoritedAt: favorites.createdAt })
@@ -92,7 +103,9 @@ export default async function ProfilePage() {
             city: user.city,
             bio: user.bio,
             danceRole: user.danceRole,
+            wsdcNumber: user.wsdcNumber,
           }}
+          citySuggestions={citySuggestions}
         />
       </section>
 

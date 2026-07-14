@@ -20,6 +20,8 @@ export const users = sqliteTable(
     city: text("city"),
     bio: text("bio"),
     danceRole: text("dance_role", { enum: DANCE_ROLES }),
+    // WSDC competitor number, shown on the public profile
+    wsdcNumber: integer("wsdc_number"),
   },
   (t) => [uniqueIndex("users_email_idx").on(t.email), uniqueIndex("users_username_idx").on(t.username)]
 );

@@ -3,6 +3,7 @@ import { likeContains } from "@/lib/like";
 import { and, asc, count, desc, eq, inArray, or } from "drizzle-orm";
 import { db } from "@/db";
 import {
+  handholds,
   danceDancers,
   dancers,
   dances,
@@ -61,6 +62,7 @@ export function getDanceAnnotations(danceId: number): AnnotationItem[] {
       note: videos.note,
       variantId: videos.variantId,
       handholdId: videos.handholdId,
+      handholdName: handholds.name,
       addedBy: videos.addedBy,
       addedByName: users.username,
       moveSlug: moves.slug,
@@ -69,6 +71,7 @@ export function getDanceAnnotations(danceId: number): AnnotationItem[] {
     .from(videos)
     .innerJoin(moves, eq(moves.id, videos.moveId))
     .innerJoin(users, eq(users.id, videos.addedBy))
+    .leftJoin(handholds, eq(handholds.id, videos.handholdId))
     .where(and(eq(videos.danceId, danceId), eq(moves.deleted, 0)))
     .orderBy(asc(videos.startSec), asc(videos.id))
     .all()
@@ -79,6 +82,7 @@ export function getDanceAnnotations(danceId: number): AnnotationItem[] {
       note: r.note,
       variantId: r.variantId,
       handholdId: r.handholdId,
+      handholdName: r.handholdName,
       addedBy: r.addedBy,
       addedByName: r.addedByName,
       move: { slug: r.moveSlug, name: r.moveName },

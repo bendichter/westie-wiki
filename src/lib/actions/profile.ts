@@ -24,6 +24,15 @@ export async function updateProfile(
     ? (danceRoleRaw as DanceRole)
     : null;
 
+  const wsdcRaw = String(formData.get("wsdcNumber") ?? "").trim().replace(/^#/, "");
+  let wsdcNumber: number | null = null;
+  if (wsdcRaw) {
+    if (!/^\d{1,6}$/.test(wsdcRaw)) {
+      return { error: "WSDC numbers are plain digits, e.g. 12345." };
+    }
+    wsdcNumber = Number(wsdcRaw);
+  }
+
   if (bio.length > 1000) return { error: "Bio is capped at 1,000 characters." };
 
   db.update(users)
@@ -32,6 +41,7 @@ export async function updateProfile(
       city: city || null,
       bio: bio || null,
       danceRole,
+      wsdcNumber,
     })
     .where(eq(users.id, user.id))
     .run();

@@ -50,6 +50,7 @@ export type AnnotationItem = {
   note: string | null;
   variantId: number | null;
   handholdId: number | null;
+  handholdName: string | null;
   addedBy: number;
   addedByName: string;
   move: { slug: string; name: string };
@@ -483,6 +484,11 @@ export function DanceAnnotator({
                   >
                     {a.move.name}
                   </Link>
+                  {a.handholdName ? (
+                    <span className="rounded-full border border-line bg-panel px-2 py-0.5 font-display text-[11px] text-muted">
+                      {a.handholdName}
+                    </span>
+                  ) : null}
 
                 </div>
                 {a.note ? <p className="font-display text-xs text-ink-soft">{a.note}</p> : null}

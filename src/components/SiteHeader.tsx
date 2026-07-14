@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
+import { isAdmin } from "@/lib/admin";
 import { logout } from "@/lib/actions/auth";
 import { SearchBar } from "./SearchBar";
 import { VerifyEmailBanner } from "./VerifyEmailBanner";
@@ -48,6 +49,14 @@ export async function SiteHeader() {
             <SearchBar />
             {user ? (
               <div className="flex items-center gap-3 text-sm font-display">
+                {isAdmin(user) ? (
+                  <Link
+                    href="/admin/moderation"
+                    className="text-amber/90 hover:text-amber hover:underline underline-offset-4"
+                  >
+                    Admin
+                  </Link>
+                ) : null}
                 <Link href="/profile" className="text-paper/90 hover:text-paper hover:underline underline-offset-4">
                   {user.username}
                 </Link>
