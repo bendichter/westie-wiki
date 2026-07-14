@@ -407,6 +407,14 @@ async function main() {
   await page.goto(`${BASE}/dances`);
   await expectText(page, "3 moves marked");
 
+  log("dance event can be edited inline");
+  await page.goto(danceUrl);
+  await page.getByRole("button", { name: "edit event" }).click();
+  await page.getByLabel("Event name").fill(`Corrected Event ${run.toUpperCase()}`);
+  await page.getByLabel("Event year").fill("2024");
+  await page.getByRole("button", { name: "Save", exact: true }).first().click();
+  await expectText(page, `Corrected Event ${run.toUpperCase()} 2024`);
+
   log("placement shows and can be edited inline");
   await page.goto(danceUrl);
   await expectText(page, "2nd place");

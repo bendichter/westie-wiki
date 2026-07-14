@@ -3,8 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { handholds as handholdsTable, moves, moveVariants, users } from "@/db/schema";
+import { events, handholds as handholdsTable, moves, moveVariants, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
+import { EditDanceEventForm } from "@/components/EditDanceEventForm";
 import { EditDanceSongForm } from "@/components/EditDanceSongForm";
 import { EditPlacementForm } from "@/components/EditPlacementForm";
 import { ReportForm } from "@/components/ReportForm";
@@ -61,6 +62,12 @@ export default async function DancePage({
   const user = await getCurrentUser();
   const danceDancerList = getDanceDancers(dance.id);
   const event = getDanceEvent(dance.id);
+  const eventSuggestions = db
+    .selectDistinct({ name: events.name })
+    .from(events)
+    .all()
+    .map((r) => r.name)
+    .sort((a, b) => a.localeCompare(b));
   const songs = getDanceSongs(dance.id);
   const annotations = getDanceAnnotations(dance.id);
   const addedBy = db.select({ username: users.username }).from(users).where(eq(users.id, dance.addedBy)).get();
@@ -135,16 +142,13 @@ export default async function DancePage({
           <EditPlacementForm danceId={dance.id} placement={dance.placement} canEdit={!!user} />
         </div>
         <div className="mt-1 font-display text-[15px] text-muted">
-          {event ? (
-            <>
-              at{" "}
-              <Link href={`/events/${event.slug}`} className="text-denim hover:underline">
-                {event.name}
-                {event.year ? ` ${event.year}` : ""}
-              </Link>
-            </>
-          ) : null}
-          {event ? " · " : ""}
+          <EditDanceEventForm
+            danceId={dance.id}
+            event={event ?? null}
+            eventSuggestions={eventSuggestions}
+            canEdit={!!user}
+          />
+          {" · "}
           <EditDanceSongForm danceId={dance.id} songs={songs} canEdit={!!user} />
           {" · "}
           registered by{" "}

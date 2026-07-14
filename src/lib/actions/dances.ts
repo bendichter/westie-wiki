@@ -318,6 +318,35 @@ export async function updateDancePlacement(
   return { error: null, success: true };
 }
 
+/** Set, change, or clear the event a dance belongs to; annotation clips follow. */
+export async function updateDanceEvent(
+  _prev: AnnotationFormState,
+  formData: FormData
+): Promise<AnnotationFormState> {
+  const user = await getCurrentUser();
+  const danceId = Number(formData.get("danceId"));
+  const dance = db.select().from(dances).where(eq(dances.id, danceId)).get();
+  if (!dance) return { error: "This dance no longer exists." };
+  if (!user) redirect(`/login?next=/dances/${dance.slug}`);
+  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+
+  const eventName = String(formData.get("eventName") ?? "").trim().slice(0, 120);
+  const eventYearRaw = String(formData.get("eventYear") ?? "").trim();
+  if (eventYearRaw && !/^\d{4}$/.test(eventYearRaw)) {
+    return { error: "Event year should be a four-digit year, e.g. 2024." };
+  }
+  const eventId = eventName
+    ? findOrCreateEvent(eventName, eventYearRaw ? Number(eventYearRaw) : null)
+    : null;
+
+  db.update(dances).set({ eventId }).where(eq(dances.id, dance.id)).run();
+  // annotation clips carry the dance's event label — keep them in step
+  db.update(videos).set({ eventId }).where(eq(videos.danceId, dance.id)).run();
+
+  revalidatePath(`/dances/${dance.slug}`);
+  return { error: null, success: true };
+}
+
 /** Set or correct a dance's songs (extended videos often play several). */
 export async function updateDanceSongs(
   _prev: AnnotationFormState,
