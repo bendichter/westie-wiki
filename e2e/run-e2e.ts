@@ -373,10 +373,10 @@ async function main() {
   log("removing an annotation requires clicking into it first");
   if ((await page.getByText("\u2715").count()) !== 0) throw new Error("timeline should not show inline delete buttons");
   await page.getByLabel("Move", { exact: true }).fill("Whip");
-  await page.getByLabel("Start").fill("0:50");
+  await page.getByLabel("Start").fill("0:50.5");
   await page.getByRole("button", { name: "Add move" }).click();
   await expectText(page, "(4)");
-  await page.getByRole("button", { name: "0:50" }).click();
+  await page.getByRole("button", { name: "0:50.5" }).click();
   await expectText(page, "Edit this move");
   await page.getByRole("button", { name: "Remove", exact: true }).click();
   await expectText(page, "(3)");

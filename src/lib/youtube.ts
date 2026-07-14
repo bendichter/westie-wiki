@@ -48,13 +48,15 @@ export function parseYoutubeUrl(input: string): { id: string; startSec: number |
 
 export function youtubeEmbedUrl(id: string, startSec: number, endSec: number | null): string {
   const params = new URLSearchParams({ rel: "0" });
-  if (startSec > 0) params.set("start", String(startSec));
-  if (endSec != null && endSec > startSec) params.set("end", String(endSec));
+  // embed params must be whole seconds — widen outward so the clip stays inside
+  if (startSec > 0) params.set("start", String(Math.floor(startSec)));
+  if (endSec != null && endSec > startSec) params.set("end", String(Math.ceil(endSec)));
   return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
 }
 
 export function youtubeWatchUrl(id: string, startSec: number): string {
-  return `https://www.youtube.com/watch?v=${id}${startSec > 0 ? `&t=${startSec}s` : ""}`;
+  const t = Math.floor(startSec);
+  return `https://www.youtube.com/watch?v=${id}${t > 0 ? `&t=${t}s` : ""}`;
 }
 
 export function youtubeThumbnailUrl(id: string): string {

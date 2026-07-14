@@ -172,7 +172,7 @@ export function DanceAnnotator({
 
   function captureTime(setter: (v: string) => void) {
     const t = playerRef.current?.getCurrentTime();
-    if (t != null && Number.isFinite(t)) setter(formatTimestamp(Math.floor(t)));
+    if (t != null && Number.isFinite(t)) setter(formatTimestamp(Math.round(t * 10) / 10));
   }
 
   function jumpTo(seconds: number) {

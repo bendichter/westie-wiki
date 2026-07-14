@@ -222,3 +222,28 @@ describe("stripMoveLinks", () => {
     expect(stripMoveLinks("a [[Whip]] and [[Sugar Push|pushes]]")).toBe("a Whip and pushes");
   });
 });
+
+describe("fractional timestamps", () => {
+  it("parses decimals in all forms, rounded to tenths", async () => {
+    const { parseTimestamp } = await import("../time");
+    expect(parseTimestamp("70.5")).toBe(70.5);
+    expect(parseTimestamp("1:10.5")).toBe(70.5);
+    expect(parseTimestamp("1:10.55")).toBe(70.6);
+    expect(parseTimestamp("1m10.5s")).toBe(70.5);
+    expect(parseTimestamp("1:02:03.2")).toBe(3723.2);
+    expect(parseTimestamp("1:60.5")).toBeNull();
+  });
+  it("formats fractional seconds with one decimal", async () => {
+    const { formatTimestamp } = await import("../time");
+    expect(formatTimestamp(70.5)).toBe("1:10.5");
+    expect(formatTimestamp(70)).toBe("1:10");
+    expect(formatTimestamp(3723.2)).toBe("1:02:03.2");
+    expect(formatTimestamp(69.96)).toBe("1:10");
+  });
+  it("widens embed params outward to whole seconds", async () => {
+    const { youtubeEmbedUrl } = await import("../youtube");
+    const url = youtubeEmbedUrl("abc123def45", 70.5, 79.2);
+    expect(url).toContain("start=70");
+    expect(url).toContain("end=80");
+  });
+});
