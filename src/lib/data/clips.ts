@@ -11,6 +11,7 @@ function hydrateClips(
     id: number;
     youtubeId: string;
     startSec: number;
+    portrait: number;
     endSec: number | null;
     title: string | null;
     note: string | null;
@@ -62,6 +63,7 @@ function hydrateClips(
     id: r.id,
     youtubeId: r.youtubeId,
     startSec: r.startSec,
+    portrait: r.portrait === 1,
     endSec: r.endSec,
     title: r.title,
     note: r.note,
@@ -89,6 +91,7 @@ const clipSelection = {
   id: videos.id,
   youtubeId: videos.youtubeId,
   startSec: videos.startSec,
+  portrait: videos.portrait,
   endSec: videos.endSec,
   title: videos.title,
   note: videos.note,

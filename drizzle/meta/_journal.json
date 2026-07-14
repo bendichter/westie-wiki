@@ -120,6 +120,20 @@
       "when": 1783967037852,
       "tag": "0016_cross_hand_orientations",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "6",
+      "when": 1783991332047,
+      "tag": "0017_video_portrait",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1783991509260,
+      "tag": "0018_leaders_right_handhold",
+      "breakpoints": true
     }
   ]
 }

@@ -12,13 +12,18 @@ export function LiteYouTube({
   startSec,
   endSec,
   title,
+  portrait = false,
 }: {
   youtubeId: string;
   startSec: number;
   endSec: number | null;
   title: string;
+  portrait?: boolean;
 }) {
   const [playing, setPlaying] = useState(false);
+  // vertical (Shorts-style) clips get a 9:16 frame at a sane height instead
+  // of a pillarboxed 16:9 box
+  const frame = portrait ? "aspect-[9/16] h-[420px] max-w-full mx-auto" : "w-full aspect-video";
 
   if (playing) {
     return (
@@ -27,7 +32,7 @@ export function LiteYouTube({
         title={title}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
-        className="w-full aspect-video rounded-md border border-line bg-ink"
+        className={`${frame} rounded-md border border-line bg-ink`}
       />
     );
   }
@@ -36,7 +41,7 @@ export function LiteYouTube({
     <button
       type="button"
       onClick={() => setPlaying(true)}
-      className="relative w-full aspect-video rounded-md border border-line overflow-hidden group cursor-pointer bg-ink"
+      className={`relative ${portrait ? "block" : ""} ${frame} rounded-md border border-line overflow-hidden group cursor-pointer bg-ink`}
       aria-label={`Play clip: ${title}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

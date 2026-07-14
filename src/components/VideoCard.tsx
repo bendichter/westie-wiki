@@ -37,6 +37,7 @@ export function VideoCard({
         startSec={video.startSec}
         endSec={video.endSec}
         title={video.title ?? "Video example"}
+        portrait={video.portrait}
       />
       <div className="p-3.5">
         {/* clip bar: the labeled segment, in the wiki's slot motif */}

@@ -8,7 +8,7 @@ import { dancers, events, handholds, moves, moveVariants, VIDEO_ROLES, videoDanc
 import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
-import { fetchYoutubeTitle, parseYoutubeUrl } from "@/lib/youtube";
+import { fetchYoutubeMeta, parseYoutubeUrl } from "@/lib/youtube";
 
 export type VideoFormState = { error: string | null; success?: boolean };
 
@@ -101,7 +101,8 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
   const note = String(formData.get("note") ?? "").trim().slice(0, 500);
   const variantId = parseVariantId(formData, move.id);
   const handholdId = parseHandholdId(formData);
-  const title = await fetchYoutubeTitle(parsed.id);
+  const meta = await fetchYoutubeMeta(parsed.id);
+  const title = meta?.title ?? null;
 
   const video = db
     .insert(videos)
@@ -112,6 +113,7 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
       endSec,
       title,
       note: note || null,
+      portrait: meta?.portrait ? 1 : 0,
       variantId,
       handholdId,
       eventId: eventName ? findOrCreateEvent(eventName, eventYear) : null,

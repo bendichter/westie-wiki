@@ -1,0 +1,1 @@
+ALTER TABLE `videos` ADD `portrait` integer DEFAULT 0 NOT NULL;

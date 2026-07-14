@@ -61,17 +61,28 @@ export function youtubeThumbnailUrl(id: string): string {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 
-/** Fetch the video title via YouTube's keyless oEmbed endpoint. Null on failure. */
-export async function fetchYoutubeTitle(id: string): Promise<string | null> {
+/** Fetch title and orientation via YouTube's keyless oEmbed endpoint. Null on failure. */
+export async function fetchYoutubeMeta(
+  id: string
+): Promise<{ title: string | null; portrait: boolean } | null> {
   try {
     const res = await fetch(
       `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}&format=json`,
       { signal: AbortSignal.timeout(4000) }
     );
     if (!res.ok) return null;
-    const data = (await res.json()) as { title?: string };
-    return data.title ?? null;
+    const data = (await res.json()) as { title?: string; width?: number; height?: number };
+    return {
+      title: data.title ?? null,
+      portrait:
+        typeof data.width === "number" && typeof data.height === "number" && data.height > data.width,
+    };
   } catch {
     return null;
   }
+}
+
+/** Fetch the video title via YouTube's keyless oEmbed endpoint. Null on failure. */
+export async function fetchYoutubeTitle(id: string): Promise<string | null> {
+  return (await fetchYoutubeMeta(id))?.title ?? null;
 }

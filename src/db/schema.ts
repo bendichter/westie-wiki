@@ -221,6 +221,8 @@ export const videos = sqliteTable(
     handholdId: integer("handhold_id").references(() => handholds.id),
     // set when this clip is an annotation within a registered dance
     danceId: integer("dance_id").references(() => dances.id),
+    // 1 for vertical (Shorts-style) videos, detected via oEmbed dimensions
+    portrait: integer("portrait").notNull().default(0),
     addedBy: integer("added_by")
       .notNull()
       .references(() => users.id),
