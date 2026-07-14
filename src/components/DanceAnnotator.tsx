@@ -63,6 +63,7 @@ export function DanceAnnotator({
   variantsByMove,
   handholds,
   currentUserId,
+  initialClipId = null,
 }: {
   danceId: number;
   youtubeId: string;
@@ -71,6 +72,7 @@ export function DanceAnnotator({
   variantsByMove: Record<string, { id: number; name: string }[]>;
   handholds: { id: number; name: string }[];
   currentUserId: number | null;
+  initialClipId?: number | null;
 }) {
   const playerHostRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
@@ -101,6 +103,18 @@ export function DanceAnnotator({
       cancelled = true;
     };
   }, [youtubeId]);
+
+  // arriving from a move page's "from a mapped dance" link: cue that clip
+  // into the form and player once, as soon as the player is ready
+  const initialClipLoaded = useRef(false);
+  useEffect(() => {
+    if (!playerReady || initialClipLoaded.current || initialClipId == null) return;
+    const target = annotations.find((a) => a.id === initialClipId);
+    if (!target) return;
+    initialClipLoaded.current = true;
+    loadAnnotation(target);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerReady, initialClipId, annotations]);
 
   const loopStartSec = parseTimestamp(start.trim());
   const loopEndSec = parseTimestamp(end.trim());

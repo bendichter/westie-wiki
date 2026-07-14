@@ -381,7 +381,14 @@ async function main() {
   await expectText(page, "Dance Song");
   await expectText(page, "From a mapped dance");
   await page.getByRole("link", { name: "From a mapped dance" }).first().click();
-  await page.waitForURL(danceUrl);
+  await page.waitForURL((u) => u.href.startsWith(danceUrl) && u.searchParams.has("clip"));
+
+  log("mapped-dance link preloads the clip into the annotator");
+  await expectText(page, "Edit this move");
+  if ((await page.getByLabel("Start").inputValue()) !== "0:15") {
+    throw new Error("linked clip did not preload its start time");
+  }
+  await page.getByRole("button", { name: "Cancel" }).click();
 
   log("dances list shows the mapped dance");
   await page.goto(`${BASE}/dances`);

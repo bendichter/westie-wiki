@@ -45,8 +45,16 @@ export async function generateMetadata({
   };
 }
 
-export default async function DancePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function DancePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ clip?: string }>;
+}) {
   const { slug } = await params;
+  const { clip } = await searchParams;
+  const initialClipId = clip && /^\d+$/.test(clip) ? Number(clip) : null;
   const dance = getDanceBySlug(slug);
   if (!dance) notFound();
 
@@ -171,6 +179,7 @@ export default async function DancePage({ params }: { params: Promise<{ slug: st
         variantsByMove={variantsByMove}
         handholds={allHandholds}
         currentUserId={user?.id ?? null}
+        initialClipId={initialClipId}
       />
     </div>
   );

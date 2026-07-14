@@ -117,7 +117,7 @@ export function VideoCard({
               Watch on YouTube
             </a>
             {video.danceSlug ? (
-              <Link href={`/dances/${video.danceSlug}`} className="hover:text-denim underline">
+              <Link href={`/dances/${video.danceSlug}?clip=${video.id}`} className="hover:text-denim underline">
                 From a mapped dance
               </Link>
             ) : null}
