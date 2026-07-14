@@ -313,6 +313,15 @@ export function DanceAnnotator({
               >
                 {loopRate === 0.5 ? "◼ stop ½× loop" : "↻ loop ½×"}
               </button>
+              <button
+                type="button"
+                disabled={!canLoop}
+                onClick={() => setLoopRate(loopRate === 0.25 ? null : 0.25)}
+                className={loopButtonClass(loopRate === 0.25)}
+                title="Play the marked segment on repeat at quarter speed"
+              >
+                {loopRate === 0.25 ? "◼ stop ¼× loop" : "↻ loop ¼×"}
+              </button>
               {!canLoop ? (
                 <span className="font-display text-xs text-muted">
                   set a start and end to loop the clip
