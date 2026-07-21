@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   addAnnotation,
@@ -117,6 +117,17 @@ export function DanceAnnotator({
     loadAnnotation(target);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerReady, initialClipId, annotations]);
+
+  // offer to document a move the wiki doesn't know yet (matching is
+  // case-insensitive so a lowercase spelling of an existing move doesn't
+  // read as new)
+  const knownMoveNames = useMemo(
+    () => new Set(moveNames.map((n) => n.toLowerCase())),
+    [moveNames]
+  );
+  const trimmedMoveName = moveName.trim();
+  const isUnknownMove =
+    trimmedMoveName.length >= 2 && !knownMoveNames.has(trimmedMoveName.toLowerCase());
 
   const loopStartSec = parseTimestamp(start.trim());
   const loopEndSec = parseTimestamp(end.trim());
@@ -270,6 +281,20 @@ export function DanceAnnotator({
                     <option key={name} value={name} />
                   ))}
                 </datalist>
+                {isUnknownMove ? (
+                  <p className="mt-1.5 flex flex-wrap items-center gap-1.5 font-display text-xs text-muted">
+                    <span>No move named “{trimmedMoveName}” yet.</span>
+                    <a
+                      href={`/moves/new?name=${encodeURIComponent(trimmedMoveName)}`}
+                      target="_blank"
+                      rel="noopener"
+                      className="shrink-0 rounded-md border border-line bg-panel px-2 py-1 font-semibold hover:border-amber hover:text-amber"
+                    >
+                      + document it
+                    </a>
+                    <span>(opens a new tab, your marks stay put)</span>
+                  </p>
+                ) : null}
               </div>
               <div>
                 <label htmlFor="annotate-start" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">

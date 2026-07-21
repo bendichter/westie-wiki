@@ -14,6 +14,8 @@ import {
 
 type MoveFormProps = {
   mode: "create" | "edit";
+  /** Prefill for the name field in create mode (e.g. from the annotator's ?name= link). */
+  initialName?: string;
   initial?: {
     moveId: number;
     baseRevision: number;
@@ -25,7 +27,7 @@ type MoveFormProps = {
   };
 };
 
-export function MoveForm({ mode, initial }: MoveFormProps) {
+export function MoveForm({ mode, initialName, initial }: MoveFormProps) {
   const action = mode === "create" ? createMove : updateMove;
   const [state, formAction, pending] = useActionState<MoveFormState, FormData>(action, {
     error: null,
@@ -44,7 +46,7 @@ export function MoveForm({ mode, initial }: MoveFormProps) {
       <div className="grid sm:grid-cols-[1fr_200px] gap-4">
         <div>
           <Label htmlFor="name">Move name</Label>
-          <Input id="name" name="name" required minLength={2} maxLength={80} defaultValue={initial?.name} />
+          <Input id="name" name="name" required minLength={2} maxLength={80} defaultValue={initial?.name ?? initialName} />
           <FieldHint>The name most dancers would recognize. Add other names below.</FieldHint>
         </div>
         <div>
