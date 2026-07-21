@@ -671,6 +671,29 @@ EastonSwing's version takes the joined hand over the leader's *own head*: raise 
 [^2]: EastonSwing, ["West Coast Swing, Level 2, Leaders Turns"](https://www.youtube.com/watch?v=w6eH9BtdF4k&t=104s) at 1:44–3:30.
 [^3]: Matt Davis & Desiree, Rising Tide Swing Dance Studio, ["Basic Leader Turns – WCS Guide #51"](https://www.youtube.com/watch?v=sZsLwbUyRqg&t=124s) at 2:04–3:45.`,
   },
+  {
+    name: "Shoulder Roll",
+    aliases: [],
+    difficulty: "intermediate",
+    tags: ["spins & turns", "styling & footwork"],
+    description: `A close-position roll where the joined arm folds over one partner's head and unrolls across the back of their shoulders as they turn out from underneath. Think of it as a [[Barrel Roll|barrel roll]] scaled down to the shoulder line: instead of the whole body rolling down the slot along the arm, the roll travels across the shoulders while the feet stay nearly in place.
+
+## The shape
+
+- From open position, the leader brings the follower in so the partners end up close together, roughly side by side and facing the same way.
+- The joined hands sweep up, and the arm folds over the rolling partner's head, elbow high and soft so the connection clears the face and hair.
+- As the rolling partner rotates out from under the arm, the connection unrolls across the back of the shoulders and peels off, the hands releasing at the end of the roll.
+- The partners re-extend down the slot, reconnect, and anchor.
+
+## Either partner can roll
+
+It's All Swing's demo shows the pattern both ways. In the slow walkthrough the follower takes the roll, sweeping the arm up and unrolling it across her shoulders as the leader stays behind her.[^1] In the next run the leader takes it, folding the joined hands over his own head as the follower steps behind him, then unwinding back out to open position.[^2]
+
+Because the roll itself is a shape rather than a crank through the hands, the rolling partner controls the speed of the unroll. That makes it an easy place to play with the music: hit a phrase ending by letting the arm melt off the shoulders slowly, or match a fast lick by snapping it through.
+
+[^1]: It's All Swing, ["#MondayMoves - Ep 12"](https://www.youtube.com/watch?v=2TOz-R2TBGY&t=26s) at 0:26–0:34; full-speed run at [0:11](https://www.youtube.com/watch?v=2TOz-R2TBGY&t=11s).
+[^2]: It's All Swing, ["#MondayMoves - Ep 12"](https://www.youtube.com/watch?v=2TOz-R2TBGY&t=40s) at 0:40–0:47.`,
+  },
 ];
 
 // relations: [fromMove, toMove, kind]
@@ -974,6 +997,11 @@ export const SEED_RESOURCES: [string, string, string][] = [
     "https://www.youtube.com/watch?v=w6eH9BtdF4k",
     "Leaders Turns, Level 2 (EastonSwing)",
   ],
+  [
+    "Shoulder Roll",
+    "https://www.youtube.com/watch?v=2TOz-R2TBGY",
+    "#MondayMoves - Ep 12 (It's All Swing)",
+  ],
 ];
 
 export const SEED_RELATIONS: [string, string, RelationKind][] = [
@@ -1013,6 +1041,7 @@ export const SEED_RELATIONS: [string, string, RelationKind][] = [
   ["Kick Ball Change", "Anchor Step", "related"],
   ["Body Roll", "Cuddle", "related"],
   ["Cuddle", "Left Side Pass", "prerequisite"],
+  ["Shoulder Roll", "Barrel Roll", "related"],
 ];
 
 export type SeedCurriculum = {
