@@ -89,6 +89,7 @@ export function DanceAnnotator({
   const [loopRate, setLoopRate] = useState<number | null>(null);
   const [removing, setRemoving] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -118,6 +119,24 @@ export function DanceAnnotator({
     else loadClip(target);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerReady, initialClipId, annotations]);
+
+  // follow playback and highlight the annotation under the playhead; an
+  // annotation without an end time stays active until the next one starts
+  useEffect(() => {
+    if (!playerReady || annotations.length === 0) return;
+    const timer = setInterval(() => {
+      const t = playerRef.current?.getCurrentTime();
+      if (t == null || !Number.isFinite(t)) return;
+      let current: AnnotationItem | null = null;
+      for (const a of annotations) {
+        if (a.startSec <= t) current = a;
+        else break;
+      }
+      if (current && current.endSec != null && t > current.endSec) current = null;
+      setActiveId(current?.id ?? null);
+    }, 250);
+    return () => clearInterval(timer);
+  }, [playerReady, annotations]);
 
   // offer to document a move the wiki doesn't know yet (matching is
   // case-insensitive so a lowercase spelling of an existing move doesn't
@@ -514,18 +533,23 @@ export function DanceAnnotator({
         ) : (
           <ol className="relative ml-2 space-y-0 border-l-2 border-line">
             {annotations.map((a) => (
-              <li key={a.id} className="relative pb-4 pl-5">
+              <li
+                key={a.id}
+                className={`relative pb-4 pl-5 transition-colors ${
+                  activeId === a.id ? "rounded-r-md bg-amber/10" : ""
+                }`}
+              >
                 <span
                   className={`absolute -left-[5px] top-2 h-2 w-2 rounded-full ${
                     editingId === a.id ? "bg-denim" : "bg-amber"
-                  }`}
+                  } ${activeId === a.id ? "ring-4 ring-amber/30" : ""}`}
                   aria-hidden
                 />
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   <button
                     type="button"
                     onClick={() => (currentUserId ? loadAnnotation(a) : loadClip(a))}
-                    className="cursor-pointer font-mono text-xs text-amber hover:underline"
+                    className="cursor-pointer font-mono text-sm font-semibold text-amber hover:underline"
                     title={
                       currentUserId
                         ? "Load this clip into the form"
@@ -537,7 +561,7 @@ export function DanceAnnotator({
                   </button>
                   <Link
                     href={`/moves/${a.move.slug}`}
-                    className="font-display font-semibold text-denim hover:underline"
+                    className="font-display text-sm font-semibold text-denim hover:underline"
                   >
                     {a.move.name}
                   </Link>
