@@ -112,6 +112,8 @@ export async function resolveReport(formData: FormData): Promise<void> {
         .set({ resolvedAt: now, resolution: "removed", videoId: null })
         .where(and(eq(reports.videoId, videoId), isNull(reports.resolvedAt)))
         .run();
+      // detach already-resolved reports too, or the delete hits their FK
+      db.update(reports).set({ videoId: null }).where(eq(reports.videoId, videoId)).run();
       db.delete(videoDancers).where(eq(videoDancers.videoId, videoId)).run();
       db.delete(videos).where(eq(videos.id, videoId)).run();
     } else if (report.danceId != null) {
@@ -126,11 +128,14 @@ export async function resolveReport(formData: FormData): Promise<void> {
         .set({ resolvedAt: now, resolution: "removed", danceId: null })
         .where(and(eq(reports.danceId, danceId), isNull(reports.resolvedAt)))
         .run();
+      // detach already-resolved reports too, or the delete hits their FK
+      db.update(reports).set({ danceId: null }).where(eq(reports.danceId, danceId)).run();
       for (const id of annotationIds) {
         db.update(reports)
           .set({ resolvedAt: now, resolution: "removed", videoId: null })
           .where(and(eq(reports.videoId, id), isNull(reports.resolvedAt)))
           .run();
+        db.update(reports).set({ videoId: null }).where(eq(reports.videoId, id)).run();
         db.delete(videoDancers).where(eq(videoDancers.videoId, id)).run();
         db.delete(videos).where(eq(videos.id, id)).run();
       }
