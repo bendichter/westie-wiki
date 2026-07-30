@@ -114,7 +114,8 @@ export function DanceAnnotator({
     const target = annotations.find((a) => a.id === initialClipId);
     if (!target) return;
     initialClipLoaded.current = true;
-    loadAnnotation(target);
+    if (currentUserId) loadAnnotation(target);
+    else loadClip(target);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerReady, initialClipId, annotations]);
 
@@ -151,7 +152,6 @@ export function DanceAnnotator({
       clearInterval(timer);
       player.setPlaybackRate(1);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loopRate, loopStartSec, loopEndSec]);
 
   function clearForm() {
@@ -205,17 +205,22 @@ export function DanceAnnotator({
     }
   }
 
+  /** Load an annotation's segment into the clip controls (and cue the player to it). */
+  function loadClip(a: AnnotationItem) {
+    setStart(formatTimestamp(a.startSec));
+    setEnd(a.endSec != null ? formatTimestamp(a.endSec) : "");
+    setLoopRate(null);
+    jumpTo(a.startSec);
+  }
+
   /** Load an annotation into the form for editing (and cue the player to it). */
   function loadAnnotation(a: AnnotationItem) {
     setEditingId(a.id);
     setMoveName(a.move.name);
-    setStart(formatTimestamp(a.startSec));
-    setEnd(a.endSec != null ? formatTimestamp(a.endSec) : "");
     setVariantId(a.variantId != null ? String(a.variantId) : "");
     setHandholdId(a.handholdId != null ? String(a.handholdId) : "");
     setNote(a.note ?? "");
-    setLoopRate(null);
-    jumpTo(a.startSec);
+    loadClip(a);
   }
 
   const nowButtonClass =
@@ -226,6 +231,100 @@ export function DanceAnnotator({
         ? "border-amber bg-amber/15 text-amber"
         : "border-line bg-panel hover:border-amber hover:text-amber"
     }`;
+
+  // start/end inputs and the loop buttons are shared between the logged-in
+  // annotation form and the logged-out clip panel
+  const startEndFields = (
+    <>
+      <div>
+        <label htmlFor="annotate-start" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
+          Start
+        </label>
+        <div className="flex gap-1.5">
+          <Input
+            id="annotate-start"
+            name="start"
+            required
+            value={start}
+            onChange={(e) => setStart(e.target.value)}
+            placeholder="1:23"
+            className="font-mono !w-24"
+          />
+          <button
+            type="button"
+            disabled={!playerReady}
+            onClick={() => captureTime(setStart)}
+            className={nowButtonClass}
+            title="Use current playback time"
+          >
+            now
+          </button>
+        </div>
+      </div>
+      <div>
+        <label htmlFor="annotate-end" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
+          End <span className="font-normal text-muted">(optional)</span>
+        </label>
+        <div className="flex gap-1.5">
+          <Input
+            id="annotate-end"
+            name="end"
+            value={end}
+            onChange={(e) => setEnd(e.target.value)}
+            placeholder="1:31"
+            className="font-mono !w-24"
+          />
+          <button
+            type="button"
+            disabled={!playerReady}
+            onClick={() => captureTime(setEnd)}
+            className={nowButtonClass}
+            title="Use current playback time"
+          >
+            now
+          </button>
+        </div>
+      </div>
+    </>
+  );
+
+  const clipLoopControls = (
+    <div className="flex items-center gap-1.5">
+      <span className="font-display text-xs font-semibold text-ink-soft">Clip:</span>
+      <button
+        type="button"
+        disabled={!canLoop}
+        onClick={() => setLoopRate(loopRate === 1 ? null : 1)}
+        className={loopButtonClass(loopRate === 1)}
+        title="Play the marked segment on repeat"
+      >
+        {loopRate === 1 ? "◼ stop loop" : "↻ loop"}
+      </button>
+      <button
+        type="button"
+        disabled={!canLoop}
+        onClick={() => setLoopRate(loopRate === 0.5 ? null : 0.5)}
+        className={loopButtonClass(loopRate === 0.5)}
+        title="Play the marked segment on repeat at half speed"
+      >
+        {loopRate === 0.5 ? "◼ stop ½× loop" : "↻ loop ½×"}
+      </button>
+      <button
+        type="button"
+        disabled={!canLoop}
+        onClick={() => setLoopRate(loopRate === 0.25 ? null : 0.25)}
+        className={loopButtonClass(loopRate === 0.25)}
+        title="Play the marked segment on repeat at quarter speed"
+      >
+        {loopRate === 0.25 ? "◼ stop ¼× loop" : "↻ loop ¼×"}
+      </button>
+      {!canLoop ? (
+        <span className="font-display text-xs text-muted">
+          set a start and end to loop the clip
+        </span>
+      ) : null}
+    </div>
+  );
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
@@ -296,93 +395,11 @@ export function DanceAnnotator({
                   </p>
                 ) : null}
               </div>
-              <div>
-                <label htmlFor="annotate-start" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
-                  Start
-                </label>
-                <div className="flex gap-1.5">
-                  <Input
-                    id="annotate-start"
-                    name="start"
-                    required
-                    value={start}
-                    onChange={(e) => setStart(e.target.value)}
-                    placeholder="1:23"
-                    className="font-mono !w-24"
-                  />
-                  <button
-                    type="button"
-                    disabled={!playerReady}
-                    onClick={() => captureTime(setStart)}
-                    className={nowButtonClass}
-                    title="Use current playback time"
-                  >
-                    now
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="annotate-end" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
-                  End <span className="font-normal text-muted">(optional)</span>
-                </label>
-                <div className="flex gap-1.5">
-                  <Input
-                    id="annotate-end"
-                    name="end"
-                    value={end}
-                    onChange={(e) => setEnd(e.target.value)}
-                    placeholder="1:31"
-                    className="font-mono !w-24"
-                  />
-                  <button
-                    type="button"
-                    disabled={!playerReady}
-                    onClick={() => captureTime(setEnd)}
-                    className={nowButtonClass}
-                    title="Use current playback time"
-                  >
-                    now
-                  </button>
-                </div>
-              </div>
+              {startEndFields}
             </div>
 
             {/* clip playback: loop the marked segment, full speed or half speed */}
-            <div className="flex items-center gap-1.5">
-              <span className="font-display text-xs font-semibold text-ink-soft">Clip:</span>
-              <button
-                type="button"
-                disabled={!canLoop}
-                onClick={() => setLoopRate(loopRate === 1 ? null : 1)}
-                className={loopButtonClass(loopRate === 1)}
-                title="Play the marked segment on repeat"
-              >
-                {loopRate === 1 ? "◼ stop loop" : "↻ loop"}
-              </button>
-              <button
-                type="button"
-                disabled={!canLoop}
-                onClick={() => setLoopRate(loopRate === 0.5 ? null : 0.5)}
-                className={loopButtonClass(loopRate === 0.5)}
-                title="Play the marked segment on repeat at half speed"
-              >
-                {loopRate === 0.5 ? "◼ stop ½× loop" : "↻ loop ½×"}
-              </button>
-              <button
-                type="button"
-                disabled={!canLoop}
-                onClick={() => setLoopRate(loopRate === 0.25 ? null : 0.25)}
-                className={loopButtonClass(loopRate === 0.25)}
-                title="Play the marked segment on repeat at quarter speed"
-              >
-                {loopRate === 0.25 ? "◼ stop ¼× loop" : "↻ loop ¼×"}
-              </button>
-              {!canLoop ? (
-                <span className="font-display text-xs text-muted">
-                  set a start and end to loop the clip
-                </span>
-              ) : null}
-            </div>
+            {clipLoopControls}
 
             <div className="flex items-end gap-3">
               {(variantsByMove[moveName] ?? []).length > 0 ? (
@@ -464,12 +481,23 @@ export function DanceAnnotator({
             </div>
           </form>
         ) : (
-          <p className="mt-4 font-display text-sm text-muted">
-            <Link href="/login" className="text-denim underline">
-              Log in
-            </Link>{" "}
-            to mark the moves in this dance.
-          </p>
+          <div className="mt-4 space-y-3 rounded-lg border border-line bg-panel p-4">
+            <div className="flex items-baseline justify-between gap-3 flex-wrap">
+              <h2 className="font-display text-lg font-bold">Loop a clip</h2>
+              <p className="font-display text-xs text-muted">
+                Click a marked move, or set a start and end yourself, then loop it at full, half,
+                or quarter speed.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">{startEndFields}</div>
+            {clipLoopControls}
+            <p className="font-display text-sm text-muted">
+              <Link href="/login" className="text-denim underline">
+                Log in
+              </Link>{" "}
+              to mark the moves in this dance.
+            </p>
+          </div>
         )}
       </div>
 
@@ -496,9 +524,13 @@ export function DanceAnnotator({
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   <button
                     type="button"
-                    onClick={() => (currentUserId ? loadAnnotation(a) : jumpTo(a.startSec))}
+                    onClick={() => (currentUserId ? loadAnnotation(a) : loadClip(a))}
                     className="cursor-pointer font-mono text-xs text-amber hover:underline"
-                    title={currentUserId ? "Load this clip into the form" : "Jump the player here"}
+                    title={
+                      currentUserId
+                        ? "Load this clip into the form"
+                        : "Load this clip into the loop controls"
+                    }
                   >
                     {formatTimestamp(a.startSec)}
                     {a.endSec != null ? `–${formatTimestamp(a.endSec)}` : ""}
