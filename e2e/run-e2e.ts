@@ -40,6 +40,8 @@ function cleanupPreviousRuns() {
   // count-based assertions hold on every run
   const sqlite = new Database(process.env.DATABASE_PATH ?? "./data/wcs-wiki.db");
   sqlite.exec(`
+    UPDATE reports SET video_id = NULL WHERE video_id IN (SELECT id FROM videos WHERE dance_id IS NOT NULL);
+    UPDATE reports SET dance_id = NULL WHERE dance_id IS NOT NULL;
     DELETE FROM video_dancers WHERE video_id IN (SELECT id FROM videos WHERE dance_id IS NOT NULL);
     DELETE FROM videos WHERE dance_id IS NOT NULL;
     DELETE FROM dance_dancers;
@@ -202,43 +204,6 @@ async function main() {
   await page.goto(`${moveUrl}/history`);
   await expectText(page, "Restored revision 1");
 
-  // --- add video with labels ---
-  log("add a video with timestamps, dancers, event");
-  await page.goto(moveUrl);
-  await page.getByRole("button", { name: "+ Add a video example" }).click();
-  await page.getByLabel("YouTube link").fill("https://youtu.be/dfVpwMLqm-o?t=30");
-  await page.getByLabel("Clip end").fill("1:00");
-  await page.locator('input[name="dancerName"]').nth(0).fill(`Lead ${run}`);
-  await page.locator('select[name="dancerRole"]').nth(0).selectOption("leader");
-  await page.locator('input[name="dancerName"]').nth(1).fill(`Follow ${run}`);
-  await page.locator('select[name="dancerRole"]').nth(1).selectOption("follower");
-  await page.getByLabel("Event", { exact: true }).fill(`Test Event ${run.toUpperCase()}`);
-  await page.getByLabel("Year").fill("2025");
-  await page.getByLabel("Note").fill("Automated test clip");
-  await page.locator('select[name="variantId"]').selectOption({ label: "With hand-change exit" });
-  await page.locator('select[name="handholdId"]').first().selectOption({ label: "Right-to-right (handshake)" });
-  await page.getByRole("button", { name: "Add video" }).click();
-  await expectText(page, "0:30 → 1:00");
-  await expectText(page, `Lead ${run}`);
-  await expectText(page, "With hand-change exit");
-  await expectText(page, "Right-to-right (handshake)");
-  await shot(page, "08-video-added");
-
-  log("edit clip timing on an existing video");
-  await page.goto(moveUrl);
-  await page.getByRole("button", { name: "Edit clip" }).first().click();
-  await page.getByLabel("Clip start").fill("0:10");
-  await page.getByLabel("Clip end").fill("0:50");
-  await page.getByRole("button", { name: "Save clip" }).click();
-  await expectText(page, "0:10 → 0:50");
-
-  log("restore original clip timing");
-  await page.getByRole("button", { name: "Edit clip" }).first().click();
-  await page.getByLabel("Clip start").fill("0:30");
-  await page.getByLabel("Clip end").fill("1:00");
-  await page.getByRole("button", { name: "Save clip" }).click();
-  await expectText(page, "0:30 → 1:00");
-
   log("cite an instructional video from another platform");
   await page.goto(moveUrl);
   await page.getByRole("button", { name: "+ Cite an instructional video" }).click();
@@ -248,23 +213,9 @@ async function main() {
   await expectText(page, "Handhold breakdown reel");
   await expectText(page, "Instagram");
 
-  log("dancer page groups clips by move under the Moves tab");
-  await page.goto(`${BASE}/dancers/lead-${run}?tab=moves`);
-  await expectText(page, moveName);
-  await expectText(page, "0:30 → 1:00");
-  await shot(page, "09-dancer-page");
-
-  log("event page shows the clip under the Moves tab");
-  await page.goto(`${BASE}/events`);
-  await expectText(page, `Test Event ${run.toUpperCase()}`);
-  await page.goto(`${BASE}/events/test-event-${run}-2025?tab=moves`);
-  await expectText(page, "0:30 → 1:00");
-
-  log("search finds move by alias and dancer by name");
+  log("search finds move by alias");
   await page.goto(`${BASE}/search?q=Secret Handshake`);
   await expectText(page, moveName);
-  await page.goto(`${BASE}/search?q=Follow ${run}`);
-  await expectText(page, `Follow ${run}`);
   await shot(page, "10-search");
 
   log("list pages: inline search and pagination");
@@ -272,15 +223,6 @@ async function main() {
   await expectText(page, moveName);
   await page.goto(`${BASE}/moves?page=2`);
   await expectText(page, "page 2 of");
-  await page.goto(`${BASE}/dancers?q=Lead ${run}`);
-  await expectText(page, `Lead ${run}`);
-  await page.goto(`${BASE}/events?q=Test Event ${run.toUpperCase()}`);
-  await expectText(page, `Test Event ${run.toUpperCase()}`);
-
-  log("home feed counts the clip as a contribution");
-  await page.goto(BASE);
-  await expectText(page, "Recent contributions");
-  await expectText(page, "added a video clip");
 
   // --- relations ---
   log("link a related move");
@@ -392,16 +334,41 @@ async function main() {
   await page.goto(`${BASE}/moves/sugar-push`);
   await expectText(page, "0:15 → 0:20");
   await expectText(page, "Dance Song");
-  await expectText(page, "From a mapped dance");
-  await page.getByRole("link", { name: "From a mapped dance" }).first().click();
-  await page.waitForURL((u) => u.href.startsWith(danceUrl) && u.searchParams.has("clip"));
 
-  log("mapped-dance link preloads the clip into the annotator");
+  log("clicking the clip thumbnail opens the mapped dance with the clip looping");
+  await page.getByRole("link", { name: /mapped dance/i }).first().click();
+  await page.waitForURL((u) => u.href.startsWith(danceUrl) && u.searchParams.has("clip"));
   await expectText(page, "Edit this move");
   if ((await page.getByLabel("Start").inputValue()) !== "0:15") {
     throw new Error("linked clip did not preload its start time");
   }
+  await page.getByRole("button", { name: "◼ stop loop" }).waitFor({ timeout: 15000 });
   await page.getByRole("button", { name: "Cancel" }).click();
+
+  log("dancer page groups clips by move under the Moves tab");
+  await page.goto(`${BASE}/dancers/lead-${run}?tab=moves`);
+  await expectText(page, "Sugar Push");
+  await expectText(page, "0:15 → 0:20");
+  await shot(page, "09-dancer-page");
+
+  log("event page shows the clip under the Moves tab");
+  await page.goto(`${BASE}/events`);
+  await expectText(page, `Test Event ${run.toUpperCase()}`);
+  await page.goto(`${BASE}/events/test-event-${run}-2025?tab=moves`);
+  await expectText(page, "0:15 → 0:20");
+
+  log("search finds the dancer by name; list pages find dancer and event");
+  await page.goto(`${BASE}/search?q=Follow ${run}`);
+  await expectText(page, `Follow ${run}`);
+  await page.goto(`${BASE}/dancers?q=Lead ${run}`);
+  await expectText(page, `Lead ${run}`);
+  await page.goto(`${BASE}/events?q=Test Event ${run.toUpperCase()}`);
+  await expectText(page, `Test Event ${run.toUpperCase()}`);
+
+  log("home feed counts the annotated clip as a contribution");
+  await page.goto(BASE);
+  await expectText(page, "Recent contributions");
+  await expectText(page, "added a video clip");
 
   log("dances list shows the mapped dance");
   await page.goto(`${BASE}/dances`);
@@ -447,7 +414,7 @@ async function main() {
   await page.goto(`${BASE}/dancers/lead-${run}`);
   await expectText(page, "Advanced Jack & Jill");
   await page.getByRole("tab", { name: /Moves/ }).click();
-  await expectText(page, "0:30 → 1:00");
+  await expectText(page, "0:15 → 0:20");
   await page.goto(`${BASE}/moves/sugar-push`);
   await expectText(page, "Seen in dances");
   await expectText(page, `Lead ${run} & Follow ${run}`);
@@ -631,8 +598,8 @@ async function main() {
   await blockRow.getByRole("button", { name: "Unblock" }).click();
   await blockRow.getByText("blocked").waitFor({ state: "detached" });
 
-  log("member reports a clip; admin sees and dismisses it");
-  await page.goto(moveUrl);
+  log("member reports a dance; admin sees and dismisses it");
+  await page.goto(danceUrl);
   await page.getByRole("button", { name: "Report", exact: true }).first().click();
   await page.getByLabel("Report reason").fill("Testing the report flow");
   await page.getByRole("button", { name: "Send report" }).click();

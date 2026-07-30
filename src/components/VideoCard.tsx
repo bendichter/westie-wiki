@@ -4,22 +4,16 @@ import type { VideoWithLabels } from "@/lib/data/moves";
 import { formatTimestamp } from "@/lib/time";
 import { youtubeWatchUrl } from "@/lib/youtube";
 import { CountChip } from "./ui";
-import { EditClipForm } from "./EditClipForm";
-import { ReportForm } from "./ReportForm";
 import { LiteYouTube } from "./LiteYouTube";
 
 export function VideoCard({
   video,
   currentUserId,
   showMove,
-  variants,
-  handholds,
 }: {
   video: VideoWithLabels & { moveName?: string; moveSlug?: string };
   currentUserId: number | null;
   showMove?: boolean;
-  variants?: { id: number; name: string }[];
-  handholds?: { id: number; name: string }[];
 }) {
   const clipLabel =
     video.endSec != null
@@ -38,6 +32,7 @@ export function VideoCard({
         endSec={video.endSec}
         title={video.title ?? "Video example"}
         portrait={video.portrait}
+        href={video.danceSlug ? `/dances/${video.danceSlug}?clip=${video.id}` : undefined}
       />
       <div className="p-3.5">
         {/* clip bar: the labeled segment, in the wiki's slot motif */}
@@ -116,30 +111,12 @@ export function VideoCard({
             >
               Watch on YouTube
             </a>
-            {video.danceSlug ? (
-              <Link href={`/dances/${video.danceSlug}?clip=${video.id}`} className="hover:text-denim underline">
-                From a mapped dance
-              </Link>
-            ) : null}
             <span>
               added by{" "}
               <Link href={`/users/${video.addedByName}`} className="hover:text-denim hover:underline">
                 {video.addedByName}
               </Link>
             </span>
-            {currentUserId != null ? (
-              <EditClipForm
-                videoId={video.id}
-                startSec={video.startSec}
-                endSec={video.endSec}
-                note={video.note}
-                variantId={video.variantId}
-                variants={variants}
-                handholdId={video.handholdId}
-                handholds={handholds}
-              />
-            ) : null}
-            {currentUserId != null ? <ReportForm videoId={video.id} /> : null}
             {currentUserId === video.addedBy ? (
               <form action={deleteVideo} className="ml-auto">
                 <input type="hidden" name="videoId" value={video.id} />

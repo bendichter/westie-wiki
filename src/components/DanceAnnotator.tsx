@@ -107,7 +107,7 @@ export function DanceAnnotator({
     };
   }, [youtubeId]);
 
-  // arriving from a move page's "from a mapped dance" link: cue that clip
+  // arriving from a move page's clip thumbnail: cue that clip
   // into the form and player once, as soon as the player is ready
   const initialClipLoaded = useRef(false);
   useEffect(() => {
@@ -115,8 +115,9 @@ export function DanceAnnotator({
     const target = annotations.find((a) => a.id === initialClipId);
     if (!target) return;
     initialClipLoaded.current = true;
-    if (currentUserId) loadAnnotation(target);
-    else loadClip(target);
+    // start looping the linked clip right away
+    if (currentUserId) loadAnnotation(target, 1);
+    else loadClip(target, 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerReady, initialClipId, annotations]);
 
@@ -224,22 +225,25 @@ export function DanceAnnotator({
     }
   }
 
-  /** Load an annotation's segment into the clip controls (and cue the player to it). */
-  function loadClip(a: AnnotationItem) {
+  /**
+   * Load an annotation's segment into the clip controls (and cue the player to
+   * it). Pass a rate to start looping it immediately (needs an end time).
+   */
+  function loadClip(a: AnnotationItem, loop: number | null = null) {
     setStart(formatTimestamp(a.startSec));
     setEnd(a.endSec != null ? formatTimestamp(a.endSec) : "");
-    setLoopRate(null);
+    setLoopRate(a.endSec != null ? loop : null);
     jumpTo(a.startSec);
   }
 
   /** Load an annotation into the form for editing (and cue the player to it). */
-  function loadAnnotation(a: AnnotationItem) {
+  function loadAnnotation(a: AnnotationItem, loop: number | null = null) {
     setEditingId(a.id);
     setMoveName(a.move.name);
     setVariantId(a.variantId != null ? String(a.variantId) : "");
     setHandholdId(a.handholdId != null ? String(a.handholdId) : "");
     setNote(a.note ?? "");
-    loadClip(a);
+    loadClip(a, loop);
   }
 
   const nowButtonClass =

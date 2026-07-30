@@ -3,8 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers, favorites, moveRelations, moves } from "@/db/schema";
-import { AddVideoForm } from "@/components/AddVideoForm";
+import { favorites, moveRelations, moves } from "@/db/schema";
 import { CommentSection } from "@/components/CommentSection";
 import { JsonLd } from "@/components/JsonLd";
 import { DefaultHandholdPicker } from "@/components/DefaultHandholdPicker";
@@ -143,13 +142,6 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
     .all()
     .map((r) => r.name)
     .filter((n) => n !== move.name);
-  const allDancerNames = db
-    .select({ name: dancers.name })
-    .from(dancers)
-    .orderBy(asc(dancers.name))
-    .all()
-    .map((r) => r.name);
-
   // relation ids for the remove buttons (only outgoing relations are removable here)
   const relationRows = db
     .select()
@@ -245,27 +237,19 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
             </div>
             {videos.length === 0 ? (
               <EmptyState title="No videos yet">
-                Seen this move danced on YouTube? Link the clip with timestamps.
+                Seen this move in a dance on YouTube?{" "}
+                <Link href="/dances/new" className="text-denim underline">
+                  Register the dance
+                </Link>{" "}
+                and mark the move there.
               </EmptyState>
             ) : (
               <div className="grid gap-5 sm:grid-cols-2">
                 {videos.map((v) => (
-                  <VideoCard key={v.id} video={v} currentUserId={user?.id ?? null} variants={variants} handholds={allHandholds} />
+                  <VideoCard key={v.id} video={v} currentUserId={user?.id ?? null} />
                 ))}
               </div>
             )}
-            <div className="mt-5">
-              {user ? (
-                <AddVideoForm moveId={move.id} dancerNames={allDancerNames} variants={variants} handholds={allHandholds} />
-              ) : (
-                <p className="text-sm text-muted font-display">
-                  <Link href={`/login?next=/moves/${move.slug}`} className="text-denim underline">
-                    Log in
-                  </Link>{" "}
-                  to add a video example.
-                </p>
-              )}
-            </div>
           </section>
 
           <ResourceSection
