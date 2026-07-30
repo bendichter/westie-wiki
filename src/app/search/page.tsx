@@ -4,6 +4,7 @@ import { and, eq, inArray, or, sql, type SQL } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import { db } from "@/db";
 import { curricula, dancers, danceSongs, dances, events, moveAliases, moves } from "@/db/schema";
+import { getDanceDancers } from "@/lib/data/dances";
 import { DifficultyBadge, EmptyState, PageTitle } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Search", robots: { index: false } };
@@ -42,9 +43,20 @@ export default async function SearchPage({
     );
   }
 
+  // split the query into words and require every word to match somewhere, so
+  // "MADJam Bryn" finds a dance whose event and dancer each carry one word;
   // escape LIKE metacharacters so searching for "100%" or "s_gar" is literal
-  const pattern = `%${query.replace(/[\\%_]/g, (m) => `\\${m}`)}%`;
-  const matches = (column: AnySQLiteColumn): SQL => sql`${column} LIKE ${pattern} ESCAPE '\\'`;
+  const tokens = query
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((t) => `%${t.replace(/[\\%_]/g, (m) => `\\${m}`)}%`);
+  // every word must match at least one of the given columns
+  const matches = (...columns: AnySQLiteColumn[]): SQL =>
+    and(
+      ...tokens.map(
+        (p) => or(...columns.map((c) => sql`${c} LIKE ${p} ESCAPE '\\'`))!
+      )
+    )!;
 
   // moves by name or alias (deduped, name matches ranked first)
   const nameMatches = db
@@ -88,37 +100,70 @@ export default async function SearchPage({
     }
   }
 
-  // dances whose songs, title, or competition match
+  // dances match on everything a person might describe them by: title,
+  // competition, event, dancers, and songs, concatenated into one haystack so
+  // each word can land in a different field
+  const danceIdRows = db.all<{ id: number }>(sql`
+    SELECT d.id AS id,
+      coalesce(d.title, '') || ' ' || coalesce(d.competition, '') || ' '
+        || coalesce(e.name, '') || ' ' || coalesce(e.year, '') || ' '
+        || coalesce(group_concat(dr.name, ' '), '') || ' '
+        || coalesce(group_concat(ds.song, ' '), '') || ' '
+        || coalesce(group_concat(ds.artist, ' '), '') AS haystack
+    FROM dances d
+    LEFT JOIN events e ON e.id = d.event_id
+    LEFT JOIN dance_dancers dd ON dd.dance_id = d.id
+    LEFT JOIN dancers dr ON dr.id = dd.dancer_id
+    LEFT JOIN dance_songs ds ON ds.dance_id = d.id
+    GROUP BY d.id
+    HAVING ${sql.join(
+      tokens.map((p) => sql`haystack LIKE ${p} ESCAPE '\\'`),
+      sql` AND `
+    )}
+    LIMIT 15
+  `);
+  const danceIds = danceIdRows.map((r) => r.id);
+  // annotate results whose songs matched, like before
   const songMatches = db
     .selectDistinct({ danceId: danceSongs.danceId, song: danceSongs.song, artist: danceSongs.artist })
     .from(danceSongs)
-    .where(or(matches(danceSongs.song), matches(danceSongs.artist)))
+    .where(matches(danceSongs.song, danceSongs.artist))
     .limit(15)
     .all();
-  const titleMatches = db
-    .selectDistinct({ id: dances.id })
-    .from(dances)
-    .where(or(matches(dances.title), matches(dances.competition)))
-    .limit(15)
-    .all();
-  const danceIds = [...new Set([...songMatches.map((r) => r.danceId), ...titleMatches.map((r) => r.id)])].slice(0, 15);
   const songByDance = new Map(songMatches.map((r) => [r.danceId, r]));
   const danceResults =
     danceIds.length > 0
       ? db
-          .select({ id: dances.id, slug: dances.slug, title: dances.title, competition: dances.competition })
+          .select({
+            id: dances.id,
+            slug: dances.slug,
+            title: dances.title,
+            competition: dances.competition,
+            eventName: events.name,
+            eventYear: events.year,
+          })
           .from(dances)
+          .leftJoin(events, eq(events.id, dances.eventId))
           .where(inArray(dances.id, danceIds))
           .all()
-          .map((d) => ({ ...d, matchedSong: songByDance.get(d.id) ?? null }))
+          .map((d) => ({
+            ...d,
+            dancerNames: getDanceDancers(d.id).map((x) => x.name),
+            matchedSong: songByDance.get(d.id) ?? null,
+          }))
       : [];
 
   const dancerResults = db.select().from(dancers).where(matches(dancers.name)).limit(15).all();
-  const eventResults = db.select().from(events).where(matches(events.name)).limit(15).all();
+  const eventResults = db
+    .select()
+    .from(events)
+    .where(matches(events.name, events.year))
+    .limit(15)
+    .all();
   const curriculumResults = db
     .select()
     .from(curricula)
-    .where(and(eq(curricula.deleted, 0), or(matches(curricula.title), matches(curricula.description))))
+    .where(and(eq(curricula.deleted, 0), matches(curricula.title, curricula.description)))
     .limit(15)
     .all();
 
@@ -189,16 +234,25 @@ export default async function SearchPage({
                       href={`/dances/${d.slug}`}
                       className="font-display font-bold text-denim hover:underline"
                     >
-                      {d.title ?? "Untitled dance"}
+                      {d.dancerNames.length > 0
+                        ? d.dancerNames.join(" & ")
+                        : (d.title ?? "Untitled dance")}
                     </Link>
+                    {d.eventName ? (
+                      <span className="text-sm text-muted font-display">
+                        {d.eventName}
+                        {d.eventYear ? ` ${d.eventYear}` : ""}
+                        {d.competition ? ` · ${d.competition}` : ""}
+                      </span>
+                    ) : d.competition ? (
+                      <span className="text-sm text-muted font-display">{d.competition}</span>
+                    ) : null}
                     {d.matchedSong ? (
                       <span className="text-sm text-muted font-display">
                         ♪ {d.matchedSong.song}
                         {d.matchedSong.song && d.matchedSong.artist ? " — " : ""}
                         {d.matchedSong.artist}
                       </span>
-                    ) : d.competition ? (
-                      <span className="text-sm text-muted font-display">{d.competition}</span>
                     ) : null}
                   </li>
                 ))}
