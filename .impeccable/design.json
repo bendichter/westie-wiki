@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-30T00:00:00Z",
+  "title": "Design System: Westie Wiki",
+  "extensions": {
+    "colorMeta": {
+      "ink": { "role": "neutral", "displayName": "Indigo Ink", "canonical": "#212842", "tonalRamp": ["oklch(15% 0.05 278)", "oklch(25% 0.055 278)", "oklch(35% 0.055 278)", "oklch(45% 0.05 278)", "oklch(58% 0.045 278)", "oklch(72% 0.035 278)", "oklch(85% 0.02 278)", "oklch(95% 0.01 278)"] },
+      "ink-soft": { "role": "neutral", "displayName": "Soft Ink", "canonical": "#3a4160", "tonalRamp": ["oklch(18% 0.05 277)", "oklch(28% 0.05 277)", "oklch(38% 0.05 277)", "oklch(48% 0.045 277)", "oklch(60% 0.04 277)", "oklch(73% 0.03 277)", "oklch(85% 0.02 277)", "oklch(95% 0.008 277)"] },
+      "paper": { "role": "neutral", "displayName": "Warm Paper", "canonical": "#f6f6f2", "tonalRamp": ["oklch(20% 0.01 106)", "oklch(32% 0.01 106)", "oklch(45% 0.01 106)", "oklch(58% 0.01 106)", "oklch(70% 0.008 106)", "oklch(82% 0.008 106)", "oklch(91% 0.006 106)", "oklch(97% 0.004 106)"] },
+      "panel": { "role": "neutral", "displayName": "Panel White", "canonical": "#ffffff", "tonalRamp": ["oklch(20% 0 0)", "oklch(35% 0 0)", "oklch(50% 0 0)", "oklch(65% 0 0)", "oklch(78% 0 0)", "oklch(88% 0 0)", "oklch(95% 0 0)", "oklch(100% 0 0)"] },
+      "denim": { "role": "primary", "displayName": "Denim Blue", "canonical": "#35507f", "tonalRamp": ["oklch(18% 0.07 262)", "oklch(28% 0.08 262)", "oklch(38% 0.09 262)", "oklch(48% 0.09 262)", "oklch(60% 0.08 262)", "oklch(72% 0.06 262)", "oklch(84% 0.04 262)", "oklch(94% 0.02 262)"] },
+      "denim-deep": { "role": "primary", "displayName": "Deep Denim", "canonical": "#273c61", "tonalRamp": ["oklch(16% 0.06 262)", "oklch(25% 0.07 262)", "oklch(34% 0.08 262)", "oklch(45% 0.08 262)", "oklch(57% 0.07 262)", "oklch(70% 0.055 262)", "oklch(83% 0.035 262)", "oklch(94% 0.015 262)"] },
+      "amber": { "role": "secondary", "displayName": "Amber Stage Light", "canonical": "#b8681b", "tonalRamp": ["oklch(22% 0.06 62)", "oklch(33% 0.09 62)", "oklch(44% 0.11 62)", "oklch(56% 0.13 62)", "oklch(66% 0.13 62)", "oklch(76% 0.11 62)", "oklch(86% 0.07 62)", "oklch(94% 0.035 62)"] },
+      "amber-soft": { "role": "secondary", "displayName": "Soft Amber", "canonical": "#f3e3cd", "tonalRamp": ["oklch(24% 0.04 68)", "oklch(36% 0.05 68)", "oklch(48% 0.06 68)", "oklch(60% 0.06 68)", "oklch(71% 0.055 68)", "oklch(81% 0.05 68)", "oklch(89% 0.04 68)", "oklch(95% 0.025 68)"] },
+      "line": { "role": "neutral", "displayName": "Hairline", "canonical": "#deddd3", "tonalRamp": ["oklch(22% 0.008 100)", "oklch(34% 0.01 100)", "oklch(46% 0.012 100)", "oklch(58% 0.012 100)", "oklch(70% 0.012 100)", "oklch(80% 0.012 100)", "oklch(89% 0.01 100)", "oklch(96% 0.006 100)"] },
+      "muted": { "role": "neutral", "displayName": "Muted", "canonical": "#6b7086", "tonalRamp": ["oklch(20% 0.03 279)", "oklch(30% 0.035 279)", "oklch(40% 0.035 279)", "oklch(52% 0.035 279)", "oklch(63% 0.03 279)", "oklch(74% 0.025 279)", "oklch(85% 0.015 279)", "oklch(95% 0.008 279)"] },
+      "danger": { "role": "tertiary", "displayName": "Brick Danger", "canonical": "#a33b2e", "tonalRamp": ["oklch(20% 0.08 31)", "oklch(30% 0.1 31)", "oklch(40% 0.12 31)", "oklch(50% 0.13 31)", "oklch(61% 0.12 31)", "oklch(72% 0.09 31)", "oklch(84% 0.06 31)", "oklch(94% 0.025 31)"] },
+      "success": { "role": "tertiary", "displayName": "Floor Green", "canonical": "#2e6b46", "tonalRamp": ["oklch(18% 0.05 155)", "oklch(28% 0.07 155)", "oklch(38% 0.08 155)", "oklch(48% 0.09 155)", "oklch(60% 0.09 155)", "oklch(72% 0.08 155)", "oklch(84% 0.06 155)", "oklch(94% 0.03 155)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page titles, always followed by the slot line." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings within pages and prose." },
+      "body": { "displayName": "Body", "purpose": "All running prose, serif, capped at 65ch." },
+      "label": { "displayName": "Label", "purpose": "Form labels, nav, buttons, and card metadata in the display face." },
+      "mono": { "displayName": "Mono", "purpose": "Timestamps, durations, counts, and revision numbers only." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "state-shift", "value": "150ms ease", "purpose": "Color and opacity transitions on hover/focus; the only motion in the system. Collapsed by prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one confident action on a form: denim fill, deepens on hover, nothing lifts.",
+      "html": "<button class=\"ds-btn-primary\">Save move</button>",
+      "css": ".ds-btn-primary { background: var(--color-denim, #35507f); color: #ffffff; font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-weight: 600; font-size: 0.875rem; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; transition: background 150ms ease; } .ds-btn-primary:hover { background: var(--color-denim-deep, #273c61); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(53, 80, 127, 0.5); } .ds-btn-primary:disabled { opacity: 0.5; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The quiet alternative: white panel with a hairline border that finds its denim voice on hover.",
+      "html": "<button class=\"ds-btn-secondary\">View history</button>",
+      "css": ".ds-btn-secondary { background: var(--color-panel, #ffffff); color: var(--color-ink, #212842); font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-weight: 600; font-size: 0.875rem; padding: 8px 16px; border: 1px solid var(--color-line, #deddd3); border-radius: 6px; cursor: pointer; transition: color 150ms ease, border-color 150ms ease; } .ds-btn-secondary:hover { border-color: var(--color-denim, #35507f); color: var(--color-denim, #35507f); } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(53, 80, 127, 0.5); } .ds-btn-secondary:disabled { opacity: 0.5; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Flat white field with a hairline border; focus brings a soft denim ring.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-in\">Move name</label><input id=\"ds-in\" class=\"ds-input\" placeholder=\"e.g. Sugar Push\" /><p class=\"ds-hint\">Names collide across scenes — that's a feature.</p></div>",
+      "css": ".ds-field { max-width: 320px; } .ds-label { display: block; font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-size: 0.875rem; font-weight: 600; color: var(--color-ink-soft, #3a4160); margin-bottom: 4px; } .ds-input { width: 100%; background: var(--color-panel, #ffffff); color: var(--color-ink, #212842); border: 1px solid var(--color-line, #deddd3); border-radius: 6px; padding: 8px 12px; font-size: 15px; transition: border-color 150ms ease, box-shadow 150ms ease; } .ds-input::placeholder { color: rgba(107, 112, 134, 0.6); } .ds-input:focus { outline: none; border-color: var(--color-denim, #35507f); box-shadow: 0 0 0 2px rgba(53, 80, 127, 0.5); } .ds-hint { font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-size: 13px; color: var(--color-muted, #6b7086); margin-top: 4px; }"
+    },
+    {
+      "name": "Tag Chip",
+      "kind": "chip",
+      "refersTo": "chip-tag",
+      "description": "Taxonomy pill in tinted denim; hover deepens the tint.",
+      "html": "<a href=\"#\" class=\"ds-chip-tag\">whip family</a>",
+      "css": ".ds-chip-tag { display: inline-block; background: rgba(53, 80, 127, 0.08); border: 1px solid rgba(53, 80, 127, 0.25); color: var(--color-denim, #35507f); border-radius: 9999px; padding: 2px 10px; font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-size: 0.75rem; font-weight: 500; text-decoration: none; transition: background 150ms ease; } .ds-chip-tag:hover { background: rgba(53, 80, 127, 0.15); }"
+    },
+    {
+      "name": "Difficulty Badge",
+      "kind": "chip",
+      "description": "Color-coded pill: green beginner, amber intermediate, brick advanced; always a 10% tint with a matching border.",
+      "html": "<span class=\"ds-badge ds-badge-beginner\">beginner</span> <span class=\"ds-badge ds-badge-intermediate\">intermediate</span> <span class=\"ds-badge ds-badge-advanced\">advanced</span>",
+      "css": ".ds-badge { display: inline-block; border: 1px solid; border-radius: 9999px; padding: 2px 10px; font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-size: 0.75rem; font-weight: 600; } .ds-badge-beginner { background: rgba(46, 107, 70, 0.1); color: var(--color-success, #2e6b46); border-color: rgba(46, 107, 70, 0.3); } .ds-badge-intermediate { background: rgba(184, 104, 27, 0.1); color: var(--color-amber, #b8681b); border-color: rgba(184, 104, 27, 0.3); } .ds-badge-advanced { background: rgba(163, 59, 46, 0.1); color: var(--color-danger, #a33b2e); border-color: rgba(163, 59, 46, 0.3); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat white panel with a hairline border on the warm paper page; no shadow, ever.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Sugar Push</div><p class=\"ds-card-body\">The foundational six-count pattern of the slot: a compression and release that everything else grows out of.</p></div>",
+      "css": ".ds-card { background: var(--color-panel, #ffffff); border: 1px solid var(--color-line, #deddd3); border-radius: 8px; padding: 20px; max-width: 340px; } .ds-card-title { font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-weight: 600; font-size: 1.15rem; color: var(--color-ink, #212842); letter-spacing: -0.01em; } .ds-card-body { font-family: var(--font-body, 'Source Serif 4', Georgia, serif); font-size: 0.9375rem; line-height: 1.6; color: var(--color-ink-soft, #3a4160); margin-top: 6px; }"
+    },
+    {
+      "name": "Page Title with Slot Line",
+      "kind": "custom",
+      "description": "The signature: display title, muted subtitle, and the slot-line track with its amber marker.",
+      "html": "<div class=\"ds-pagetitle\"><h1 class=\"ds-pt-h\">Moves</h1><p class=\"ds-pt-sub\">Every pattern the community has documented so far.</p><div class=\"ds-slot-line\"></div></div>",
+      "css": ".ds-pagetitle { max-width: 420px; } .ds-pt-h { font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-size: 1.875rem; font-weight: 700; letter-spacing: -0.01em; color: var(--color-ink, #212842); margin: 0; } .ds-pt-sub { font-family: var(--font-display, 'Bricolage Grotesque', 'Avenir Next', sans-serif); font-size: 15px; color: var(--color-muted, #6b7086); margin: 4px 0 0; } .ds-slot-line { position: relative; height: 2px; background: var(--color-line, #deddd3); margin-top: 12px; } .ds-slot-line::after { content: \"\"; position: absolute; top: -3px; left: 0; width: 8px; height: 8px; border-radius: 9999px; background: var(--color-amber, #b8681b); }"
+    },
+    {
+      "name": "Clip Bar",
+      "kind": "custom",
+      "description": "The slot motif applied to video clips: marker dots at both ends of a hairline track, mono timestamp range between.",
+      "html": "<div class=\"ds-clipbar\"><span class=\"ds-cb-dot\"></span><span class=\"ds-cb-track\"></span><span class=\"ds-cb-time\">0:42 → 1:07 <span class=\"ds-cb-dur\">· 25s clip</span></span><span class=\"ds-cb-track\"></span><span class=\"ds-cb-dot\"></span></div>",
+      "css": ".ds-clipbar { display: flex; align-items: center; gap: 12px; max-width: 340px; } .ds-cb-dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--color-amber, #b8681b); flex-shrink: 0; } .ds-cb-track { height: 1px; background: var(--color-line, #deddd3); flex: 1; } .ds-cb-time { font-family: var(--font-mono, 'Spline Sans Mono', ui-monospace, monospace); font-size: 0.75rem; color: var(--color-ink-soft, #3a4160); white-space: nowrap; } .ds-cb-dur { color: var(--color-muted, #6b7086); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Ballroom at Night",
+    "overview": "The system pictures a social dance late in the evening: a dark indigo room, one warm amber stage light, denim on the floor, and warm paper for the pages where dancers write it all down. The dark ink lives in the site chrome (header, footer), the paper is the reading surface, denim carries every link and action, and amber appears only where attention belongs: the brand mark, the slot marker, the play button on hover, the Join button.\n\nThe mood is warm and welcoming above all. This is a community reference built by dancers for dancers, so nothing should feel corporate, gamified, or intimidating. The reading experience is bookish in practice (serif body text, footnote citations, revision history) but the personality stays approachable: friendly copy, generous line-height, and a signature motif with a wink. That motif is the slot: a thin track line with a round amber marker, echoing West Coast Swing's slotted dance. It underlines the brand mark, sits beneath every page title, and frames clip timestamps on video cards.",
+    "keyCharacteristics": [
+      "Warm paper page, white panels, dark indigo chrome; depth from color banding, never shadows",
+      "Serif prose for reading, grotesque display type for headings and UI chrome, mono for timestamps",
+      "Denim blue is the single interactive voice; amber is scarce and always meaningful",
+      "The slot-line motif (track + marker) as the recurring signature",
+      "Quiet, utilitarian components: flat fills, 1px hairlines, modest radii"
+    ],
+    "rules": [
+      { "name": "The Stage Light Rule", "body": "Amber is a spotlight, not a paint bucket: it appears only on small, meaningful marks (the marker dot, the brand accent, one CTA, hover on play). Soft Amber is its only permitted wash. If amber covers a large area, the metaphor is broken.", "section": "colors" },
+      { "name": "The One Voice Rule", "body": "Denim is the only color that signals interactivity. Never introduce a second link color; never use denim decoratively on non-interactive elements.", "section": "colors" },
+      { "name": "The Two Faces Rule", "body": "Serif is for reading; the display grotesque is for everything you scan: headings, navigation, buttons, labels, hints, and card metadata. UI chrome never uses the serif, and long prose never uses the grotesque.", "section": "typography" },
+      { "name": "The Timestamp Rule", "body": "Anything measured (clip times, durations, counts, revision numbers) is set in the mono face, small (11–12px), never bold.", "section": "typography" },
+      { "name": "The Flat Floor Rule", "body": "No box-shadows, no gradients, no glows. If a surface needs separation, give it Panel White and a Hairline border; if it needs emphasis, give it a color tint at ≤15% opacity.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do end every page title with the slot line; it is the site's handshake.",
+      "Do set all running prose in the serif at 65ch, and all UI chrome in the display face.",
+      "Do use denim for every interactive element, and tints of a status color (≤15% opacity) with a matching low-opacity border for chips, badges, and alerts.",
+      "Do use the mono face for every timestamp, duration, and count.",
+      "Do keep transitions to color and opacity, 150–200ms, and honor prefers-reduced-motion."
+    ],
+    "donts": [
+      "Don't use box-shadows, gradients, or glows anywhere (the Flat Floor Rule).",
+      "Don't let amber cover large areas or become a second interactive color (the Stage Light Rule); Soft Amber washes and small marks only.",
+      "Don't introduce colors outside the twelve-token palette, pure black, or pure gray; every neutral here is warm or indigo-leaning.",
+      "Don't use the serif for buttons, labels, navigation, or metadata, or the grotesque for long prose (the Two Faces Rule).",
+      "Don't exceed 1px borders except the 2px slot track and 3px blockquote rule."
+    ]
+  }
+}
