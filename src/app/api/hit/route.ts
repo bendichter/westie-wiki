@@ -1,11 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
-import { pageViews } from "@/db/schema";
+import { pageViews, regionViews } from "@/db/schema";
 
 /**
  * Page-view beacon. Client-side only (so crawlers don't count), stores
- * path + day tallies and nothing else: no visitor id, no IP, no cookies.
+ * path + day and region + day tallies and nothing else: no visitor id,
+ * no IP, no cookies. Region is the Fly edge the visitor connected
+ * through, so it is only recorded when deployed behind the Fly proxy.
  */
 export async function POST(request: NextRequest) {
   let path: unknown;
@@ -31,6 +33,17 @@ export async function POST(request: NextRequest) {
       set: { count: sql`${pageViews.count} + 1` },
     })
     .run();
+
+  const region = request.headers.get("fly-region");
+  if (region && /^[a-z]{3}$/.test(region)) {
+    db.insert(regionViews)
+      .values({ region, day, count: 1 })
+      .onConflictDoUpdate({
+        target: [regionViews.region, regionViews.day],
+        set: { count: sql`${regionViews.count} + 1` },
+      })
+      .run();
+  }
 
   return NextResponse.json({ ok: true });
 }

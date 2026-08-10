@@ -470,6 +470,19 @@ export const pageViews = sqliteTable(
   (t) => [uniqueIndex("page_views_path_day_idx").on(t.path, t.day)]
 );
 
+// privacy-preserving visitor-region counts: one row per (region, day), where
+// region is the Fly edge region code (e.g. "sjc") the visitor connected through
+export const regionViews = sqliteTable(
+  "region_views",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    region: text("region").notNull(),
+    day: text("day").notNull(), // YYYY-MM-DD (UTC)
+    count: integer("count").notNull().default(0),
+  },
+  (t) => [uniqueIndex("region_views_region_day_idx").on(t.region, t.day)]
+);
+
 export const sponsors = sqliteTable("sponsors", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),

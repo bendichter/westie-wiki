@@ -141,6 +141,13 @@
       "when": 1783993509560,
       "tag": "0019_wsdc_number",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1786364449588,
+      "tag": "0020_romantic_zodiak",
+      "breakpoints": true
     }
   ]
 }
