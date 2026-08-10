@@ -6,8 +6,8 @@ import { SearchBar } from "./SearchBar";
 import { VerifyEmailBanner } from "./VerifyEmailBanner";
 
 const NAV = [
-  { href: "/moves", label: "Moves" },
   { href: "/dances", label: "Dances" },
+  { href: "/moves", label: "Moves" },
   { href: "/dancers", label: "Dancers" },
   { href: "/events", label: "Events" },
   { href: "/curricula", label: "Curricula" },

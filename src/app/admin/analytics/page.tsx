@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { desc, eq, gte, sql, sum } from "drizzle-orm";
+import { desc, gte, sql, sum } from "drizzle-orm";
 import { db } from "@/db";
 import { pageViews, regionViews } from "@/db/schema";
 import { AdminNav } from "@/components/AdminNav";

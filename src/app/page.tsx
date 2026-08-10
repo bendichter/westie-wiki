@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { count, desc, eq } from "drizzle-orm";
+import { count, countDistinct, desc, eq, isNotNull } from "drizzle-orm";
 import { db } from "@/db";
-import { curricula, curriculumRevisions, dancers, moveRevisions, moves, users, videos } from "@/db/schema";
+import { curricula, curriculumRevisions, dancers, events, moveRevisions, moves, users, videos } from "@/db/schema";
 import { SponsorSlot } from "@/components/SponsorSlot";
 import { ButtonLink, CountChip, EmptyState } from "@/components/ui";
 import { timeAgo } from "@/lib/format";
@@ -9,8 +9,9 @@ import { timeAgo } from "@/lib/format";
 export default function HomePage() {
   const stats = {
     moves: db.select({ n: count() }).from(moves).where(eq(moves.deleted, 0)).get()?.n ?? 0,
-    videos: db.select({ n: count() }).from(videos).get()?.n ?? 0,
+    dances: db.select({ n: countDistinct(videos.danceId) }).from(videos).where(isNotNull(videos.danceId)).get()?.n ?? 0,
     dancers: db.select({ n: count() }).from(dancers).get()?.n ?? 0,
+    events: db.select({ n: count() }).from(events).get()?.n ?? 0,
     curricula: db.select({ n: count() }).from(curricula).where(eq(curricula.deleted, 0)).get()?.n ?? 0,
   };
 
@@ -69,14 +70,6 @@ export default function HomePage() {
     .sort((a, b) => b.createdAt - a.createdAt)
     .slice(0, 8);
 
-  const featuredCurricula = db
-    .select()
-    .from(curricula)
-    .where(eq(curricula.deleted, 0))
-    .orderBy(desc(curricula.updatedAt))
-    .limit(3)
-    .all();
-
   return (
     <div>
       {/* hero */}
@@ -93,7 +86,10 @@ export default function HomePage() {
             community.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <ButtonLink href="/moves">Browse the moves</ButtonLink>
+            <ButtonLink href="/dances">Watch dances</ButtonLink>
+            <ButtonLink href="/moves" variant="secondary">
+              Browse moves
+            </ButtonLink>
             <ButtonLink href="/curricula" variant="secondary">
               Start a learning path
             </ButtonLink>
@@ -102,10 +98,21 @@ export default function HomePage() {
 
         <div className="mt-12 slot-line" aria-hidden />
         <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2 font-mono text-sm text-muted">
-          <span><strong className="text-ink">{stats.moves}</strong> moves</span>
-          <span><strong className="text-ink">{stats.videos}</strong> video clips</span>
-          <span><strong className="text-ink">{stats.dancers}</strong> dancers</span>
-          <span><strong className="text-ink">{stats.curricula}</strong> curricula</span>
+          <Link href="/dances" className="group hover:text-denim hover:underline underline-offset-4">
+            <strong className="text-ink group-hover:text-denim">{stats.dances}</strong> dances
+          </Link>
+          <Link href="/moves" className="group hover:text-denim hover:underline underline-offset-4">
+            <strong className="text-ink group-hover:text-denim">{stats.moves}</strong> moves
+          </Link>
+          <Link href="/dancers" className="group hover:text-denim hover:underline underline-offset-4">
+            <strong className="text-ink group-hover:text-denim">{stats.dancers}</strong> dancers
+          </Link>
+          <Link href="/events" className="group hover:text-denim hover:underline underline-offset-4">
+            <strong className="text-ink group-hover:text-denim">{stats.events}</strong> events
+          </Link>
+          <Link href="/curricula" className="group hover:text-denim hover:underline underline-offset-4">
+            <strong className="text-ink group-hover:text-denim">{stats.curricula}</strong> curricula
+          </Link>
         </div>
       </section>
 
@@ -141,32 +148,7 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* curricula + about */}
         <div className="space-y-8">
-          <div>
-            <h2 className="text-xl font-bold mb-4">Learning paths</h2>
-            {featuredCurricula.length === 0 ? (
-              <EmptyState title="No curricula yet">
-                Curricula are ordered lists of moves with notes and key videos —{" "}
-                <Link href="/curricula/new" className="text-denim underline">build one</Link>.
-              </EmptyState>
-            ) : (
-              <ul className="space-y-3">
-                {featuredCurricula.map((c) => (
-                  <li key={c.id} className="border border-line rounded-lg bg-panel p-4">
-                    <Link
-                      href={`/curricula/${c.slug}`}
-                      className="font-display font-bold text-denim hover:underline"
-                    >
-                      {c.title}
-                    </Link>
-                    <p className="text-sm text-muted mt-1 font-display line-clamp-2">{c.description}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
           <SponsorSlot />
         </div>
       </section>
