@@ -9,13 +9,17 @@ export function Pagination({
   totalPages,
   basePath,
   params,
+  preserveScroll,
 }: {
   page: number;
   totalPages: number;
   basePath: string;
   params: Record<string, string | undefined>;
+  /** keep the current scroll position on navigation (for mid-page sections) */
+  preserveScroll?: boolean;
 }) {
   if (totalPages <= 1) return null;
+  const scroll = !preserveScroll;
 
   const href = (p: number) => {
     const qs = new URLSearchParams();
@@ -40,13 +44,13 @@ export function Pagination({
   return (
     <nav className="mt-6 flex flex-wrap items-center gap-2" aria-label="Pagination">
       {page > 1 ? (
-        <Link href={href(page - 1)} className={linkClass} rel="prev">
+        <Link href={href(page - 1)} scroll={scroll} className={linkClass} rel="prev">
           ← Prev
         </Link>
       ) : null}
       {windowStart > 1 ? (
         <>
-          <Link href={href(1)} className={linkClass}>1</Link>
+          <Link href={href(1)} scroll={scroll} className={linkClass}>1</Link>
           {windowStart > 2 ? <span className="text-muted px-1">…</span> : null}
         </>
       ) : null}
@@ -56,7 +60,7 @@ export function Pagination({
             {p}
           </span>
         ) : (
-          <Link key={p} href={href(p)} className={linkClass}>
+          <Link key={p} href={href(p)} scroll={scroll} className={linkClass}>
             {p}
           </Link>
         )
@@ -64,11 +68,11 @@ export function Pagination({
       {windowEnd < totalPages ? (
         <>
           {windowEnd < totalPages - 1 ? <span className="text-muted px-1">…</span> : null}
-          <Link href={href(totalPages)} className={linkClass}>{totalPages}</Link>
+          <Link href={href(totalPages)} scroll={scroll} className={linkClass}>{totalPages}</Link>
         </>
       ) : null}
       {page < totalPages ? (
-        <Link href={href(page + 1)} className={linkClass} rel="next">
+        <Link href={href(page + 1)} scroll={scroll} className={linkClass} rel="next">
           Next →
         </Link>
       ) : null}

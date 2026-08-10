@@ -334,6 +334,7 @@ export default async function MovePage({
                   totalPages={videoTotalPages}
                   basePath={`/moves/${move.slug}`}
                   params={{}}
+                  preserveScroll
                 />
               </>
             )}
