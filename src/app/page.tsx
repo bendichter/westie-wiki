@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { count, countDistinct, desc, eq, isNotNull } from "drizzle-orm";
+import { count, countDistinct, desc, eq, isNotNull, max } from "drizzle-orm";
 import { db } from "@/db";
-import { curricula, curriculumRevisions, dancers, events, moveRevisions, moves, users, videos } from "@/db/schema";
+import { curricula, dancers, events, moves, videos } from "@/db/schema";
+import { DanceCard } from "@/components/DanceCard";
 import { SponsorSlot } from "@/components/SponsorSlot";
-import { ButtonLink, CountChip, EmptyState } from "@/components/ui";
-import { timeAgo } from "@/lib/format";
+import { ButtonLink, EmptyState } from "@/components/ui";
+import { listDances } from "@/lib/data/dances";
 
 export default function HomePage() {
   const stats = {
@@ -15,60 +16,19 @@ export default function HomePage() {
     curricula: db.select({ n: count() }).from(curricula).where(eq(curricula.deleted, 0)).get()?.n ?? 0,
   };
 
-  // merged feed: move edits, clip additions, and curriculum edits
-  const moveEdits = db
-    .select({
-      title: moves.name,
-      href: moves.slug,
-      detail: moveRevisions.editSummary,
-      who: users.username,
-      createdAt: moveRevisions.createdAt,
-    })
-    .from(moveRevisions)
-    .innerJoin(moves, eq(moves.id, moveRevisions.moveId))
-    .innerJoin(users, eq(users.id, moveRevisions.editorId))
-    .where(eq(moves.deleted, 0))
-    .orderBy(desc(moveRevisions.createdAt))
-    .limit(10)
-    .all()
-    .map((e) => ({ ...e, kind: "edit" as const, href: `/moves/${e.href}` }));
-
-  const clipAdds = db
-    .select({
-      title: moves.name,
-      href: moves.slug,
-      who: users.username,
-      createdAt: videos.createdAt,
-    })
+  // the two dances whose move annotations are newest
+  const recentDanceIds = db
+    .select({ danceId: videos.danceId })
     .from(videos)
-    .innerJoin(moves, eq(moves.id, videos.moveId))
-    .innerJoin(users, eq(users.id, videos.addedBy))
-    .where(eq(moves.deleted, 0))
-    .orderBy(desc(videos.createdAt))
-    .limit(10)
+    .where(isNotNull(videos.danceId))
+    .groupBy(videos.danceId)
+    .orderBy(desc(max(videos.createdAt)))
+    .limit(2)
     .all()
-    .map((e) => ({ ...e, kind: "clip" as const, detail: "added a video clip", href: `/moves/${e.href}` }));
-
-  const curriculumEdits = db
-    .select({
-      title: curricula.title,
-      href: curricula.slug,
-      detail: curriculumRevisions.editSummary,
-      who: users.username,
-      createdAt: curriculumRevisions.createdAt,
-    })
-    .from(curriculumRevisions)
-    .innerJoin(curricula, eq(curricula.id, curriculumRevisions.curriculumId))
-    .innerJoin(users, eq(users.id, curriculumRevisions.editorId))
-    .where(eq(curricula.deleted, 0))
-    .orderBy(desc(curriculumRevisions.createdAt))
-    .limit(10)
-    .all()
-    .map((e) => ({ ...e, kind: "path" as const, href: `/curricula/${e.href}` }));
-
-  const contributions = [...moveEdits, ...clipAdds, ...curriculumEdits]
-    .sort((a, b) => b.createdAt - a.createdAt)
-    .slice(0, 8);
+    .map((r) => r.danceId);
+  const recentDances = listDances()
+    .filter((d) => recentDanceIds.includes(d.id))
+    .sort((a, b) => recentDanceIds.indexOf(a.id) - recentDanceIds.indexOf(b.id));
 
   return (
     <div>
@@ -117,34 +77,20 @@ export default function HomePage() {
       </section>
 
       <section className="grid gap-10 lg:grid-cols-[1fr_360px] mt-4">
-        {/* recent contributions */}
+        {/* recently annotated dances */}
         <div>
           <h2 className="text-xl font-bold mb-4">Recent contributions</h2>
-          {contributions.length === 0 ? (
-            <EmptyState title="No contributions yet">
-              The wiki is brand new. <Link href="/moves/new" className="text-denim underline">Document the first move</Link>.
+          {recentDances.length === 0 ? (
+            <EmptyState title="No annotated dances yet">
+              Dances are full videos mapped move by move —{" "}
+              <Link href="/dances/new" className="text-denim underline">add the first one</Link>.
             </EmptyState>
           ) : (
-            <ul className="divide-y divide-line border border-line rounded-lg bg-panel">
-              {contributions.map((entry, i) => (
-                <li key={i} className="px-4 py-3 flex items-baseline gap-3">
-                  <CountChip>{entry.kind}</CountChip>
-                  <div className="min-w-0">
-                    <Link
-                      href={entry.href}
-                      className="font-display font-semibold text-denim hover:underline"
-                    >
-                      {entry.title}
-                    </Link>
-                    <span className="text-sm text-muted font-display">
-                      {" "}
-                      — {entry.detail || "edited"} ·{" "}
-                      <Link href={`/users/${entry.who}`} className="hover:underline">{entry.who}</Link> · {timeAgo(entry.createdAt)}
-                    </span>
-                  </div>
-                </li>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {recentDances.map((dance) => (
+                <DanceCard key={dance.id} dance={dance} />
               ))}
-            </ul>
+            </div>
           )}
         </div>
 
