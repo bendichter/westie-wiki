@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { and, asc, count, desc, eq, inArray, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, getTableColumns, inArray, or } from "drizzle-orm";
 import { db } from "@/db";
 import {
   dancers,
@@ -100,11 +100,21 @@ export default async function MovesPage({
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
   const page = clampPage(pageParam, totalPages);
 
+  // default sort: most video examples first
   const rows = db
-    .select()
+    .select(getTableColumns(moves))
     .from(moves)
+    .leftJoin(videos, eq(videos.moveId, moves.id))
     .where(and(...conditions))
-    .orderBy(sort === "recent" ? desc(moves.updatedAt) : asc(moves.name), asc(moves.id))
+    .groupBy(moves.id)
+    .orderBy(
+      ...(sort === "recent"
+        ? [desc(moves.updatedAt)]
+        : sort === "name"
+          ? [asc(moves.name)]
+          : [desc(count(videos.id)), asc(moves.name)]),
+      asc(moves.id)
+    )
     .limit(PER_PAGE)
     .offset((page - 1) * PER_PAGE)
     .all();
@@ -187,7 +197,13 @@ export default async function MovesPage({
         <span className="text-muted ml-3">Sort:</span>
         <Link
           href={filterQuery({ sort: undefined })}
-          className={`rounded-full px-3 py-1 border ${!sort || sort === "name" ? "bg-denim text-white border-denim" : "bg-panel border-line text-ink-soft hover:border-denim"}`}
+          className={`rounded-full px-3 py-1 border ${!sort || sort === "examples" ? "bg-denim text-white border-denim" : "bg-panel border-line text-ink-soft hover:border-denim"}`}
+        >
+          Most examples
+        </Link>
+        <Link
+          href={filterQuery({ sort: "name" })}
+          className={`rounded-full px-3 py-1 border ${sort === "name" ? "bg-denim text-white border-denim" : "bg-panel border-line text-ink-soft hover:border-denim"}`}
         >
           A–Z
         </Link>
