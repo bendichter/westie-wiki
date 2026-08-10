@@ -12,11 +12,11 @@ function clipTiming(clip: { startSec: number; endSec: number | null }): {
 } {
   const label =
     clip.endSec != null
-      ? `${formatTimestamp(clip.startSec)} → ${formatTimestamp(clip.endSec)}`
+      ? `${formatTimestamp(clip.startSec)} — ${formatTimestamp(clip.endSec)}`
       : clip.startSec > 0
         ? `from ${formatTimestamp(clip.startSec)}`
         : "full video";
-  const duration = clip.endSec != null ? `${clip.endSec - clip.startSec}s clip` : null;
+  const duration = clip.endSec != null ? `${clip.endSec - clip.startSec}s` : null;
   return { label, duration };
 }
 
@@ -45,42 +45,51 @@ export function VideoCard({
         href={video.danceSlug ? `/dances/${video.danceSlug}?clip=${video.id}` : undefined}
       />
       <div className="p-3.5">
-        {/* clip bars: each labeled segment, in the wiki's slot motif; at most 3 */}
-        {[video, ...extraClips.slice(0, 2)].map((clip, i) => {
-          const timing = clipTiming(clip);
-          const text = (
-            <>
-              {timing.label}
-              {timing.duration ? <span className="text-muted"> · {timing.duration}</span> : null}
-            </>
-          );
-          return (
-            <div key={clip.id} className={`flex items-center gap-3${i > 0 ? " mt-1.5" : ""}`}>
+        {/* clip bars: labeled segments in the wiki's slot motif, two per line, at most 4 */}
+        {(() => {
+          const timings = [video, ...extraClips].slice(0, 4);
+          const lines: (typeof timings)[] = [];
+          for (let i = 0; i < timings.length; i += 2) lines.push(timings.slice(i, i + 2));
+          return lines.map((line, i) => (
+            <div key={line[0].id} className={`flex items-center gap-3${i > 0 ? " mt-1.5" : ""}`}>
               <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
-              <div className="h-px bg-line flex-1" aria-hidden />
-              {clip.danceSlug ? (
-                <Link
-                  href={`/dances/${clip.danceSlug}?clip=${clip.id}`}
-                  className="font-mono text-xs text-ink-soft whitespace-nowrap hover:text-denim hover:underline"
-                >
-                  {text}
-                </Link>
-              ) : (
-                <span className="font-mono text-xs text-ink-soft whitespace-nowrap">{text}</span>
-              )}
+              {line.map((clip) => {
+                const timing = clipTiming(clip);
+                const text = (
+                  <>
+                    {timing.label}
+                    {timing.duration ? <span className="text-muted"> · {timing.duration}</span> : null}
+                  </>
+                );
+                return (
+                  <span key={clip.id} className="contents">
+                    <div className="h-px bg-line flex-1" aria-hidden />
+                    {clip.danceSlug ? (
+                      <Link
+                        href={`/dances/${clip.danceSlug}?clip=${clip.id}`}
+                        className="font-mono text-xs text-ink-soft whitespace-nowrap hover:text-denim hover:underline"
+                      >
+                        {text}
+                      </Link>
+                    ) : (
+                      <span className="font-mono text-xs text-ink-soft whitespace-nowrap">{text}</span>
+                    )}
+                  </span>
+                );
+              })}
               <div className="h-px bg-line flex-1" aria-hidden />
               <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
             </div>
-          );
-        })}
-        {extraClips.length > 2 ? (
+          ));
+        })()}
+        {extraClips.length > 3 ? (
           <div className="mt-1.5 text-center font-mono text-xs text-muted">
             {video.danceSlug ? (
               <Link href={`/dances/${video.danceSlug}`} className="hover:text-denim hover:underline">
-                … ({extraClips.length - 2} more)
+                … ({extraClips.length - 3} more)
               </Link>
             ) : (
-              <>… ({extraClips.length - 2} more)</>
+              <>… ({extraClips.length - 3} more)</>
             )}
           </div>
         ) : null}
