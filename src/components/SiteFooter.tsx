@@ -12,12 +12,18 @@ export function SiteFooter() {
             A community-edited catalog of West Coast Swing moves, video examples, and learning
             paths. Anyone can browse; make an account to contribute.
           </p>
+          <p className="mt-3">
+            Contact:{" "}
+            <a href="mailto:ben.dichter@gmail.com" className="hover:text-paper underline">
+              ben.dichter@gmail.com
+            </a>
+          </p>
         </div>
         <div className="font-display sm:justify-self-end">
           <div className="text-paper font-semibold mb-2">Explore</div>
-          <ul className="space-y-1">
-            <li><Link href="/moves" className="hover:text-paper hover:underline">All moves</Link></li>
+          <ul className="grid grid-cols-2 gap-x-8 gap-y-1">
             <li><Link href="/dances" className="hover:text-paper hover:underline">Dances</Link></li>
+            <li><Link href="/moves" className="hover:text-paper hover:underline">All moves</Link></li>
             <li><Link href="/dancers" className="hover:text-paper hover:underline">Dancers</Link></li>
             <li><Link href="/events" className="hover:text-paper hover:underline">Events</Link></li>
             <li><Link href="/curricula" className="hover:text-paper hover:underline">Curricula</Link></li>
