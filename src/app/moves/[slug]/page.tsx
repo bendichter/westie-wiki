@@ -252,7 +252,9 @@ export default async function MovePage({
         <div className="min-w-0 space-y-10">
           <section>
             {move.description.trim() ? (
-              <MoveMarkdown selfSlug={move.slug}>{move.description}</MoveMarkdown>
+              <MoveMarkdown selfSlug={move.slug} className="!max-w-none">
+                {move.description}
+              </MoveMarkdown>
             ) : (
               <EmptyState title="No description yet">
                 Know this move?{" "}

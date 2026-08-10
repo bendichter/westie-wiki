@@ -33,8 +33,6 @@ export function VideoCard({
   currentUserId: number | null;
   showMove?: boolean;
 }) {
-  const { label: clipLabel, duration } = clipTiming(video);
-
   return (
     <div className="bg-panel border border-line rounded-lg overflow-hidden">
       <LiteYouTube

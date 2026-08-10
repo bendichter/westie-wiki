@@ -7,7 +7,15 @@ import { Markdown } from "./Markdown";
  * catalog. Server-only (hits the DB); pass selfSlug on a move's own page so
  * self-references render as plain text instead of circular links.
  */
-export function MoveMarkdown({ children, selfSlug }: { children: string; selfSlug?: string }) {
+export function MoveMarkdown({
+  children,
+  selfSlug,
+  className,
+}: {
+  children: string;
+  selfSlug?: string;
+  className?: string;
+}) {
   if (!children.trim()) return null;
-  return <Markdown>{linkifyMoves(children, getMoveLinkIndex(), selfSlug)}</Markdown>;
+  return <Markdown className={className}>{linkifyMoves(children, getMoveLinkIndex(), selfSlug)}</Markdown>;
 }

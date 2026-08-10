@@ -1,10 +1,10 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-export function Markdown({ children }: { children: string }) {
+export function Markdown({ children, className }: { children: string; className?: string }) {
   if (!children.trim()) return null;
   return (
-    <div className="prose-wcs">
+    <div className={className ? `prose-wcs ${className}` : "prose-wcs"}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         allowedElements={[
