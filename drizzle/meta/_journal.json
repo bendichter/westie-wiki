@@ -148,6 +148,13 @@
       "when": 1786364449588,
       "tag": "0020_romantic_zodiak",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1786370000000,
+      "tag": "0021_shorten_handhold_names",
+      "breakpoints": true
     }
   ]
 }
