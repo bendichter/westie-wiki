@@ -33,7 +33,6 @@ import {
   getRelatedMoves,
   type MoveLink,
 } from "@/lib/data/moves";
-import { listDances } from "@/lib/data/dances";
 import { formatDate, timeAgo } from "@/lib/format";
 import { platformLabel } from "@/lib/platform";
 
@@ -155,7 +154,6 @@ export default async function MovePage({
     timeAgoLabel: timeAgo(c.createdAt),
   }));
   const latestRevision = getLatestRevisionNo(move.id);
-  const seenInDances = listDances({ moveId: move.id });
   const variants = getMoveVariants(move.id);
   const resources = getMoveResources(move.id).map((r) => ({ ...r, platform: platformLabel(r.url) }));
   const allHandholds = getHandholds();
@@ -247,10 +245,48 @@ export default async function MovePage({
 
       <div className="slot-line mt-4" aria-hidden />
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_320px] mt-6">
-        {/* main column */}
-        <div className="min-w-0 space-y-10">
-          <section>
+      <div className="mt-6 space-y-10">
+        {/* pattern card */}
+        <section>
+          <h2 className="font-display text-xs uppercase tracking-widest text-muted font-bold mb-4">
+            Pattern card
+          </h2>
+          <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+            <RelationGroup
+              title="Learn first"
+              items={related.prerequisites}
+              currentUserCanEdit={!!user}
+              relationIds={relationIds}
+            />
+            <RelationGroup
+              title="Variation of"
+              items={related.variationOf}
+              currentUserCanEdit={!!user}
+              relationIds={relationIds}
+            />
+            <RelationGroup
+              title="Variations"
+              items={related.variations}
+              currentUserCanEdit={false}
+            />
+            <RelationGroup title="Related" items={related.related} currentUserCanEdit={!!user} relationIds={relationIds} />
+            <RelationGroup title="Leads into" items={related.unlocks} currentUserCanEdit={false} />
+            <DefaultHandholdPicker
+              moveId={move.id}
+              current={defaultHandhold}
+              handholds={allHandholds}
+              canEdit={!!user}
+            />
+            <VariantManager moveId={move.id} variants={variants} canEdit={!!user} />
+          </dl>
+          {user ? (
+            <div className="mt-5">
+              <RelationEditor moveId={move.id} moveNames={allMoveNames} />
+            </div>
+          ) : null}
+        </section>
+
+        <section>
             {move.description.trim() ? (
               <MoveMarkdown selfSlug={move.slug} className="!max-w-none">
                 {move.description}
@@ -283,7 +319,7 @@ export default async function MovePage({
               </EmptyState>
             ) : (
               <>
-                <div className="grid gap-5 sm:grid-cols-2">
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {pagedVideoGroups.map((group) => (
                     <VideoCard
                       key={group.primary.id}
@@ -311,99 +347,31 @@ export default async function MovePage({
           />
 
           <CommentSection moveId={move.id} comments={comments} currentUserId={user?.id ?? null} currentUserIsAdmin={userIsAdmin} />
+
+        <SponsorSlot limit={1} />
+
+        {userIsAdmin ? (
+          <form action={adminDeleteMove}>
+            <input type="hidden" name="moveId" value={move.id} />
+            <button
+              type="submit"
+              className="cursor-pointer rounded-md border border-danger/40 bg-panel px-3 py-1.5 font-display text-xs font-semibold text-danger hover:bg-danger/10"
+            >
+              Delete move (admin — restorable)
+            </button>
+          </form>
+        ) : null}
+
+        <div className="pt-5 border-t border-line text-sm text-muted font-display space-y-1">
+          <p>
+            Created {formatDate(move.createdAt)} · last edited {timeAgo(move.updatedAt)}
+          </p>
+          <p>
+            <Link href={`/moves/${move.slug}/history`} className="text-denim hover:underline">
+              {latestRevision} revision{latestRevision === 1 ? "" : "s"}
+            </Link>
+          </p>
         </div>
-
-        {/* pattern card sidebar */}
-        <aside className="lg:border-l lg:border-line lg:pl-8">
-          <h2 className="font-display text-xs uppercase tracking-widest text-muted font-bold mb-4">
-            Pattern card
-          </h2>
-          <dl className="space-y-4">
-            <RelationGroup
-              title="Learn first"
-              items={related.prerequisites}
-              currentUserCanEdit={!!user}
-              relationIds={relationIds}
-            />
-            <RelationGroup
-              title="Variation of"
-              items={related.variationOf}
-              currentUserCanEdit={!!user}
-              relationIds={relationIds}
-            />
-            <RelationGroup
-              title="Variations"
-              items={related.variations}
-              currentUserCanEdit={false}
-            />
-            <RelationGroup title="Related" items={related.related} currentUserCanEdit={!!user} relationIds={relationIds} />
-            <RelationGroup title="Leads into" items={related.unlocks} currentUserCanEdit={false} />
-            <DefaultHandholdPicker
-              moveId={move.id}
-              current={defaultHandhold}
-              handholds={allHandholds}
-              canEdit={!!user}
-            />
-            <VariantManager moveId={move.id} variants={variants} canEdit={!!user} />
-          </dl>
-
-          {user ? (
-            <div className="mt-5">
-              <RelationEditor moveId={move.id} moveNames={allMoveNames} />
-            </div>
-          ) : null}
-
-          {seenInDances.length > 0 ? (
-            <div className="mt-8 border-t border-line pt-5">
-              <h3 className="mb-2 font-display text-xs font-semibold uppercase tracking-wide text-muted">
-                Seen in dances
-              </h3>
-              <ul className="space-y-1.5">
-                {seenInDances.map((dance) => (
-                  <li key={dance.id} className="text-[15px]">
-                    <Link href={`/dances/${dance.slug}`} className="font-display text-denim hover:underline">
-                      {dance.dancers.map((d) => d.name).join(" & ") || dance.title || "Untitled dance"}
-                    </Link>
-                    {dance.eventName ? (
-                      <span className="font-display text-sm text-muted">
-                        {" "}
-                        · {dance.eventName}
-                        {dance.eventYear ? ` ${dance.eventYear}` : ""}
-                      </span>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-
-          <div className="mt-8">
-            <SponsorSlot limit={1} />
-          </div>
-
-          {userIsAdmin ? (
-            <form action={adminDeleteMove} className="mt-8">
-              <input type="hidden" name="moveId" value={move.id} />
-              <button
-                type="submit"
-                className="cursor-pointer rounded-md border border-danger/40 bg-panel px-3 py-1.5 font-display text-xs font-semibold text-danger hover:bg-danger/10"
-              >
-                Delete move (admin — restorable)
-              </button>
-            </form>
-          ) : null}
-
-          <div className="mt-8 pt-5 border-t border-line text-sm text-muted font-display space-y-1">
-            <p>
-              Created {formatDate(move.createdAt)} · last edited {timeAgo(move.updatedAt)}
-            </p>
-            <p>
-              <Link href={`/moves/${move.slug}/history`} className="text-denim hover:underline">
-                {latestRevision} revision{latestRevision === 1 ? "" : "s"}
-              </Link>
-            </p>
-          </div>
-        </aside>
       </div>
     </div>
   );
