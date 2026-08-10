@@ -14,16 +14,35 @@ const PER_PAGE = 12;
 export default async function DancesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; page?: string }>;
+  searchParams: Promise<{ q?: string; page?: string; sort?: string }>;
 }) {
-  const { q, page: pageParam } = await searchParams;
+  const { q, page: pageParam, sort } = await searchParams;
   const query = (q ?? "").trim().slice(0, 100);
   const user = await getCurrentUser();
 
   const dances = listDances(query ? { query } : undefined);
+  // default: most recently annotated first; unannotated dances fall to the end
+  if (sort === "annotations") {
+    dances.sort((a, b) => b.annotationCount - a.annotationCount || b.createdAt - a.createdAt);
+  } else if (sort !== "added") {
+    dances.sort((a, b) => (b.lastAnnotatedAt ?? 0) - (a.lastAnnotatedAt ?? 0) || b.createdAt - a.createdAt);
+  }
   const totalPages = Math.max(1, Math.ceil(dances.length / PER_PAGE));
   const page = clampPage(pageParam, totalPages);
   const paged = dances.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+  const sortHref = (s?: string) => {
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (s) params.set("sort", s);
+    const qs = params.toString();
+    return qs ? `/dances?${qs}` : "/dances";
+  };
+  const sortChips: { key?: string; label: string }[] = [
+    { key: undefined, label: "Recently annotated" },
+    { key: "annotations", label: "Most annotations" },
+    { key: "added", label: "Recently added" },
+  ];
 
   return (
     <div>
@@ -40,7 +59,25 @@ export default async function DancesPage({
         basePath="/dances"
         query={query}
         placeholder="Search by song, artist, dancer, or event…"
+        preserve={{ sort }}
       />
+
+      <div className="flex flex-wrap items-center gap-2 mb-6 font-display text-sm">
+        <span className="text-muted">Sort:</span>
+        {sortChips.map((chip) => (
+          <Link
+            key={chip.label}
+            href={sortHref(chip.key)}
+            className={`rounded-full px-3 py-1 border ${
+              (sort ?? undefined) === chip.key || (!sort && !chip.key)
+                ? "bg-denim text-white border-denim"
+                : "bg-panel border-line text-ink-soft hover:border-denim"
+            }`}
+          >
+            {chip.label}
+          </Link>
+        ))}
+      </div>
 
       {paged.length === 0 ? (
         query ? (
@@ -73,7 +110,7 @@ export default async function DancesPage({
         </ul>
       )}
 
-      <Pagination page={page} totalPages={totalPages} basePath="/dances" params={{ q: query }} />
+      <Pagination page={page} totalPages={totalPages} basePath="/dances" params={{ q: query, sort }} />
     </div>
   );
 }

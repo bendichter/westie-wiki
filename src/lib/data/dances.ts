@@ -1,6 +1,6 @@
 import "server-only";
 import { likeContains } from "@/lib/like";
-import { and, asc, count, desc, eq, inArray, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, max, or } from "drizzle-orm";
 import { db } from "@/db";
 import {
   handholds,
@@ -171,6 +171,7 @@ export function listDances(filter?: {
       eventName: events.name,
       eventYear: events.year,
       annotationCount: count(videos.id),
+      lastAnnotatedAt: max(videos.createdAt),
     })
     .from(dances)
     .leftJoin(events, eq(events.id, dances.eventId))
