@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { curricula, curriculumRevisions, moveRevisions, moves, users } from "@/db/schema";
+import { curricula, curriculumRevisions, dances, moveRevisions, moves, users, videos } from "@/db/schema";
 import { CountChip, EmptyState, PageTitle } from "@/components/ui";
 import { clampPage, Pagination } from "@/components/Pagination";
 import { formatDateTime } from "@/lib/format";
@@ -32,7 +32,7 @@ export default async function ChangesPage({
     .where(eq(moves.deleted, 0))
     .orderBy(desc(moveRevisions.createdAt))
     .all()
-    .map((e) => ({ ...e, kind: "move" as const }));
+    .map((e) => ({ ...e, kind: "move" as const, href: `/moves/${e.slug}/history/${e.revisionNo}` }));
 
   const curriculumEdits = db
     .select({
@@ -49,9 +49,39 @@ export default async function ChangesPage({
     .where(eq(curricula.deleted, 0))
     .orderBy(desc(curriculumRevisions.createdAt))
     .all()
-    .map((e) => ({ ...e, kind: "curriculum" as const }));
+    .map((e) => ({ ...e, kind: "curriculum" as const, href: `/curricula/${e.slug}/history/${e.revisionNo}` }));
 
-  const all = [...moveEdits, ...curriculumEdits].sort((a, b) => b.createdAt - a.createdAt);
+  // video annotations: move clips marked in a dance, or standalone clips on a move
+  const annotations = db
+    .select({
+      id: videos.id,
+      name: moves.name,
+      slug: moves.slug,
+      danceSlug: dances.slug,
+      danceTitle: dances.title,
+      createdAt: videos.createdAt,
+      editor: users.username,
+    })
+    .from(videos)
+    .innerJoin(moves, eq(moves.id, videos.moveId))
+    .innerJoin(users, eq(users.id, videos.addedBy))
+    .leftJoin(dances, eq(dances.id, videos.danceId))
+    .where(eq(moves.deleted, 0))
+    .orderBy(desc(videos.createdAt))
+    .all()
+    .map((e) => ({
+      name: e.name,
+      revisionNo: null,
+      editSummary: e.danceSlug ? `annotated in ${e.danceTitle || "a dance"}` : "added a video clip",
+      createdAt: e.createdAt,
+      editor: e.editor,
+      kind: "clip" as const,
+      href: e.danceSlug ? `/dances/${e.danceSlug}?clip=${e.id}` : `/moves/${e.slug}`,
+    }));
+
+  const all = [...moveEdits, ...curriculumEdits, ...annotations].sort(
+    (a, b) => b.createdAt - a.createdAt
+  );
   const totalPages = Math.max(1, Math.ceil(all.length / PER_PAGE));
   const page = clampPage(pageParam, totalPages);
   const edits = all.slice((page - 1) * PER_PAGE, page * PER_PAGE);
@@ -70,17 +100,14 @@ export default async function ChangesPage({
         <ul className="divide-y divide-line border border-line rounded-lg bg-panel">
           {edits.map((edit, i) => (
             <li key={i} className="px-4 py-3 flex items-baseline gap-3">
-              <CountChip>{edit.kind === "move" ? "move" : "path"}</CountChip>
+              <CountChip>{edit.kind === "move" ? "move" : edit.kind === "curriculum" ? "path" : "clip"}</CountChip>
               <div className="min-w-0">
                 <Link
-                  href={
-                    edit.kind === "move"
-                      ? `/moves/${edit.slug}/history/${edit.revisionNo}`
-                      : `/curricula/${edit.slug}/history/${edit.revisionNo}`
-                  }
+                  href={edit.href}
                   className="font-display font-semibold text-denim hover:underline"
                 >
-                  {edit.name} · r{edit.revisionNo}
+                  {edit.name}
+                  {edit.revisionNo != null ? ` · r${edit.revisionNo}` : ""}
                 </Link>
                 <span className="text-sm text-muted font-display">
                   {" "}
