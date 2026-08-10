@@ -184,6 +184,15 @@ export default async function MovePage({
     .all();
   const relationIds = new Map(relationRows.map((r) => [`${r.toMoveId}:${r.kind}`, r.id]));
 
+  // the pattern card panel renders only when it has content (or edit affordances)
+  const hasPatternCard =
+    !!user ||
+    defaultHandhold != null ||
+    variants.length > 0 ||
+    [related.prerequisites, related.variationOf, related.variations, related.related, related.unlocks].some(
+      (items) => items.length > 0
+    );
+
   return (
     <div>
       <JsonLd
@@ -247,11 +256,9 @@ export default async function MovePage({
 
       <div className="mt-6 space-y-10">
         {/* pattern card */}
-        <section>
-          <h2 className="font-display text-xs uppercase tracking-widest text-muted font-bold mb-4">
-            Pattern card
-          </h2>
-          <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+        {hasPatternCard ? (
+        <section className="rounded-lg border border-line bg-panel p-5 sm:p-6">
+          <dl className="grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
             <RelationGroup
               title="Learn first"
               items={related.prerequisites}
@@ -280,11 +287,12 @@ export default async function MovePage({
             <VariantManager moveId={move.id} variants={variants} canEdit={!!user} />
           </dl>
           {user ? (
-            <div className="mt-5">
+            <div className="mt-5 border-t border-line pt-4">
               <RelationEditor moveId={move.id} moveNames={allMoveNames} />
             </div>
           ) : null}
         </section>
+        ) : null}
 
         <section>
             {move.description.trim() ? (
