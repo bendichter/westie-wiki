@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { isAdmin } from "@/lib/admin";
 import { logout } from "@/lib/actions/auth";
 import { SearchBar } from "./SearchBar";
+import { TaglineBanner } from "./TaglineBanner";
 import { VerifyEmailBanner } from "./VerifyEmailBanner";
 
 const NAV = [
@@ -87,13 +88,7 @@ export async function SiteHeader() {
         </div>
       </div>
       {user && user.emailVerifiedAt == null ? <VerifyEmailBanner /> : null}
-      <div className="bg-denim-deep text-paper/85 text-center text-[13px] font-display py-1 px-4">
-        Descriptive, not prescriptive — a learning aid built by dancers, not a source of truth about West
-        Coast Swing.{" "}
-        <Link href="/about" className="underline underline-offset-2 hover:text-paper">
-          Read more
-        </Link>
-      </div>
+      <TaglineBanner />
     </header>
   );
 }
