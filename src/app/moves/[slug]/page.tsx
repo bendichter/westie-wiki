@@ -114,6 +114,26 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
   const tags = getMoveTags(move.id);
   const related = getRelatedMoves(move.id);
   const videos = getMoveVideos(move.id);
+  // one card per dance: repeated occurrences of the move in the same dance
+  // collapse into extra timing rows, earliest timing first
+  const videoGroups: { primary: (typeof videos)[number]; extras: typeof videos }[] = [];
+  const groupByDance = new Map<string, (typeof videoGroups)[number]>();
+  for (const v of videos) {
+    const group = v.danceSlug ? groupByDance.get(v.danceSlug) : undefined;
+    if (group) {
+      group.extras.push(v);
+    } else {
+      const next = { primary: v, extras: [] };
+      videoGroups.push(next);
+      if (v.danceSlug) groupByDance.set(v.danceSlug, next);
+    }
+  }
+  for (const group of videoGroups) {
+    if (group.extras.length === 0) continue;
+    const ordered = [group.primary, ...group.extras].sort((a, b) => a.startSec - b.startSec);
+    group.primary = ordered[0];
+    group.extras = ordered.slice(1);
+  }
   const comments = getMoveComments(move.id).map((c) => ({
     ...c,
     timeAgoLabel: timeAgo(c.createdAt),
@@ -245,8 +265,13 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
               </EmptyState>
             ) : (
               <div className="grid gap-5 sm:grid-cols-2">
-                {videos.map((v) => (
-                  <VideoCard key={v.id} video={v} currentUserId={user?.id ?? null} />
+                {videoGroups.map((group) => (
+                  <VideoCard
+                    key={group.primary.id}
+                    video={group.primary}
+                    extraClips={group.extras}
+                    currentUserId={user?.id ?? null}
+                  />
                 ))}
               </div>
             )}

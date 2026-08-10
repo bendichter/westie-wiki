@@ -6,23 +6,33 @@ import { youtubeWatchUrl } from "@/lib/youtube";
 import { CountChip } from "./ui";
 import { LiteYouTube } from "./LiteYouTube";
 
+function clipTiming(clip: { startSec: number; endSec: number | null }): {
+  label: string;
+  duration: string | null;
+} {
+  const label =
+    clip.endSec != null
+      ? `${formatTimestamp(clip.startSec)} → ${formatTimestamp(clip.endSec)}`
+      : clip.startSec > 0
+        ? `from ${formatTimestamp(clip.startSec)}`
+        : "full video";
+  const duration = clip.endSec != null ? `${clip.endSec - clip.startSec}s clip` : null;
+  return { label, duration };
+}
+
 export function VideoCard({
   video,
+  extraClips = [],
   currentUserId,
   showMove,
 }: {
   video: VideoWithLabels & { moveName?: string; moveSlug?: string };
+  /** further timings of the same move in the same dance video */
+  extraClips?: VideoWithLabels[];
   currentUserId: number | null;
   showMove?: boolean;
 }) {
-  const clipLabel =
-    video.endSec != null
-      ? `${formatTimestamp(video.startSec)} → ${formatTimestamp(video.endSec)}`
-      : video.startSec > 0
-        ? `from ${formatTimestamp(video.startSec)}`
-        : "full video";
-  const duration =
-    video.endSec != null ? `${video.endSec - video.startSec}s clip` : null;
+  const { label: clipLabel, duration } = clipTiming(video);
 
   return (
     <div className="bg-panel border border-line rounded-lg overflow-hidden">
@@ -46,6 +56,33 @@ export function VideoCard({
           <div className="h-px bg-line flex-1" aria-hidden />
           <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
         </div>
+        {extraClips.map((clip) => {
+          const timing = clipTiming(clip);
+          const text = (
+            <>
+              {timing.label}
+              {timing.duration ? <span className="text-muted"> · {timing.duration}</span> : null}
+            </>
+          );
+          return (
+            <div key={clip.id} className="mt-1.5 flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
+              <div className="h-px bg-line flex-1" aria-hidden />
+              {clip.danceSlug ? (
+                <Link
+                  href={`/dances/${clip.danceSlug}?clip=${clip.id}`}
+                  className="font-mono text-xs text-ink-soft whitespace-nowrap hover:text-denim hover:underline"
+                >
+                  {text}
+                </Link>
+              ) : (
+                <span className="font-mono text-xs text-ink-soft whitespace-nowrap">{text}</span>
+              )}
+              <div className="h-px bg-line flex-1" aria-hidden />
+              <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
+            </div>
+          );
+        })}
 
         <div className="mt-2.5 text-sm font-display space-y-1">
           {video.variantName || video.handholdName ? (
