@@ -13,6 +13,7 @@ import { RelationEditor } from "@/components/RelationEditor";
 import { ResourceSection } from "@/components/ResourceSection";
 import { SponsorSlot } from "@/components/SponsorSlot";
 import { VariantManager } from "@/components/VariantManager";
+import { clampPage, Pagination } from "@/components/Pagination";
 import { VideoCard } from "@/components/VideoCard";
 import { ButtonLink, DifficultyBadge, EmptyState, TagChip } from "@/components/ui";
 import { adminDeleteMove } from "@/lib/actions/admin";
@@ -103,8 +104,17 @@ function RelationGroup({
   );
 }
 
-export default async function MovePage({ params }: { params: Promise<{ slug: string }> }) {
+const VIDEOS_PER_PAGE = 6;
+
+export default async function MovePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { slug } = await params;
+  const { page: pageParam } = await searchParams;
   const move = getMoveBySlug(slug);
   if (!move) notFound();
 
@@ -134,6 +144,12 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
     group.primary = ordered[0];
     group.extras = ordered.slice(1);
   }
+  const videoTotalPages = Math.max(1, Math.ceil(videoGroups.length / VIDEOS_PER_PAGE));
+  const videoPage = clampPage(pageParam, videoTotalPages);
+  const pagedVideoGroups = videoGroups.slice(
+    (videoPage - 1) * VIDEOS_PER_PAGE,
+    videoPage * VIDEOS_PER_PAGE
+  );
   const comments = getMoveComments(move.id).map((c) => ({
     ...c,
     timeAgoLabel: timeAgo(c.createdAt),
@@ -264,16 +280,24 @@ export default async function MovePage({ params }: { params: Promise<{ slug: str
                 and mark the move there.
               </EmptyState>
             ) : (
-              <div className="grid gap-5 sm:grid-cols-2">
-                {videoGroups.map((group) => (
-                  <VideoCard
-                    key={group.primary.id}
-                    video={group.primary}
-                    extraClips={group.extras}
-                    currentUserId={user?.id ?? null}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  {pagedVideoGroups.map((group) => (
+                    <VideoCard
+                      key={group.primary.id}
+                      video={group.primary}
+                      extraClips={group.extras}
+                      currentUserId={user?.id ?? null}
+                    />
+                  ))}
+                </div>
+                <Pagination
+                  page={videoPage}
+                  totalPages={videoTotalPages}
+                  basePath={`/moves/${move.slug}`}
+                  params={{}}
+                />
+              </>
             )}
           </section>
 
