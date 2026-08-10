@@ -4,11 +4,19 @@ import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { curricula, curriculumRevisions, moveRevisions, moves, users } from "@/db/schema";
 import { CountChip, EmptyState, PageTitle } from "@/components/ui";
+import { clampPage, Pagination } from "@/components/Pagination";
 import { formatDateTime } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Recent changes" };
 
-export default function ChangesPage() {
+const PER_PAGE = 50;
+
+export default async function ChangesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
   const moveEdits = db
     .select({
       name: moves.name,
@@ -23,7 +31,6 @@ export default function ChangesPage() {
     .innerJoin(users, eq(users.id, moveRevisions.editorId))
     .where(eq(moves.deleted, 0))
     .orderBy(desc(moveRevisions.createdAt))
-    .limit(60)
     .all()
     .map((e) => ({ ...e, kind: "move" as const }));
 
@@ -41,17 +48,19 @@ export default function ChangesPage() {
     .innerJoin(users, eq(users.id, curriculumRevisions.editorId))
     .where(eq(curricula.deleted, 0))
     .orderBy(desc(curriculumRevisions.createdAt))
-    .limit(60)
     .all()
     .map((e) => ({ ...e, kind: "curriculum" as const }));
 
-  const edits = [...moveEdits, ...curriculumEdits]
-    .sort((a, b) => b.createdAt - a.createdAt)
-    .slice(0, 80);
+  const all = [...moveEdits, ...curriculumEdits].sort((a, b) => b.createdAt - a.createdAt);
+  const totalPages = Math.max(1, Math.ceil(all.length / PER_PAGE));
+  const page = clampPage(pageParam, totalPages);
+  const edits = all.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
     <div className="max-w-3xl">
-      <PageTitle sub="Every edit to every page, newest first — the wiki's pulse.">
+      <PageTitle
+        sub={`Every edit to every page, newest first — the wiki's pulse.${totalPages > 1 ? ` Page ${page} of ${totalPages}.` : ""}`}
+      >
         Recent changes
       </PageTitle>
 
@@ -83,6 +92,8 @@ export default function ChangesPage() {
           ))}
         </ul>
       )}
+
+      <Pagination page={page} totalPages={totalPages} basePath="/changes" params={{}} />
     </div>
   );
 }
