@@ -16,7 +16,8 @@ function clipTiming(clip: { startSec: number; endSec: number | null }): {
       : clip.startSec > 0
         ? `from ${formatTimestamp(clip.startSec)}`
         : "full video";
-  const duration = clip.endSec != null ? `${clip.endSec - clip.startSec}s` : null;
+  const duration =
+    clip.endSec != null ? `${Math.round((clip.endSec - clip.startSec) * 10) / 10}s` : null;
   return { label, duration };
 }
 
@@ -45,60 +46,78 @@ export function VideoCard({
         href={video.danceSlug ? `/dances/${video.danceSlug}?clip=${video.id}` : undefined}
       />
       <div className="p-3.5">
-        {/* clip bars: labeled segments in the wiki's slot motif, two per line, at most 4 */}
+        {/* clip bars: labeled segments in the wiki's slot motif, at most 2 lines.
+            A handhold-labeled annotation takes a whole line with its handhold
+            beside it; two unlabeled annotations share a line. */}
         {(() => {
-          const timings = [video, ...extraClips].slice(0, 4);
+          const timings = [video, ...extraClips];
           const lines: (typeof timings)[] = [];
-          for (let i = 0; i < timings.length; i += 2) lines.push(timings.slice(i, i + 2));
-          return lines.map((line, i) => (
-            <div key={line[0].id} className={`flex items-center gap-3${i > 0 ? " mt-1.5" : ""}`}>
-              <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
-              {line.map((clip) => {
-                const timing = clipTiming(clip);
-                const text = (
-                  <>
-                    {timing.label}
-                    {timing.duration ? <span className="text-muted"> · {timing.duration}</span> : null}
-                  </>
-                );
-                return (
-                  <span key={clip.id} className="contents">
-                    <div className="h-px bg-line flex-1" aria-hidden />
-                    {clip.danceSlug ? (
-                      <Link
-                        href={`/dances/${clip.danceSlug}?clip=${clip.id}`}
-                        className="font-mono text-xs text-ink-soft whitespace-nowrap hover:text-denim hover:underline"
-                      >
-                        {text}
-                      </Link>
-                    ) : (
-                      <span className="font-mono text-xs text-ink-soft whitespace-nowrap">{text}</span>
-                    )}
-                  </span>
-                );
-              })}
-              <div className="h-px bg-line flex-1" aria-hidden />
-              <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
-            </div>
-          ));
+          let idx = 0;
+          while (idx < timings.length && lines.length < 2) {
+            const current = timings[idx];
+            const next = timings[idx + 1];
+            if (!current.handholdName && next && !next.handholdName) {
+              lines.push([current, next]);
+              idx += 2;
+            } else {
+              lines.push([current]);
+              idx += 1;
+            }
+          }
+          const remaining = timings.length - idx;
+          return (
+            <>
+              {lines.map((line, i) => (
+                <div key={line[0].id} className={`flex items-center gap-3${i > 0 ? " mt-1.5" : ""}`}>
+                  <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
+                  {line.map((clip) => {
+                    const timing = clipTiming(clip);
+                    const text = (
+                      <>
+                        {timing.label}
+                        {timing.duration ? <span className="text-muted"> · {timing.duration}</span> : null}
+                      </>
+                    );
+                    return (
+                      <span key={clip.id} className="contents">
+                        <div className="h-px bg-line flex-1" aria-hidden />
+                        {clip.danceSlug ? (
+                          <Link
+                            href={`/dances/${clip.danceSlug}?clip=${clip.id}`}
+                            className="font-mono text-xs text-ink-soft whitespace-nowrap hover:text-denim hover:underline"
+                          >
+                            {text}
+                          </Link>
+                        ) : (
+                          <span className="font-mono text-xs text-ink-soft whitespace-nowrap">{text}</span>
+                        )}
+                        {clip.handholdName ? <CountChip>{clip.handholdName}</CountChip> : null}
+                      </span>
+                    );
+                  })}
+                  <div className="h-px bg-line flex-1" aria-hidden />
+                  <span className="w-2 h-2 rounded-full bg-amber shrink-0" aria-hidden />
+                </div>
+              ))}
+              {remaining > 0 ? (
+                <div className="mt-1.5 text-center font-mono text-xs text-muted">
+                  {video.danceSlug ? (
+                    <Link href={`/dances/${video.danceSlug}`} className="hover:text-denim hover:underline">
+                      … ({remaining} more)
+                    </Link>
+                  ) : (
+                    <>… ({remaining} more)</>
+                  )}
+                </div>
+              ) : null}
+            </>
+          );
         })()}
-        {extraClips.length > 3 ? (
-          <div className="mt-1.5 text-center font-mono text-xs text-muted">
-            {video.danceSlug ? (
-              <Link href={`/dances/${video.danceSlug}`} className="hover:text-denim hover:underline">
-                … ({extraClips.length - 3} more)
-              </Link>
-            ) : (
-              <>… ({extraClips.length - 3} more)</>
-            )}
-          </div>
-        ) : null}
 
         <div className="mt-2.5 text-sm font-display space-y-1">
-          {video.variantName || video.handholdName ? (
+          {video.variantName ? (
             <div className="flex flex-wrap gap-1.5">
-              {video.variantName ? <CountChip>{video.variantName}</CountChip> : null}
-              {video.handholdName ? <CountChip>{video.handholdName}</CountChip> : null}
+              <CountChip>{video.variantName}</CountChip>
             </div>
           ) : null}
           {showMove && video.moveSlug ? (
