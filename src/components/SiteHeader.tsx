@@ -10,7 +10,6 @@ import { VerifyEmailBanner } from "./VerifyEmailBanner";
 const NAV = [
   { href: "/dances", label: "Dances" },
   { href: "/moves", label: "Moves" },
-  { href: "/dancers", label: "Dancers" },
   { href: "/loop", label: "Loop" },
   { href: "/curricula", label: "Curricula" },
 ];
