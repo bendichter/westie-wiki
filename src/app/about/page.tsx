@@ -64,6 +64,30 @@ export default function AboutPage() {
           <li>Leave an edit summary so others understand your change.</li>
         </ul>
 
+        <h2>Bugs and Feature Requests</h2>
+        <p>
+          Westie Wiki is developed in the open at{" "}
+          <a
+            href="https://github.com/bendichter/westie-wiki"
+            className="text-denim underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            github.com/bendichter/westie-wiki
+          </a>
+          . If something looks broken, or you have an idea that would make the wiki more useful,
+          please{" "}
+          <a
+            href="https://github.com/bendichter/westie-wiki/issues"
+            className="text-denim underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            open a GitHub issue
+          </a>
+          . Reports of small annoyances are just as welcome as big feature ideas.
+        </p>
+
         <p>
           Ready to contribute?{" "}
           <Link href="/signup" className="text-denim underline">
