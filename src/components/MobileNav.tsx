@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const NAV = [
   { href: "/dances", label: "Dances" },
   { href: "/moves", label: "Moves" },
   { href: "/dancers", label: "Dancers" },
-  { href: "/events", label: "Events" },
+  { href: "/loop", label: "Loop" },
   { href: "/curricula", label: "Curricula" },
   { href: "/search", label: "Search" },
 ];
@@ -19,10 +19,13 @@ export function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // close the panel after navigating
-  useEffect(() => {
+  // close the panel after navigating (state adjustment during render, per the
+  // React docs pattern, instead of a cascading effect)
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   return (
     <>

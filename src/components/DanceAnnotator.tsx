@@ -8,40 +8,10 @@ import {
   updateAnnotation,
   type AnnotationFormState,
 } from "@/lib/actions/dances";
-import { formatTimestamp, parseTimestamp } from "@/lib/time";
-import { FormError, Input, inputClass, PrimaryButton } from "./ui";
-
-// minimal typings for the YouTube IFrame API
-type YTPlayer = {
-  getCurrentTime: () => number;
-  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
-  playVideo: () => void;
-  setPlaybackRate: (rate: number) => void;
-};
-declare global {
-  interface Window {
-    YT?: { Player: new (el: HTMLElement, opts: object) => YTPlayer; PlayerState?: unknown };
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
-
-let apiPromise: Promise<void> | null = null;
-function loadYouTubeApi(): Promise<void> {
-  if (window.YT?.Player) return Promise.resolve();
-  if (!apiPromise) {
-    apiPromise = new Promise((resolve) => {
-      const prev = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        prev?.();
-        resolve();
-      };
-      const script = document.createElement("script");
-      script.src = "https://www.youtube.com/iframe_api";
-      document.head.appendChild(script);
-    });
-  }
-  return apiPromise;
-}
+import { formatTimestamp } from "@/lib/time";
+import { ClipLoopControls, PlayerBox, StartEndFields } from "./LoopControls";
+import { useYouTubeLoop } from "./useYouTubeLoop";
+import { FormError, inputClass, Input, PrimaryButton } from "./ui";
 
 export type AnnotationItem = {
   id: number;
@@ -75,37 +45,18 @@ export function DanceAnnotator({
   currentUserId: number | null;
   initialClipId?: number | null;
 }) {
-  const playerHostRef = useRef<HTMLDivElement>(null);
-  const playerRef = useRef<YTPlayer | null>(null);
   const moveInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
   const [moveName, setMoveName] = useState("");
   const [variantId, setVariantId] = useState("");
   const [handholdId, setHandholdId] = useState("");
   const [note, setNote] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [loopRate, setLoopRate] = useState<number | null>(null);
   const [removing, setRemoving] = useState(false);
-  const [playerReady, setPlayerReady] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    loadYouTubeApi().then(() => {
-      if (cancelled || !playerHostRef.current || playerRef.current) return;
-      playerRef.current = new window.YT!.Player(playerHostRef.current, {
-        videoId: youtubeId,
-        width: "100%",
-        playerVars: { rel: 0 },
-        events: { onReady: () => setPlayerReady(true) },
-      });
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [youtubeId]);
+  const yt = useYouTubeLoop({ videoId: youtubeId });
+  const { playerReady, playerRef } = yt;
 
   // arriving from a move page's clip thumbnail: cue that clip
   // into the form and player once, as soon as the player is ready
@@ -137,7 +88,7 @@ export function DanceAnnotator({
       setActiveId(current?.id ?? null);
     }, 250);
     return () => clearInterval(timer);
-  }, [playerReady, annotations]);
+  }, [playerReady, annotations, playerRef]);
 
   // offer to document a move the wiki doesn't know yet (matching is
   // case-insensitive so a lowercase spelling of an existing move doesn't
@@ -150,40 +101,16 @@ export function DanceAnnotator({
   const isUnknownMove =
     trimmedMoveName.length >= 2 && !knownMoveNames.has(trimmedMoveName.toLowerCase());
 
-  const loopStartSec = parseTimestamp(start.trim());
-  const loopEndSec = parseTimestamp(end.trim());
-  const canLoop =
-    playerReady && loopStartSec != null && loopEndSec != null && loopEndSec > loopStartSec;
-
-  // while looping, snap back to the clip start whenever playback leaves the segment
-  useEffect(() => {
-    if (loopRate == null || loopStartSec == null || loopEndSec == null) return;
-    const player = playerRef.current;
-    if (!player) return;
-    player.setPlaybackRate(loopRate);
-    player.seekTo(loopStartSec, true);
-    player.playVideo();
-    const timer = setInterval(() => {
-      const t = player.getCurrentTime();
-      if (!Number.isFinite(t)) return;
-      if (t >= loopEndSec || t < loopStartSec - 1.5) player.seekTo(loopStartSec, true);
-    }, 200);
-    return () => {
-      clearInterval(timer);
-      player.setPlaybackRate(1);
-    };
-  }, [loopRate, loopStartSec, loopEndSec]);
-
   function clearForm() {
     formRef.current?.reset();
-    setStart("");
-    setEnd("");
+    yt.setStart("");
+    yt.setEnd("");
     setMoveName("");
     setVariantId("");
     setHandholdId("");
     setNote("");
     setEditingId(null);
-    setLoopRate(null);
+    yt.setLoopRate(null);
   }
 
   const [state, formAction, pending] = useActionState<AnnotationFormState, FormData>(
@@ -200,16 +127,6 @@ export function DanceAnnotator({
     },
     { error: null }
   );
-
-  function captureTime(setter: (v: string) => void) {
-    const t = playerRef.current?.getCurrentTime();
-    if (t != null && Number.isFinite(t)) setter(formatTimestamp(Math.round(t * 10) / 10));
-  }
-
-  function jumpTo(seconds: number) {
-    playerRef.current?.seekTo(seconds, true);
-    playerRef.current?.playVideo();
-  }
 
   /** Delete the annotation currently loaded in the edit form (owner only). */
   async function removeEditingAnnotation() {
@@ -230,10 +147,7 @@ export function DanceAnnotator({
    * it). Pass a rate to start looping it immediately (needs an end time).
    */
   function loadClip(a: AnnotationItem, loop: number | null = null) {
-    setStart(formatTimestamp(a.startSec));
-    setEnd(a.endSec != null ? formatTimestamp(a.endSec) : "");
-    setLoopRate(a.endSec != null ? loop : null);
-    jumpTo(a.startSec);
+    yt.loadSegment(a.startSec, a.endSec, loop);
   }
 
   /** Load an annotation into the form for editing (and cue the player to it). */
@@ -246,120 +160,31 @@ export function DanceAnnotator({
     loadClip(a, loop);
   }
 
-  const nowButtonClass =
-    "shrink-0 cursor-pointer rounded-md border border-line bg-panel px-2 py-1.5 font-display text-xs font-semibold hover:border-amber hover:text-amber disabled:opacity-40";
-  const loopButtonClass = (active: boolean) =>
-    `shrink-0 cursor-pointer rounded-md border px-2 py-1.5 font-display text-xs font-semibold disabled:opacity-40 ${
-      active
-        ? "border-amber bg-amber/15 text-amber"
-        : "border-line bg-panel hover:border-amber hover:text-amber"
-    }`;
-
   // start/end inputs and the loop buttons are shared between the logged-in
   // annotation form and the logged-out clip panel
   const startEndFields = (
-    <>
-      <div>
-        <label htmlFor="annotate-start" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
-          Start
-        </label>
-        <div className="flex gap-1.5">
-          <Input
-            id="annotate-start"
-            name="start"
-            required
-            value={start}
-            onChange={(e) => setStart(e.target.value)}
-            placeholder="1:23"
-            className="font-mono !w-24"
-          />
-          <button
-            type="button"
-            disabled={!playerReady}
-            onClick={() => captureTime(setStart)}
-            className={nowButtonClass}
-            title="Use current playback time"
-          >
-            now
-          </button>
-        </div>
-      </div>
-      <div>
-        <label htmlFor="annotate-end" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
-          End <span className="font-normal text-muted">(optional)</span>
-        </label>
-        <div className="flex gap-1.5">
-          <Input
-            id="annotate-end"
-            name="end"
-            value={end}
-            onChange={(e) => setEnd(e.target.value)}
-            placeholder="1:31"
-            className="font-mono !w-24"
-          />
-          <button
-            type="button"
-            disabled={!playerReady}
-            onClick={() => captureTime(setEnd)}
-            className={nowButtonClass}
-            title="Use current playback time"
-          >
-            now
-          </button>
-        </div>
-      </div>
-    </>
+    <StartEndFields
+      idPrefix="annotate"
+      withFormNames
+      start={yt.start}
+      end={yt.end}
+      onStartChange={yt.setStart}
+      onEndChange={yt.setEnd}
+      onCaptureStart={yt.captureStart}
+      onCaptureEnd={yt.captureEnd}
+      playerReady={playerReady}
+    />
   );
 
   const clipLoopControls = (
-    <div className="flex items-center gap-1.5">
-      <span className="font-display text-xs font-semibold text-ink-soft">Clip:</span>
-      <button
-        type="button"
-        disabled={!canLoop}
-        onClick={() => setLoopRate(loopRate === 1 ? null : 1)}
-        className={loopButtonClass(loopRate === 1)}
-        title="Play the marked segment on repeat"
-      >
-        {loopRate === 1 ? "◼ stop loop" : "↻ loop"}
-      </button>
-      <button
-        type="button"
-        disabled={!canLoop}
-        onClick={() => setLoopRate(loopRate === 0.5 ? null : 0.5)}
-        className={loopButtonClass(loopRate === 0.5)}
-        title="Play the marked segment on repeat at half speed"
-      >
-        {loopRate === 0.5 ? "◼ stop ½× loop" : "↻ loop ½×"}
-      </button>
-      <button
-        type="button"
-        disabled={!canLoop}
-        onClick={() => setLoopRate(loopRate === 0.25 ? null : 0.25)}
-        className={loopButtonClass(loopRate === 0.25)}
-        title="Play the marked segment on repeat at quarter speed"
-      >
-        {loopRate === 0.25 ? "◼ stop ¼× loop" : "↻ loop ¼×"}
-      </button>
-      {!canLoop ? (
-        <span className="font-display text-xs text-muted">
-          set a start and end to loop the clip
-        </span>
-      ) : null}
-    </div>
+    <ClipLoopControls loopRate={yt.loopRate} setLoopRate={yt.setLoopRate} canLoop={yt.canLoop} />
   );
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       {/* player + marking panel */}
       <div>
-        <div className="overflow-hidden rounded-lg border border-line bg-ink">
-          {/* the YT API replaces the host div with an iframe whose height
-              attribute is fixed; pin it to a real 16:9 box instead */}
-          <div className="relative aspect-video w-full [&_iframe]:absolute [&_iframe]:inset-0 [&_iframe]:h-full [&_iframe]:w-full">
-            <div ref={playerHostRef} className="absolute inset-0" />
-          </div>
-        </div>
+        <PlayerBox hostRef={yt.playerHostRef} />
 
         {currentUserId ? (
           <form
