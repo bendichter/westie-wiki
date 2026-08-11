@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import {
   danceDancers,
@@ -299,8 +299,12 @@ function replaceSongs(danceId: number, rows: { song: string; artist: string }[])
   });
 }
 
-/** Set or correct a dance's placement (optional — not every dance is a competition). */
-export async function updateDancePlacement(
+/**
+ * Edit a dance's metadata in one pass: dancers and their roles, competition,
+ * placement, event, songs, and note. Annotation clips carry the dance's event
+ * and dancer labels, so those are kept in step.
+ */
+export async function updateDanceDetails(
   _prev: AnnotationFormState,
   formData: FormData
 ): Promise<AnnotationFormState> {
@@ -311,24 +315,14 @@ export async function updateDancePlacement(
   if (!user) redirect(`/login?next=/dances/${dance.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
 
-  const placement = String(formData.get("placement") ?? "").trim().slice(0, 40);
-  db.update(dances).set({ placement: placement || null }).where(eq(dances.id, dance.id)).run();
-
-  revalidatePath(`/dances/${dance.slug}`);
-  return { error: null, success: true };
-}
-
-/** Set, change, or clear the event a dance belongs to; annotation clips follow. */
-export async function updateDanceEvent(
-  _prev: AnnotationFormState,
-  formData: FormData
-): Promise<AnnotationFormState> {
-  const user = await getCurrentUser();
-  const danceId = Number(formData.get("danceId"));
-  const dance = db.select().from(dances).where(eq(dances.id, danceId)).get();
-  if (!dance) return { error: "This dance no longer exists." };
-  if (!user) redirect(`/login?next=/dances/${dance.slug}`);
-  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  const names = formData.getAll("dancerName").map((v) => String(v).trim().slice(0, 80));
+  const roles = formData.getAll("dancerRole").map((v) => String(v));
+  const labeledDancers: { name: string; role: VideoRole | null }[] = [];
+  for (let i = 0; i < names.length; i++) {
+    if (!names[i]) continue;
+    const role = (VIDEO_ROLES as readonly string[]).includes(roles[i]) ? (roles[i] as VideoRole) : null;
+    labeledDancers.push({ name: names[i], role });
+  }
 
   const eventName = String(formData.get("eventName") ?? "").trim().slice(0, 120);
   const eventYearRaw = String(formData.get("eventYear") ?? "").trim();
@@ -339,25 +333,41 @@ export async function updateDanceEvent(
     ? findOrCreateEvent(eventName, eventYearRaw ? Number(eventYearRaw) : null)
     : null;
 
-  db.update(dances).set({ eventId }).where(eq(dances.id, dance.id)).run();
+  const competition = String(formData.get("competition") ?? "").trim().slice(0, 80);
+  const placement = String(formData.get("placement") ?? "").trim().slice(0, 40);
+  const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+
+  db.update(dances)
+    .set({
+      eventId,
+      competition: competition || null,
+      placement: placement || null,
+      note: note || null,
+    })
+    .where(eq(dances.id, dance.id))
+    .run();
   // annotation clips carry the dance's event label — keep them in step
   db.update(videos).set({ eventId }).where(eq(videos.danceId, dance.id)).run();
 
-  revalidatePath(`/dances/${dance.slug}`);
-  return { error: null, success: true };
-}
-
-/** Set or correct a dance's songs (extended videos often play several). */
-export async function updateDanceSongs(
-  _prev: AnnotationFormState,
-  formData: FormData
-): Promise<AnnotationFormState> {
-  const user = await getCurrentUser();
-  const danceId = Number(formData.get("danceId"));
-  const dance = db.select().from(dances).where(eq(dances.id, danceId)).get();
-  if (!dance) return { error: "This dance no longer exists." };
-  if (!user) redirect(`/login?next=/dances/${dance.slug}`);
-  if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  // replace the dancer labels on the dance and on its annotation clips
+  const clipIds = db
+    .select({ id: videos.id })
+    .from(videos)
+    .where(eq(videos.danceId, dance.id))
+    .all()
+    .map((r) => r.id);
+  db.delete(danceDancers).where(eq(danceDancers.danceId, dance.id)).run();
+  if (clipIds.length > 0) db.delete(videoDancers).where(inArray(videoDancers.videoId, clipIds)).run();
+  const seen = new Set<number>();
+  for (const d of labeledDancers) {
+    const dancerId = findOrCreateDancer(d.name);
+    if (seen.has(dancerId)) continue;
+    seen.add(dancerId);
+    db.insert(danceDancers).values({ danceId: dance.id, dancerId, role: d.role }).run();
+    for (const videoId of clipIds) {
+      db.insert(videoDancers).values({ videoId, dancerId, role: d.role }).run();
+    }
+  }
 
   replaceSongs(dance.id, parseSongRows(formData));
 

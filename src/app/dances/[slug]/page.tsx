@@ -3,11 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { events, handholds as handholdsTable, moves, moveVariants, users } from "@/db/schema";
+import { dancers as dancersTable, events, handholds as handholdsTable, moves, moveVariants, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
-import { EditDanceEventForm } from "@/components/EditDanceEventForm";
-import { EditDanceSongForm } from "@/components/EditDanceSongForm";
-import { EditPlacementForm } from "@/components/EditPlacementForm";
+import { EditDanceDetailsForm } from "@/components/EditDanceDetailsForm";
 import { ReportForm } from "@/components/ReportForm";
 import { JsonLd } from "@/components/JsonLd";
 import { CountChip } from "@/components/ui";
@@ -65,6 +63,12 @@ export default async function DancePage({
   const eventSuggestions = db
     .selectDistinct({ name: events.name })
     .from(events)
+    .all()
+    .map((r) => r.name)
+    .sort((a, b) => a.localeCompare(b));
+  const dancerSuggestions = db
+    .selectDistinct({ name: dancersTable.name })
+    .from(dancersTable)
     .all()
     .map((r) => r.name)
     .sort((a, b) => a.localeCompare(b));
@@ -141,28 +145,35 @@ export default async function DancePage({
               : heading}
           </h1>
           {dance.competition ? <CountChip>{dance.competition}</CountChip> : null}
-          <EditPlacementForm danceId={dance.id} placement={dance.placement} canEdit={!!user} />
+          {dance.placement ? <CountChip>{dance.placement}</CountChip> : null}
         </div>
-        <div className="mt-1 font-display text-[15px] text-muted">
-          <EditDanceEventForm
-            danceId={dance.id}
-            event={event ?? null}
-            eventSuggestions={eventSuggestions}
-            canEdit={!!user}
-          />
-          {" · "}
-          <EditDanceSongForm danceId={dance.id} songs={songs} canEdit={!!user} />
-          {" · "}
-          registered by{" "}
-          {addedBy ? (
-            <Link href={`/users/${addedBy.username}`} className="hover:underline">
-              {addedBy.username}
-            </Link>
-          ) : (
-            "unknown"
-          )}{" "}
-          on {formatDate(dance.createdAt)}
-        </div>
+        {event || songs.length > 0 ? (
+          <div className="mt-1 font-display text-[15px] text-muted">
+            {event ? (
+              <>
+                at{" "}
+                <Link href={`/events/${event.slug}`} className="text-denim hover:underline">
+                  {event.name}
+                  {event.year ? ` ${event.year}` : ""}
+                </Link>
+              </>
+            ) : null}
+            {event && songs.length > 0 ? " · " : null}
+            {songs.length > 0 ? (
+              <>
+                <span aria-hidden>♪</span>{" "}
+                {songs.map((s, i) => (
+                  <span key={i}>
+                    {s.song}
+                    {s.song && s.artist ? " — " : ""}
+                    {s.artist}
+                    {i < songs.length - 1 ? " · " : ""}
+                  </span>
+                ))}
+              </>
+            ) : null}
+          </div>
+        ) : null}
         {user ? (
           <div className="mt-1">
             <ReportForm danceId={dance.id} />
@@ -173,6 +184,22 @@ export default async function DancePage({
           <p className="mt-0.5 truncate font-display text-xs text-muted" title={dance.title}>
             {dance.title}
           </p>
+        ) : null}
+        {user ? (
+          <div className="mt-2">
+            <EditDanceDetailsForm
+              danceId={dance.id}
+              dancers={danceDancerList.map((d) => ({ name: d.name, role: d.role }))}
+              competition={dance.competition}
+              placement={dance.placement}
+              event={event ?? null}
+              songs={songs.map((s) => ({ song: s.song, artist: s.artist }))}
+              note={dance.note}
+              eventSuggestions={eventSuggestions}
+              dancerSuggestions={dancerSuggestions}
+              canEdit={!!user}
+            />
+          </div>
         ) : null}
         <div className="slot-line mt-3" aria-hidden />
       </div>
@@ -187,6 +214,18 @@ export default async function DancePage({
         currentUserId={user?.id ?? null}
         initialClipId={initialClipId}
       />
+
+      <p className="mt-10 border-t border-line pt-5 font-display text-sm text-muted">
+        registered by{" "}
+        {addedBy ? (
+          <Link href={`/users/${addedBy.username}`} className="hover:underline">
+            {addedBy.username}
+          </Link>
+        ) : (
+          "unknown"
+        )}{" "}
+        on {formatDate(dance.createdAt)}
+      </p>
       </div>
     </div>
   );

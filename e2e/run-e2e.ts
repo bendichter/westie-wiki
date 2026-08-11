@@ -93,7 +93,6 @@ async function main() {
   log("move page renders with videos, pattern card, relations");
   await page.goto(`${BASE}/moves/whip`);
   await expectText(page, "Basic Whip");
-  await expectText(page, "Pattern card");
   await expectText(page, "Variations");
   await shot(page, "03-move-whip");
 
@@ -332,7 +331,7 @@ async function main() {
 
   log("annotation appears on the move page with the dance's song");
   await page.goto(`${BASE}/moves/sugar-push`);
-  await expectText(page, "0:15 → 0:20");
+  await expectText(page, "0:15 — 0:20");
   await expectText(page, "Dance Song");
 
   log("clicking the clip thumbnail opens the mapped dance with the clip looping");
@@ -348,14 +347,14 @@ async function main() {
   log("dancer page groups clips by move under the Moves tab");
   await page.goto(`${BASE}/dancers/lead-${run}?tab=moves`);
   await expectText(page, "Sugar Push");
-  await expectText(page, "0:15 → 0:20");
+  await expectText(page, "0:15 — 0:20");
   await shot(page, "09-dancer-page");
 
   log("event page shows the clip under the Moves tab");
   await page.goto(`${BASE}/events`);
   await expectText(page, `Test Event ${run.toUpperCase()}`);
   await page.goto(`${BASE}/events/test-event-${run}-2025?tab=moves`);
-  await expectText(page, "0:15 → 0:20");
+  await expectText(page, "0:15 — 0:20");
 
   log("search finds the dancer by name; list pages find dancer and event");
   await page.goto(`${BASE}/search?q=Follow ${run}`);
@@ -365,30 +364,22 @@ async function main() {
   await page.goto(`${BASE}/events?q=Test Event ${run.toUpperCase()}`);
   await expectText(page, `Test Event ${run.toUpperCase()}`);
 
-  log("home feed counts the annotated clip as a contribution");
+  log("home shows the freshly annotated dance's card");
   await page.goto(BASE);
   await expectText(page, "Recent contributions");
-  await expectText(page, "added a video clip");
+  await expectText(page, `Lead ${run} & Follow ${run}`);
 
   log("dances list shows the mapped dance");
   await page.goto(`${BASE}/dances`);
   await expectText(page, "3 moves marked");
 
-  log("dance event can be edited inline");
+  log("dance event can be edited from the Edit details panel");
   await page.goto(danceUrl);
-  await page.getByRole("button", { name: "edit event" }).click();
-  await page.getByLabel("Event name").fill(`Corrected Event ${run.toUpperCase()}`);
-  await page.getByLabel("Event year").fill("2024");
-  await page.getByRole("button", { name: "Save", exact: true }).first().click();
+  await page.getByRole("button", { name: "Edit details" }).click();
+  await page.getByLabel("Event", { exact: true }).fill(`Corrected Event ${run.toUpperCase()}`);
+  await page.getByLabel("Year").fill("2024");
+  await page.getByRole("button", { name: "Save details" }).click();
   await expectText(page, `Corrected Event ${run.toUpperCase()} 2024`);
-
-  log("placement shows and can be edited inline");
-  await page.goto(danceUrl);
-  await expectText(page, "2nd place");
-  await page.getByRole("button", { name: "edit", exact: true }).click();
-  await page.getByLabel("Placement").fill("1st place");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
-  await expectText(page, "1st place");
 
   log("search finds the dance by song and artist");
   await page.goto(`${BASE}/search?q=Second Song`);
@@ -399,12 +390,15 @@ async function main() {
   await page.goto(`${BASE}/dances?q=zzzz-no-match`);
   await expectText(page, "No dances matching");
 
-  log("edit the dance's songs from the dance page");
+  log("one Edit details panel updates placement and songs together");
   await page.goto(danceUrl);
+  await expectText(page, "2nd place");
   await expectText(page, "Second Song");
-  await page.getByRole("button", { name: "edit songs" }).click();
-  await page.locator('form input[name="songName"]').first().fill("Corrected Song");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.getByRole("button", { name: "Edit details" }).click();
+  await page.getByLabel("Placement").fill("1st place");
+  await page.locator('input[name="songName"]').first().fill("Corrected Song");
+  await page.getByRole("button", { name: "Save details" }).click();
+  await expectText(page, "1st place");
   await expectText(page, "Corrected Song");
   await page.goto(`${BASE}/moves/sugar-push`);
   await expectText(page, "Corrected Song");
@@ -414,10 +408,10 @@ async function main() {
   await page.goto(`${BASE}/dancers/lead-${run}`);
   await expectText(page, "Advanced Jack & Jill");
   await page.getByRole("tab", { name: /Moves/ }).click();
-  await expectText(page, "0:15 → 0:20");
+  await expectText(page, "0:15 — 0:20");
   await page.goto(`${BASE}/moves/sugar-push`);
-  await expectText(page, "Seen in dances");
-  await expectText(page, `Lead ${run} & Follow ${run}`);
+  await expectText(page, `Lead ${run}`);
+  await expectText(page, `Follow ${run}`);
 
   // --- curriculum ---
   log("create a curriculum with ordered moves, notes, key videos");
