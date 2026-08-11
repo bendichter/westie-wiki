@@ -101,7 +101,7 @@ export function EditDanceDetailsForm({
                 list="dance-dancer-suggestions"
                 placeholder="Dancer name"
                 aria-label={`Dancer ${i + 1} name`}
-                className="!w-56 !py-1.5 text-sm"
+                className="min-w-0 flex-1 !py-1.5 text-sm"
               />
               <Select
                 name="dancerRole"
@@ -110,7 +110,7 @@ export function EditDanceDetailsForm({
                   setDancerRows(dancerRows.map((r, j) => (j === i ? { ...r, role: e.target.value } : r)))
                 }
                 aria-label={`Dancer ${i + 1} role`}
-                className="!w-32 !py-1.5 text-sm"
+                className="!w-28 shrink-0 !py-1.5 text-sm"
               >
                 <option value="">no role</option>
                 <option value="leader">leader</option>

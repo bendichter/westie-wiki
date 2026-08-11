@@ -428,9 +428,9 @@ export function DanceAnnotator({
             {/* clip playback: loop the marked segment, full speed or half speed */}
             {clipLoopControls}
 
-            <div className="flex items-end gap-3">
+            <div className="flex flex-wrap items-end gap-3">
               {(variantsByMove[moveName] ?? []).length > 0 ? (
-                <div className="w-52">
+                <div className="w-full sm:w-52">
                   <label htmlFor="annotate-variant" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
                     Variant <span className="font-normal text-muted">(optional)</span>
                   </label>
@@ -439,7 +439,7 @@ export function DanceAnnotator({
                     name="variantId"
                     value={variantId}
                     onChange={(e) => setVariantId(e.target.value)}
-                    className={inputClass("cursor-pointer")}
+                    className={inputClass("cursor-pointer min-w-0 max-w-full")}
                   >
                     <option value="">Not specified</option>
                     {(variantsByMove[moveName] ?? []).map((v) => (
@@ -450,7 +450,7 @@ export function DanceAnnotator({
                   </select>
                 </div>
               ) : null}
-              <div className="w-48">
+              <div className="w-full sm:w-48">
                 <label htmlFor="annotate-handhold" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
                   Handhold <span className="font-normal text-muted">(optional)</span>
                 </label>
@@ -459,7 +459,7 @@ export function DanceAnnotator({
                   name="handholdId"
                   value={handholdId}
                   onChange={(e) => setHandholdId(e.target.value)}
-                  className={inputClass("cursor-pointer")}
+                  className={inputClass("cursor-pointer min-w-0 max-w-full")}
                 >
                   <option value="">Not specified</option>
                   {handholds.map((h) => (
@@ -469,7 +469,7 @@ export function DanceAnnotator({
                   ))}
                 </select>
               </div>
-              <div className="flex-1">
+              <div className="w-full sm:w-auto sm:flex-1">
                 <label htmlFor="annotate-note" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
                   Note <span className="font-normal text-muted">(optional)</span>
                 </label>
