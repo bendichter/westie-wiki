@@ -174,17 +174,7 @@ export default async function DancePage({
             ) : null}
           </div>
         ) : null}
-        {user ? (
-          <div className="mt-1">
-            <ReportForm danceId={dance.id} />
-          </div>
-        ) : null}
         {dance.note ? <p className="mt-1 font-display text-[15px] text-ink-soft">{dance.note}</p> : null}
-        {dance.title ? (
-          <p className="mt-0.5 truncate font-display text-xs text-muted" title={dance.title}>
-            {dance.title}
-          </p>
-        ) : null}
         {user ? (
           <div className="mt-2">
             <EditDanceDetailsForm
@@ -215,17 +205,24 @@ export default async function DancePage({
         initialClipId={initialClipId}
       />
 
-      <p className="mt-10 border-t border-line pt-5 font-display text-sm text-muted">
-        registered by{" "}
-        {addedBy ? (
-          <Link href={`/users/${addedBy.username}`} className="hover:underline">
-            {addedBy.username}
-          </Link>
-        ) : (
-          "unknown"
-        )}{" "}
-        on {formatDate(dance.createdAt)}
-      </p>
+      <div className="mt-10 border-t border-line pt-5 font-display text-sm text-muted">
+        <p>
+          registered by{" "}
+          {addedBy ? (
+            <Link href={`/users/${addedBy.username}`} className="hover:underline">
+              {addedBy.username}
+            </Link>
+          ) : (
+            "unknown"
+          )}{" "}
+          on {formatDate(dance.createdAt)}
+        </p>
+        {user ? (
+          <div className="mt-1">
+            <ReportForm danceId={dance.id} />
+          </div>
+        ) : null}
+      </div>
       </div>
     </div>
   );
