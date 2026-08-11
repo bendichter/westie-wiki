@@ -143,8 +143,8 @@ export function EditDanceDetailsForm({
         </datalist>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_8rem]">
-        <div>
+      <div className="flex gap-3">
+        <div className="flex-1">
           <label htmlFor="edit-dance-event" className={fieldLabel}>
             Event
           </label>
@@ -163,7 +163,7 @@ export function EditDanceDetailsForm({
             ))}
           </datalist>
         </div>
-        <div>
+        <div className="w-24 shrink-0">
           <label htmlFor="edit-dance-event-year" className={fieldLabel}>
             Year
           </label>
