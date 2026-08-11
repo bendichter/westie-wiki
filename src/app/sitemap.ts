@@ -16,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/dancers`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE}/events`, changeFrequency: "weekly", priority: 0.5 },
     { url: `${BASE}/curricula`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE}/loop`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/contributors`, changeFrequency: "weekly", priority: 0.4 },
     { url: `${BASE}/about`, changeFrequency: "monthly", priority: 0.3 },
     { url: `${BASE}/guidelines`, changeFrequency: "monthly", priority: 0.3 },

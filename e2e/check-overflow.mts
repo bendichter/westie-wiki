@@ -3,7 +3,7 @@ import Database from "better-sqlite3";
 import { chromium } from "playwright";
 
 const BASE = "http://localhost:3000";
-const PATHS = ["/", "/dances", "/moves", "/dances/test-dance", "/moves/sugar-push", "/changes", "/about", "/events", "/dancers", "/curricula", "/profile"];
+const PATHS = ["/", "/dances", "/moves", "/dances/test-dance", "/moves/sugar-push", "/changes", "/about", "/events", "/dancers", "/curricula", "/profile", "/loop", "/loop?v=GGi2Rkf-15g&start=15&end=19"];
 const WIDTHS = [320, 360, 375, 390, 414];
 
 // seed a session for the archivist user so logged-in UI renders

@@ -311,6 +311,28 @@ async function main() {
   await page.getByRole("button", { name: "Cancel" }).click();
   await expectText(page, "Mark a move");
 
+  log("loop tool: paste a link with t=, set end, loop, share");
+  await page.goto(`${BASE}/loop`);
+  await page.getByLabel("YouTube link").fill("https://youtu.be/GGi2Rkf-15g?t=15");
+  await page.getByRole("button", { name: "Load", exact: true }).click();
+  if ((await page.getByLabel("Start").inputValue()) !== "0:15") {
+    throw new Error("loop page did not prefill start from the link's t= parameter");
+  }
+  await page.getByLabel("End", { exact: true }).fill("0:19");
+  const loopToolButton = page.getByRole("button", { name: "↻ loop", exact: true });
+  for (let i = 0; i < 60 && (await loopToolButton.isDisabled()); i++) await page.waitForTimeout(250);
+  if (await loopToolButton.isDisabled()) throw new Error("loop tool button never enabled");
+  const shareHref = await page.getByRole("link", { name: "Share this loop" }).getAttribute("href");
+  if (!shareHref?.includes("v=GGi2Rkf-15g") || !shareHref.includes("start=15") || !shareHref.includes("end=19")) {
+    throw new Error(`share link missing loop params: ${shareHref}`);
+  }
+
+  log("loop tool: share-link arrival auto-loops at the given rate");
+  await page.goto(`${BASE}/loop?v=GGi2Rkf-15g&start=15&end=19&rate=0.5`);
+  await page.getByRole("button", { name: "◼ stop ½× loop" }).waitFor({ timeout: 15000 });
+  await page.goto(danceUrl);
+  await expectText(page, "Mark a move");
+
   log("removing an annotation requires clicking into it first");
   if ((await page.getByText("\u2715").count()) !== 0) throw new Error("timeline should not show inline delete buttons");
   await page.getByLabel("Move", { exact: true }).fill("Whip");
