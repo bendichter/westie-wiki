@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { isAdmin } from "@/lib/admin";
 import { logout } from "@/lib/actions/auth";
+import { MobileNav } from "./MobileNav";
 import { SearchBar } from "./SearchBar";
 import { TaglineBanner } from "./TaglineBanner";
 import { VerifyEmailBanner } from "./VerifyEmailBanner";
@@ -28,7 +29,7 @@ export async function SiteHeader() {
             <div className="slot-line !bg-ink-soft mt-0.5 transition-all" aria-hidden />
           </Link>
 
-          <nav className="flex items-center gap-4 text-sm font-display order-3 sm:order-2 w-full sm:w-auto">
+          <nav className="hidden sm:flex items-center gap-4 text-sm font-display sm:order-2">
             {NAV.map((item) => (
               <Link
                 key={item.href}
@@ -45,6 +46,7 @@ export async function SiteHeader() {
               Search
             </Link>
           </nav>
+          <MobileNav />
 
           <div className="flex items-center gap-3 ml-auto order-2 sm:order-3">
             <SearchBar />
