@@ -8,9 +8,9 @@ import { TaglineBanner } from "./TaglineBanner";
 import { VerifyEmailBanner } from "./VerifyEmailBanner";
 
 const NAV = [
+  { href: "/loop", label: "Loop" },
   { href: "/dances", label: "Dances" },
   { href: "/moves", label: "Moves" },
-  { href: "/loop", label: "Loop" },
   { href: "/curricula", label: "Curricula" },
 ];
 
