@@ -353,8 +353,12 @@ export function DanceAnnotator({
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       {/* player + marking panel */}
       <div>
-        <div className="overflow-hidden rounded-lg border border-line bg-ink [&_iframe]:aspect-video [&_iframe]:w-full">
-          <div ref={playerHostRef} className="aspect-video w-full" />
+        <div className="overflow-hidden rounded-lg border border-line bg-ink">
+          {/* the YT API replaces the host div with an iframe whose height
+              attribute is fixed; pin it to a real 16:9 box instead */}
+          <div className="relative aspect-video w-full [&_iframe]:absolute [&_iframe]:inset-0 [&_iframe]:h-full [&_iframe]:w-full">
+            <div ref={playerHostRef} className="absolute inset-0" />
+          </div>
         </div>
 
         {currentUserId ? (

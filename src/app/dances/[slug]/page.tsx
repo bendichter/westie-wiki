@@ -102,7 +102,9 @@ export default async function DancePage({
       : (dance.title ?? "Untitled dance");
 
   return (
-    <div>
+    // full-bleed: escape the site column so the player can use the whole viewport
+    <div className="relative left-1/2 w-screen -translate-x-1/2 px-4 sm:px-6">
+      <div className="mx-auto max-w-[1500px]">
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -185,6 +187,7 @@ export default async function DancePage({
         currentUserId={user?.id ?? null}
         initialClipId={initialClipId}
       />
+      </div>
     </div>
   );
 }

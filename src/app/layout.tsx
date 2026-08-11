@@ -41,7 +41,7 @@ export default function RootLayout({
       lang="en"
       className={`${bricolage.variable} ${sourceSerif.variable} ${splineMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col overflow-x-clip">
         <JsonLd
           data={{
             "@context": "https://schema.org",
