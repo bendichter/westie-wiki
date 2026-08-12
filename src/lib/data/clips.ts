@@ -146,6 +146,35 @@ export function getEventClips(eventId: number): ClipWithMove[] {
   return hydrateClips(rows);
 }
 
+/**
+ * Collapse repeated occurrences within the same dance into one card: the
+ * earliest occurrence leads and the rest become extra timing rows on it.
+ * Standalone clips (no dance) stay separate.
+ */
+export function groupClipsByDance<T extends { danceSlug: string | null; startSec: number }>(
+  clips: T[]
+): { primary: T; extras: T[] }[] {
+  const groups: { primary: T; extras: T[] }[] = [];
+  const byDance = new Map<string, { primary: T; extras: T[] }>();
+  for (const clip of clips) {
+    const group = clip.danceSlug ? byDance.get(clip.danceSlug) : undefined;
+    if (group) {
+      group.extras.push(clip);
+    } else {
+      const next = { primary: clip, extras: [] as T[] };
+      groups.push(next);
+      if (clip.danceSlug) byDance.set(clip.danceSlug, next);
+    }
+  }
+  for (const group of groups) {
+    if (group.extras.length === 0) continue;
+    const ordered = [group.primary, ...group.extras].sort((a, b) => a.startSec - b.startSec);
+    group.primary = ordered[0];
+    group.extras = ordered.slice(1);
+  }
+  return groups;
+}
+
 /** Group clips by move, preserving clip order within each move. */
 export function groupClipsByMove(clips: ClipWithMove[]): {
   moveId: number;

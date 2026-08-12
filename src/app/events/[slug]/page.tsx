@@ -10,7 +10,7 @@ import { TabNav } from "@/components/TabNav";
 import { VideoCard } from "@/components/VideoCard";
 import { EmptyState, PageTitle } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
-import { getEventClips, groupClipsByMove } from "@/lib/data/clips";
+import { getEventClips, groupClipsByDance, groupClipsByMove } from "@/lib/data/clips";
 import { listDances } from "@/lib/data/dances";
 
 const DANCES_PER_PAGE = 12;
@@ -121,8 +121,13 @@ export default async function EventPage({
                     <div className="slot-line flex-1 self-center hidden sm:block" aria-hidden />
                   </div>
                   <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    {group.clips.map((clip) => (
-                      <VideoCard key={clip.id} video={clip} currentUserId={user?.id ?? null} />
+                    {groupClipsByDance(group.clips).map((g) => (
+                      <VideoCard
+                        key={g.primary.id}
+                        video={g.primary}
+                        extraClips={g.extras}
+                        currentUserId={user?.id ?? null}
+                      />
                     ))}
                   </div>
                 </section>

@@ -33,6 +33,7 @@ import {
   getRelatedMoves,
   type MoveLink,
 } from "@/lib/data/moves";
+import { groupClipsByDance } from "@/lib/data/clips";
 import { formatDate, timeAgo } from "@/lib/format";
 import { platformLabel } from "@/lib/platform";
 
@@ -125,24 +126,7 @@ export default async function MovePage({
   const videos = getMoveVideos(move.id);
   // one card per dance: repeated occurrences of the move in the same dance
   // collapse into extra timing rows, earliest timing first
-  const videoGroups: { primary: (typeof videos)[number]; extras: typeof videos }[] = [];
-  const groupByDance = new Map<string, (typeof videoGroups)[number]>();
-  for (const v of videos) {
-    const group = v.danceSlug ? groupByDance.get(v.danceSlug) : undefined;
-    if (group) {
-      group.extras.push(v);
-    } else {
-      const next = { primary: v, extras: [] };
-      videoGroups.push(next);
-      if (v.danceSlug) groupByDance.set(v.danceSlug, next);
-    }
-  }
-  for (const group of videoGroups) {
-    if (group.extras.length === 0) continue;
-    const ordered = [group.primary, ...group.extras].sort((a, b) => a.startSec - b.startSec);
-    group.primary = ordered[0];
-    group.extras = ordered.slice(1);
-  }
+  const videoGroups = groupClipsByDance(videos);
   const videoTotalPages = Math.max(1, Math.ceil(videoGroups.length / VIDEOS_PER_PAGE));
   const videoPage = clampPage(pageParam, videoTotalPages);
   const pagedVideoGroups = videoGroups.slice(
