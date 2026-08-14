@@ -41,9 +41,9 @@ export default function HomePage() {
             <span className="text-denim">documented by us.</span>
           </h1>
           <p className="mt-5 text-lg text-ink-soft max-w-2xl">
-            Every move with its names and its aliases. Every description backed by timestamped
-            video of real dancers at real events. Every page editable, wiki-style, by anyone in the
-            community.
+            Every dance mapped move by move, with timestamps. Every marked move linked to its
+            wiki page, with names, aliases, and a description. Every page editable, wiki-style,
+            by anyone in the community.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <ButtonLink href="/dances">Watch dances</ButtonLink>
