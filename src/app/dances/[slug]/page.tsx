@@ -138,7 +138,11 @@ export default async function DancePage({
                       {d.name}
                     </Link>
                     {d.role ? (
-                      <span className="text-lg sm:text-xl text-muted font-normal"> ({d.role})</span>
+                      <span className="text-lg sm:text-xl text-muted font-normal">
+                        {" "}
+                        (<span className="sm:hidden">{d.role.charAt(0).toUpperCase()}</span>
+                        <span className="hidden sm:inline">{d.role}</span>)
+                      </span>
                     ) : null}
                     {i < danceDancerList.length - 1 ? <span className="text-muted"> &amp; </span> : null}
                   </span>
@@ -176,23 +180,6 @@ export default async function DancePage({
           </div>
         ) : null}
         {dance.note ? <p className="mt-1 font-display text-[15px] text-ink-soft">{dance.note}</p> : null}
-        {user ? (
-          <div className="mt-2">
-            <EditDanceDetailsForm
-              danceId={dance.id}
-              dancers={danceDancerList.map((d) => ({ name: d.name, role: d.role }))}
-              competition={dance.competition}
-              placement={dance.placement}
-              event={event ?? null}
-              songs={songs.map((s) => ({ song: s.song, artist: s.artist }))}
-              note={dance.note}
-              eventSuggestions={eventSuggestions}
-              dancerSuggestions={dancerSuggestions}
-              canEdit={!!user}
-              canRemove={user.id === dance.addedBy || isAdmin(user)}
-            />
-          </div>
-        ) : null}
         <div className="slot-line mt-3" aria-hidden />
       </div>
 
@@ -223,6 +210,19 @@ export default async function DancePage({
         {user ? (
           <div className="mt-1">
             <ReportForm danceId={dance.id} />
+            <EditDanceDetailsForm
+              danceId={dance.id}
+              dancers={danceDancerList.map((d) => ({ name: d.name, role: d.role }))}
+              competition={dance.competition}
+              placement={dance.placement}
+              event={event ?? null}
+              songs={songs.map((s) => ({ song: s.song, artist: s.artist }))}
+              note={dance.note}
+              eventSuggestions={eventSuggestions}
+              dancerSuggestions={dancerSuggestions}
+              canEdit={!!user}
+              canRemove={user.id === dance.addedBy || isAdmin(user)}
+            />
           </div>
         ) : null}
       </div>

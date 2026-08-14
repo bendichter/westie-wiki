@@ -78,7 +78,7 @@ export function EditDanceDetailsForm({
       <button
         type="button"
         onClick={openForm}
-        className="cursor-pointer rounded-md border border-line bg-panel px-3 py-1.5 font-display text-sm font-semibold text-ink hover:border-denim hover:text-denim"
+        className="mt-1 block cursor-pointer text-xs text-muted underline hover:text-denim"
       >
         Edit details
       </button>
