@@ -54,6 +54,9 @@ export function DanceAnnotator({
   const [editingId, setEditingId] = useState<number | null>(null);
   const [removing, setRemoving] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
+  // the marking/loop panel folds away so watchers can focus on the timeline;
+  // it starts open on an unmapped dance, where marking is the whole point
+  const [panelOpen, setPanelOpen] = useState(annotations.length === 0);
 
   const yt = useYouTubeLoop({ videoId: youtubeId });
   const { playerReady, playerRef } = yt;
@@ -147,6 +150,7 @@ export function DanceAnnotator({
    * it). Pass a rate to start looping it immediately (needs an end time).
    */
   function loadClip(a: AnnotationItem, loop: number | null = null) {
+    setPanelOpen(true);
     yt.loadSegment(a.startSec, a.endSec, loop);
   }
 
@@ -186,27 +190,36 @@ export function DanceAnnotator({
       <div>
         <PlayerBox hostRef={yt.playerHostRef} />
 
-        {currentUserId ? (
-          <form
-            ref={formRef}
-            action={formAction}
-            className="mt-4 space-y-3 rounded-lg border border-line bg-panel p-4"
+        <div className="mt-4 rounded-lg border border-line bg-panel">
+          <button
+            type="button"
+            onClick={() => setPanelOpen((o) => !o)}
+            aria-expanded={panelOpen}
+            className="flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-3"
           >
-            <div className="flex items-baseline justify-between gap-3 flex-wrap">
-              <h2 className="font-display text-lg font-bold">
-                {editingId != null ? "Edit this move" : "Mark a move"}
-              </h2>
-              <p className="font-display text-xs text-muted">
-                {editingId != null ? (
-                  <>Adjust the fields, then save — or cancel to go back to marking.</>
-                ) : (
-                  <>
-                    Play the video, hit <span className="font-mono">now</span> at the start of each
-                    pattern, name it, add — repeat down the whole dance.
-                  </>
-                )}
-              </p>
-            </div>
+            <span className="font-display text-lg font-bold">
+              {currentUserId
+                ? editingId != null
+                  ? "Edit this move"
+                  : "Mark a move"
+                : "Loop a clip"}
+            </span>
+            <span className="font-display text-xs font-semibold text-muted">
+              {panelOpen ? "▾ hide" : "▸ show"}
+            </span>
+          </button>
+          {!panelOpen ? null : currentUserId ? (
+          <form ref={formRef} action={formAction} className="space-y-3 px-4 pb-4">
+            <p className="font-display text-xs text-muted">
+              {editingId != null ? (
+                <>Adjust the fields, then save — or cancel to go back to marking.</>
+              ) : (
+                <>
+                  Play the video, hit <span className="font-mono">now</span> at the start of each
+                  pattern, name it, add — repeat down the whole dance.
+                </>
+              )}
+            </p>
             <FormError error={state.error} />
             <input type="hidden" name="danceId" value={danceId} />
             {editingId != null ? <input type="hidden" name="videoId" value={editingId} /> : null}
@@ -332,25 +345,23 @@ export function DanceAnnotator({
               ) : null}
             </div>
           </form>
-        ) : (
-          <div className="mt-4 space-y-3 rounded-lg border border-line bg-panel p-4">
-            <div className="flex items-baseline justify-between gap-3 flex-wrap">
-              <h2 className="font-display text-lg font-bold">Loop a clip</h2>
+          ) : (
+            <div className="space-y-3 px-4 pb-4">
               <p className="font-display text-xs text-muted">
                 Click a marked move, or set a start and end yourself, then loop it at full, half,
                 or quarter speed.
               </p>
+              <div className="flex flex-wrap gap-3">{startEndFields}</div>
+              {clipLoopControls}
+              <p className="font-display text-sm text-muted">
+                <Link href="/login" className="text-denim underline">
+                  Log in
+                </Link>{" "}
+                to mark the moves in this dance.
+              </p>
             </div>
-            <div className="flex flex-wrap gap-3">{startEndFields}</div>
-            {clipLoopControls}
-            <p className="font-display text-sm text-muted">
-              <Link href="/login" className="text-denim underline">
-                Log in
-              </Link>{" "}
-              to mark the moves in this dance.
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* annotation timeline */}
