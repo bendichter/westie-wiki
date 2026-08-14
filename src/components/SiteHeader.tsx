@@ -8,10 +8,10 @@ import { TaglineBanner } from "./TaglineBanner";
 import { VerifyEmailBanner } from "./VerifyEmailBanner";
 
 const NAV = [
-  { href: "/loop", label: "Loop" },
   { href: "/dances", label: "Dances" },
   { href: "/moves", label: "Moves" },
   { href: "/curricula", label: "Curricula" },
+  { href: "/loop", label: "Loop" },
 ];
 
 export async function SiteHeader() {
