@@ -48,6 +48,9 @@ function cleanupPreviousRuns() {
     DELETE FROM dance_songs;
     DELETE FROM dances;
     DELETE FROM sponsors;
+    -- retire prior runs' test moves, or their shared alias crowds this run's
+    -- move out of the capped search results
+    UPDATE moves SET deleted = 1 WHERE name LIKE 'Test Move %' AND deleted = 0;
   `);
   sqlite.close();
 }
@@ -610,7 +613,10 @@ async function main() {
   const gone = await page.request.get(`${BASE}/moves/whip`);
   if (gone.status() !== 404) throw new Error(`deleted move returned ${gone.status()}`);
   await page.goto(`${BASE}/admin/moderation`);
-  await page.getByRole("button", { name: "Restore" }).click();
+  await page
+    .locator("li", { hasText: "Whip" })
+    .getByRole("button", { name: "Restore" })
+    .click();
   await page.waitForTimeout(600);
   const back = await page.request.get(`${BASE}/moves/whip`);
   if (back.status() !== 200) throw new Error(`restored move returned ${back.status()}`);
