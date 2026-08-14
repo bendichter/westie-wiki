@@ -7,13 +7,13 @@ export const metadata: Metadata = { title: "About" };
 export default function AboutPage() {
   return (
     <div className="max-w-2xl">
-      <PageTitle sub="What this project is — and what it isn't.">About Westie Wiki</PageTitle>
+      <PageTitle sub="What this project is, and what it isn't.">About Westie Wiki</PageTitle>
 
-      <div className="prose-wcs space-y-4">
+      <div className="prose-wcs !max-w-none space-y-4">
         <p>
           Westie Wiki is a community-edited catalog of West Coast Swing moves. Dancers document
           patterns, link video examples with exact timestamps, label who&apos;s dancing and where, and
-          assemble curricula — ordered paths through the material with notes for learners.
+          assemble curricula: ordered paths through the material with notes for learners.
         </p>
 
         <h2>Descriptive, not prescriptive</h2>
@@ -25,7 +25,7 @@ export default function AboutPage() {
           &ldquo;rules&rdquo; constantly and gloriously.
         </p>
         <p>
-          Treat every page as a learning aid — a map drawn by fellow travelers — not as a source of
+          Treat every page as a learning aid, a map drawn by fellow travelers, not as a source of
           truth about West Coast Swing. If your teacher tells you something different from what you
           read here, listen to your teacher. Better yet, add what you learned to the wiki.
         </p>
@@ -38,12 +38,12 @@ export default function AboutPage() {
           </li>
           <li>
             <strong>Members can edit.</strong> Like Wikipedia, every edit is recorded with who made
-            it and why. Old versions are never lost — you can view history, compare revisions, and
+            it and why. Old versions are never lost: you can view history, compare revisions, and
             restore.
           </li>
           <li>
             <strong>Videos stay on YouTube.</strong>{" "}We link to clips with start/end timestamps and
-            label them with dancers and events. We host nothing and claim nothing — and we only
+            label them with dancers and events. We host nothing and claim nothing, and we only
             link videos uploaded by the dancers themselves or the event, or shared with the
             dancer&apos;s explicit permission. Never workshop recaps.
           </li>
@@ -51,7 +51,7 @@ export default function AboutPage() {
 
         <h2>House style</h2>
         <p>
-          The short version is below — the full{" "}
+          The short version is below; the full{" "}
           <Link href="/guidelines" className="text-denim underline">
             contribution guidelines
           </Link>{" "}
@@ -60,7 +60,7 @@ export default function AboutPage() {
         <ul>
           <li>Describe what you see and what is commonly taught, not what you think is correct.</li>
           <li>When names conflict, list them all as alternative names and let the description explain.</li>
-          <li>Prefer video evidence over assertion — link a clip.</li>
+          <li>Prefer video evidence over assertion: link a clip.</li>
           <li>Leave an edit summary so others understand your change.</li>
         </ul>
 

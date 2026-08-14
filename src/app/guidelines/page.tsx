@@ -11,7 +11,7 @@ export default function GuidelinesPage() {
         Contribution guidelines
       </PageTitle>
 
-      <div className="prose-wcs space-y-4">
+      <div className="prose-wcs !max-w-none space-y-4">
         <p>
           These aren&apos;t rules enforced by software: they&apos;re the habits that keep a
           community wiki useful. When in doubt, edit boldly; everything is versioned and nothing
