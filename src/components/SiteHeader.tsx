@@ -45,7 +45,7 @@ export async function SiteHeader() {
               Search
             </Link>
           </nav>
-          <MobileNav />
+          <MobileNav showAdmin={isAdmin(user)} />
 
           <div className="flex items-center gap-3 ml-auto order-2 sm:order-3">
             <SearchBar />
@@ -54,7 +54,7 @@ export async function SiteHeader() {
                 {isAdmin(user) ? (
                   <Link
                     href="/admin/moderation"
-                    className="text-amber/90 hover:text-amber hover:underline underline-offset-4"
+                    className="hidden sm:inline text-amber/90 hover:text-amber hover:underline underline-offset-4"
                   >
                     Admin
                   </Link>

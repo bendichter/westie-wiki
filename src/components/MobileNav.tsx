@@ -5,16 +5,16 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const NAV = [
-  { href: "/loop", label: "Loop" },
   { href: "/dances", label: "Dances" },
   { href: "/moves", label: "Moves" },
   { href: "/curricula", label: "Curricula" },
+  { href: "/loop", label: "Loop" },
   { href: "/search", label: "Search" },
 ];
 
 /** Phone-width nav: a hamburger toggle plus an in-flow panel of links that
  * wraps onto its own row of the header band. Hidden at sm and up. */
-export function MobileNav() {
+export function MobileNav({ showAdmin = false }: { showAdmin?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -65,6 +65,19 @@ export function MobileNav() {
               </Link>
             );
           })}
+          {showAdmin ? (
+            <Link
+              href="/admin/moderation"
+              aria-current={pathname.startsWith("/admin") ? "page" : undefined}
+              className={`block py-3 underline-offset-4 ${
+                pathname.startsWith("/admin")
+                  ? "text-amber underline"
+                  : "text-amber/90 hover:text-amber hover:underline"
+              }`}
+            >
+              Admin
+            </Link>
+          ) : null}
         </nav>
       ) : null}
     </>
