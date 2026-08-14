@@ -10,6 +10,7 @@ export function Pagination({
   basePath,
   params,
   preserveScroll,
+  paramName = "page",
 }: {
   page: number;
   totalPages: number;
@@ -17,6 +18,9 @@ export function Pagination({
   params: Record<string, string | undefined>;
   /** keep the current scroll position on navigation (for mid-page sections) */
   preserveScroll?: boolean;
+  /** query param carrying the page number — override when several paginated
+   *  sections share one URL */
+  paramName?: string;
 }) {
   if (totalPages <= 1) return null;
   const scroll = !preserveScroll;
@@ -24,8 +28,8 @@ export function Pagination({
   const href = (p: number) => {
     const qs = new URLSearchParams();
     for (const [k, v] of Object.entries(params)) if (v) qs.set(k, v);
-    if (p > 1) qs.set("page", String(p));
-    else qs.delete("page");
+    if (p > 1) qs.set(paramName, String(p));
+    else qs.delete(paramName);
     const s = qs.toString();
     return s ? `${basePath}?${s}` : basePath;
   };

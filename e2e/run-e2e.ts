@@ -494,7 +494,10 @@ async function main() {
   await expectText(page, "Nashville, TN");
   await expectText(page, "WSDC #12345");
   await expectText(page, "dances both roles");
-  await expectText(page, "added a video clip");
+  // contributions are grouped: dances, annotations, move edits
+  await expectText(page, "Advanced Jack & Jill · registered");
+  await expectText(page, `marked at 0:15 in Lead ${run} & Follow ${run}`);
+  await expectText(page, "Created page");
   await shot(page, "13b-public-profile");
 
   // --- second user: collaborative editing ---
