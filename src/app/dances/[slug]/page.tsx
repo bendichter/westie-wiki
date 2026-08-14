@@ -129,7 +129,7 @@ export default async function DancePage({
           › {heading}
         </p>
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-bold sm:text-4xl">
+          <h1 className="text-2xl font-bold sm:text-4xl">
             {danceDancerList.length > 0
               ? danceDancerList.map((d, i) => (
                   <span key={d.id}>
