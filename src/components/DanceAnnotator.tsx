@@ -205,7 +205,7 @@ export function DanceAnnotator({
             aria-expanded={panelOpen}
             className="flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-3"
           >
-            <span className="font-display text-lg font-bold">
+            <span className="font-display text-sm font-bold sm:text-lg">
               {currentUserId
                 ? editingId != null
                   ? "Edit this move"

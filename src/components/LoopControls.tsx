@@ -17,7 +17,9 @@ export const loopButtonClass = (active: boolean) =>
  * fixed, so the wrapper enforces the real aspect). */
 export function PlayerBox({ hostRef }: { hostRef: RefObject<HTMLDivElement | null> }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-line bg-ink">
+    // full-bleed on phones: the negative margins cancel the page's px-4 so the
+    // video reaches the screen edges, with no rounding or side borders there
+    <div className="-mx-4 overflow-hidden border-y border-line bg-ink sm:mx-0 sm:rounded-lg sm:border">
       <div className="relative aspect-video w-full [&_iframe]:absolute [&_iframe]:inset-0 [&_iframe]:h-full [&_iframe]:w-full">
         <div ref={hostRef} className="absolute inset-0" />
       </div>
