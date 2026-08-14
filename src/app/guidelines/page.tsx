@@ -6,14 +6,14 @@ export const metadata: Metadata = { title: "Contribution guidelines" };
 
 export default function GuidelinesPage() {
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-3xl">
       <PageTitle sub="How to write pages that serve every dancer who reads them.">
         Contribution guidelines
       </PageTitle>
 
       <div className="prose-wcs space-y-4">
         <p>
-          These aren&apos;t rules enforced by software — they&apos;re the habits that keep a
+          These aren&apos;t rules enforced by software: they&apos;re the habits that keep a
           community wiki useful. When in doubt, edit boldly; everything is versioned and nothing
           is ever lost.
         </p>
@@ -21,7 +21,7 @@ export default function GuidelinesPage() {
         <h2>Describe, don&apos;t prescribe</h2>
         <ul>
           <li>
-            Write what dancers actually do and what is commonly taught — not what you believe is
+            Write what dancers actually do and what is commonly taught, not what you believe is
             correct. &ldquo;Most teachers cue the tuck on 3&rdquo; beats &ldquo;the tuck must
             happen on 3.&rdquo;
           </li>
@@ -29,28 +29,29 @@ export default function GuidelinesPage() {
             When scenes disagree, say so. Disagreement is information, not a problem to resolve.
           </li>
           <li>
-            Prefer video evidence over assertion — link a clip with timestamps.
+            Prefer video evidence over assertion: link a clip with timestamps.
           </li>
         </ul>
 
         <h2>Roles, not genders</h2>
         <ul>
           <li>
-            Write about <strong>leaders</strong> and <strong>followers</strong> — never assume the
+            Write about <strong>leaders</strong> and <strong>followers</strong>. Never assume the
             gender of either. Anyone can dance either role, and at most events plenty of people do.
           </li>
           <li>
-            Use <em>they/them</em> for a generic dancer: &ldquo;the follower turns under
-            <em> their</em> own arm,&rdquo; not &ldquo;under <em>her</em> arm.&rdquo;
+            Use <em>they/them</em>{" "}
+            for a generic dancer: &ldquo;the follower turns under <em>their</em>{" "}
+            own arm,&rdquo; not &ldquo;under <em>her</em>{" "}arm.&rdquo;
           </li>
           <li>
             Terms like &ldquo;the man&apos;s side&rdquo; or &ldquo;the ladies&apos; line&rdquo;
-            appear in older curricula — if a historical name matters, record it as an alias and
+            appear in older curricula. If a historical name matters, record it as an alias and
             explain it, but write the description itself in role language.
           </li>
           <li>
             When labeling videos, the leader/follower tags describe who danced which role in that
-            clip — nothing more.
+            clip, nothing more.
           </li>
         </ul>
 
@@ -73,7 +74,7 @@ export default function GuidelinesPage() {
           <li>
             Handholds and minor parameterizations (two-hand vs. right-to-left vs.
             right-to-right, one-hand styling, a different exit) belong in a{" "}
-            <strong>&ldquo;Common variations&rdquo; section of the move&apos;s description</strong> —
+            <strong>&ldquo;Common variations&rdquo; section of the move&apos;s description</strong>:
             they&apos;re parameters of the pattern, not new patterns.
           </li>
           <li>
@@ -83,7 +84,7 @@ export default function GuidelinesPage() {
             exact variant.
           </li>
           <li>
-            A variant earns its <em>own page</em> only when it has its own skeleton — new
+            A variant earns its <em>own page</em> only when it has its own skeleton: new
             geometry, counts, or skill (Basket Whip yes; two-hand sugar push no). Link it with a
             variation-of relation.
           </li>
@@ -92,7 +93,7 @@ export default function GuidelinesPage() {
         <h2>Names and aliases</h2>
         <ul>
           <li>
-            Names collide across scenes and eras — that&apos;s a feature. Pick the most widely
+            Names collide across scenes and eras. That&apos;s a feature. Pick the most widely
             recognized name for the page title and list every other name you&apos;ve heard as an
             alternative name.
           </li>
@@ -102,28 +103,57 @@ export default function GuidelinesPage() {
           </li>
         </ul>
 
+        <h2 id="which-dances" className="scroll-mt-4">
+          Which dances to register
+        </h2>
+        <ul>
+          <li>
+            Register <strong>competition spotlights only</strong>: moments where one couple
+            dances alone for the crowd, like Jack &amp; Jill and Strictly finals in spotlight
+            format, routines, and showcases. Social-floor footage and all-skate heats, where
+            nobody chose to be featured, don&apos;t belong here.
+          </li>
+          <li>
+            You can always register a dance <strong>you danced in yourself</strong>.
+          </li>
+          <li>
+            You can register spotlights of <strong>All-Star and Champion</strong> dancers
+            without asking: dancing a spotlight at that level is a public performance, and
+            studying those dances is what this site is for.
+          </li>
+          <li>
+            For dancers <strong>below All-Star</strong>, get permission from both dancers before
+            registering their dance. A newcomer or novice spotlight is often a personal memory,
+            not a performance they expect to be studied move by move.
+          </li>
+          <li>
+            The consent rules below apply on top of all of this: the video itself must still
+            come from one of the dancers or from the event.
+          </li>
+        </ul>
+
         <h2>Video consent</h2>
         <ul>
           <li>
             Only link a video if it was <strong>uploaded by one of the dancers in it or by the
-            event</strong> where it was filmed — or if you have the dancer&apos;s explicit
+            event</strong>{" "}where it was filmed, or if you have the dancer&apos;s explicit
             permission. Someone else&apos;s upload of someone else&apos;s dancing doesn&apos;t
             qualify, even when it&apos;s public.
           </li>
           <li>
             Instructional videos that were properly shared on YouTube by their creators are
-            welcome for explaining a move — tutorials are published to be watched. Cite them in
+            welcome for explaining a move: tutorials are published to be watched. Cite them in
             a move&apos;s &ldquo;Learn more&rdquo; section or link them as clips.
           </li>
           <li>
-            <strong>Don&apos;t link workshop recaps.</strong> Recap videos are recorded for the
-            attendees&apos; personal review and are generally not meant to be shared — that
+            <strong>Don&apos;t link workshop recaps.</strong>{" "}Recap videos are recorded for the
+            attendees&apos; personal review and are generally not meant to be shared. That
             stays true even when someone has uploaded one publicly.
           </li>
           <li>
             See a video that breaks these rules? Use the <strong>Report</strong> link on the
-            clip or dance — admins review every report. And if you appear in a linked video and
-            want it removed, report it or say so in the discussion thread — it will be taken
+            clip or dance. Admins review every report. And if you appear in a linked video and
+            want it removed, report it or say so in the discussion thread. It will be taken
             down, no questions asked.
           </li>
         </ul>
@@ -131,7 +161,7 @@ export default function GuidelinesPage() {
         <h2>Editing well</h2>
         <ul>
           <li>
-            Leave an edit summary — one sentence about what you changed and why. Future editors
+            Leave an edit summary: one sentence about what you changed and why. Future editors
             (including future you) will thank you.
           </li>
           <li>
@@ -143,7 +173,7 @@ export default function GuidelinesPage() {
           </li>
           <li>
             Videos of yourself or your students are welcome when they genuinely demonstrate the
-            move — this is a reference, not an ad. Label dancers and events accurately.
+            move. This is a reference, not an ad. Label dancers and events accurately.
           </li>
         </ul>
 
@@ -158,7 +188,7 @@ export default function GuidelinesPage() {
             for the house pattern.
           </li>
           <li>
-            Say which counts things happen on — &ldquo;the redirection on 3&amp;4&rdquo; is
+            Say which counts things happen on: &ldquo;the redirection on 3&amp;4&rdquo; is
             teachable; &ldquo;then you redirect&rdquo; isn&apos;t.
           </li>
           <li>Markdown is supported: use <code>##</code> headings, lists, and bold sparingly.</li>

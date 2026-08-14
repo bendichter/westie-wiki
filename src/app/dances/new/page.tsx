@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { asc } from "drizzle-orm";
 import { db } from "@/db";
@@ -25,6 +26,14 @@ export default async function NewDancePage() {
       <PageTitle sub="Register a full dance video once, then mark every move in it as you watch. Each marked move becomes a labeled clip on that move's page.">
         Register a dance
       </PageTitle>
+      <p className="mb-6 rounded-lg border border-line bg-panel px-4 py-3 font-display text-sm text-ink-soft">
+        Competition spotlights only: a dance you danced in yourself, or an All-Star or Champion
+        spotlight. For dancers below All-Star, get their permission first. See{" "}
+        <Link href="/guidelines#which-dances" className="text-denim underline">
+          which dances to register
+        </Link>
+        .
+      </p>
       <DanceCreateForm dancerNames={dancerNames} />
     </div>
   );
