@@ -34,6 +34,7 @@ export function DanceAnnotator({
   variantsByMove,
   handholds,
   currentUserId,
+  currentUserIsAdmin = false,
   initialClipId = null,
 }: {
   danceId: number;
@@ -43,6 +44,7 @@ export function DanceAnnotator({
   variantsByMove: Record<string, { id: number; name: string }[]>;
   handholds: { id: number; name: string }[];
   currentUserId: number | null;
+  currentUserIsAdmin?: boolean;
   initialClipId?: number | null;
 }) {
   const moveInputRef = useRef<HTMLInputElement>(null);
@@ -333,7 +335,8 @@ export function DanceAnnotator({
                 </button>
               ) : null}
               {editingId != null &&
-              annotations.find((a) => a.id === editingId)?.addedBy === currentUserId ? (
+              (currentUserIsAdmin ||
+                annotations.find((a) => a.id === editingId)?.addedBy === currentUserId) ? (
                 <button
                   type="button"
                   onClick={removeEditingAnnotation}

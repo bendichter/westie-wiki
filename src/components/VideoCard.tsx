@@ -25,12 +25,14 @@ export function VideoCard({
   video,
   extraClips = [],
   currentUserId,
+  currentUserIsAdmin = false,
   showMove,
 }: {
   video: VideoWithLabels & { moveName?: string; moveSlug?: string };
   /** further timings of the same move in the same dance video */
   extraClips?: VideoWithLabels[];
   currentUserId: number | null;
+  currentUserIsAdmin?: boolean;
   showMove?: boolean;
 }) {
   return (
@@ -181,7 +183,7 @@ export function VideoCard({
                 {video.addedByName}
               </Link>
             </span>
-            {currentUserId === video.addedBy ? (
+            {currentUserId === video.addedBy || currentUserIsAdmin ? (
               <form action={deleteVideo} className="ml-auto">
                 <input type="hidden" name="videoId" value={video.id} />
                 <button

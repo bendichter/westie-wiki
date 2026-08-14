@@ -437,6 +437,19 @@ async function main() {
   await expectText(page, `Lead ${run}`);
   await expectText(page, `Follow ${run}`);
 
+  log("owner can remove a dance from the edit panel");
+  await page.goto(`${BASE}/dances/new`);
+  await page.getByLabel("YouTube link").fill("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+  await page.getByRole("button", { name: "Register and start marking" }).click();
+  await page.waitForURL((u) => u.pathname.startsWith("/dances/") && u.pathname !== "/dances/new");
+  const tempDanceUrl = page.url();
+  await page.getByRole("button", { name: "Edit details" }).click();
+  await page.getByRole("button", { name: "Remove this dance" }).click();
+  await page.getByRole("button", { name: "Yes, remove it" }).click();
+  await page.waitForURL(`${BASE}/dances`);
+  const removedDance = await page.request.get(tempDanceUrl);
+  if (removedDance.status() !== 404) throw new Error(`removed dance returned ${removedDance.status()}`);
+
   // --- curriculum ---
   log("create a curriculum with ordered moves, notes, key videos");
   await page.goto(`${BASE}/curricula/new`);
@@ -601,6 +614,13 @@ async function main() {
   await page.waitForTimeout(600);
   const back = await page.request.get(`${BASE}/moves/whip`);
   if (back.status() !== 200) throw new Error(`restored move returned ${back.status()}`);
+
+  log("admin can delete another member's annotation");
+  await page.goto(danceUrl);
+  await page.getByRole("button", { name: "0:22" }).click();
+  await expectText(page, "Edit this move");
+  await page.getByRole("button", { name: "Remove", exact: true }).click();
+  await expectText(page, "(2)");
 
   log("admin can block and unblock an account");
   await page.goto(`${BASE}/admin/moderation`);

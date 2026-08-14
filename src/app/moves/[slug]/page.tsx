@@ -318,6 +318,7 @@ export default async function MovePage({
                       video={group.primary}
                       extraClips={group.extras}
                       currentUserId={user?.id ?? null}
+                      currentUserIsAdmin={userIsAdmin}
                     />
                   ))}
                 </div>

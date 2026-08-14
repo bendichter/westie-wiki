@@ -13,11 +13,14 @@ import {
   moveVariants,
   events,
   moves,
+  reports,
   VIDEO_ROLES,
   videoDancers,
   videos,
   type VideoRole,
 } from "@/db/schema";
+import { isAdmin } from "@/lib/admin";
+import { removeDanceCascade } from "@/lib/dance-removal";
 import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
@@ -375,14 +378,36 @@ export async function updateDanceDetails(
   return { error: null, success: true };
 }
 
+/**
+ * Remove a dance and its whole move timeline from the wiki. The member who
+ * registered it, or an admin.
+ */
+export async function deleteDance(formData: FormData): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) return;
+  const danceId = Number(formData.get("danceId"));
+  const dance = db.select().from(dances).where(eq(dances.id, danceId)).get();
+  if (!dance) return;
+  if (dance.addedBy !== user.id && !isAdmin(user)) return;
+
+  removeDanceCascade(danceId, Date.now());
+  revalidatePath("/dances");
+  revalidatePath("/moves", "layout");
+  redirect("/dances");
+}
+
+/** Delete an annotation: its owner, or an admin cleaning up. */
 export async function deleteAnnotation(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
   if (!user) return;
   const videoId = Number(formData.get("videoId"));
   const video = db.select().from(videos).where(eq(videos.id, videoId)).get();
-  if (!video || video.addedBy !== user.id || video.danceId == null) return;
+  if (!video || video.danceId == null) return;
+  if (video.addedBy !== user.id && !isAdmin(user)) return;
 
   const dance = db.select().from(dances).where(eq(dances.id, video.danceId)).get();
+  // detach any reports pointing at this clip, or the delete hits their FK
+  db.update(reports).set({ videoId: null }).where(eq(reports.videoId, videoId)).run();
   db.delete(videoDancers).where(eq(videoDancers.videoId, videoId)).run();
   db.delete(videos).where(eq(videos.id, videoId)).run();
   if (dance) revalidatePath(`/dances/${dance.slug}`);

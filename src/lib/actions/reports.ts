@@ -4,16 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { and, eq, isNull } from "drizzle-orm";
 import { db } from "@/db";
-import {
-  danceDancers,
-  dances,
-  danceSongs,
-  moves,
-  reports,
-  videoDancers,
-  videos,
-} from "@/db/schema";
+import { dances, moves, reports, videoDancers, videos } from "@/db/schema";
 import { isAdmin } from "@/lib/admin";
+import { removeDanceCascade } from "@/lib/dance-removal";
 import { checkRateLimit, getCurrentUser } from "@/lib/auth";
 
 export type ReportFormState = { error: string | null; success?: boolean };
@@ -117,31 +110,7 @@ export async function resolveReport(formData: FormData): Promise<void> {
       db.delete(videoDancers).where(eq(videoDancers.videoId, videoId)).run();
       db.delete(videos).where(eq(videos.id, videoId)).run();
     } else if (report.danceId != null) {
-      const danceId = report.danceId;
-      const annotationIds = db
-        .select({ id: videos.id })
-        .from(videos)
-        .where(eq(videos.danceId, danceId))
-        .all()
-        .map((r) => r.id);
-      db.update(reports)
-        .set({ resolvedAt: now, resolution: "removed", danceId: null })
-        .where(and(eq(reports.danceId, danceId), isNull(reports.resolvedAt)))
-        .run();
-      // detach already-resolved reports too, or the delete hits their FK
-      db.update(reports).set({ danceId: null }).where(eq(reports.danceId, danceId)).run();
-      for (const id of annotationIds) {
-        db.update(reports)
-          .set({ resolvedAt: now, resolution: "removed", videoId: null })
-          .where(and(eq(reports.videoId, id), isNull(reports.resolvedAt)))
-          .run();
-        db.update(reports).set({ videoId: null }).where(eq(reports.videoId, id)).run();
-        db.delete(videoDancers).where(eq(videoDancers.videoId, id)).run();
-        db.delete(videos).where(eq(videos.id, id)).run();
-      }
-      db.delete(danceSongs).where(eq(danceSongs.danceId, danceId)).run();
-      db.delete(danceDancers).where(eq(danceDancers.danceId, danceId)).run();
-      db.delete(dances).where(eq(dances.id, danceId)).run();
+      removeDanceCascade(report.danceId, now);
     }
     revalidatePath("/dances");
     revalidatePath("/moves", "layout");

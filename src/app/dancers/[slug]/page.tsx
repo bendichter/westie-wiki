@@ -9,6 +9,7 @@ import { clampPage, Pagination } from "@/components/Pagination";
 import { TabNav } from "@/components/TabNav";
 import { VideoCard } from "@/components/VideoCard";
 import { EmptyState, PageTitle } from "@/components/ui";
+import { isAdmin } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import { getDancerClips, groupClipsByDance, groupClipsByMove } from "@/lib/data/clips";
 import { listDances } from "@/lib/data/dances";
@@ -125,6 +126,7 @@ export default async function DancerPage({
                         video={g.primary}
                         extraClips={g.extras}
                         currentUserId={user?.id ?? null}
+                        currentUserIsAdmin={isAdmin(user)}
                       />
                     ))}
                   </div>

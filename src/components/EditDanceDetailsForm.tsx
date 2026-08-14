@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { updateDanceDetails, type AnnotationFormState } from "@/lib/actions/dances";
+import { deleteDance, updateDanceDetails, type AnnotationFormState } from "@/lib/actions/dances";
 import { FormError, Input, PrimaryButton, Select, Textarea } from "./ui";
 
 type DancerRow = { name: string; role: string };
@@ -32,6 +32,7 @@ export function EditDanceDetailsForm({
   eventSuggestions,
   dancerSuggestions,
   canEdit,
+  canRemove = false,
 }: {
   danceId: number;
   dancers: { name: string; role: string | null }[];
@@ -43,10 +44,13 @@ export function EditDanceDetailsForm({
   eventSuggestions: string[];
   dancerSuggestions: string[];
   canEdit: boolean;
+  /** registrant or admin: may remove the dance and its timeline entirely */
+  canRemove?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [dancerRows, setDancerRows] = useState<DancerRow[]>([]);
   const [songRows, setSongRows] = useState<SongRow[]>([]);
+  const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [state, formAction, pending] = useActionState<AnnotationFormState, FormData>(
     async (prev, formData) => {
       const result = await updateDanceDetails(prev, formData);
@@ -65,6 +69,7 @@ export function EditDanceDetailsForm({
         : [{ name: "", role: "" }]
     );
     setSongRows(songs.length > 0 ? songs.map((s) => ({ ...s })) : [{ song: "", artist: "" }]);
+    setConfirmingRemove(false);
     setOpen(true);
   };
 
@@ -81,7 +86,8 @@ export function EditDanceDetailsForm({
   }
 
   return (
-    <form action={formAction} className="mt-3 max-w-2xl space-y-4 rounded-lg border border-line bg-panel p-4 text-left">
+    <div className="mt-3 max-w-2xl rounded-lg border border-line bg-panel p-4 text-left">
+    <form action={formAction} className="space-y-4">
       <h2 className="font-display text-lg font-bold">Edit dance details</h2>
       <FormError error={state.error} />
       <input type="hidden" name="danceId" value={danceId} />
@@ -291,5 +297,40 @@ export function EditDanceDetailsForm({
         </button>
       </div>
     </form>
+
+    {canRemove ? (
+      <div className="mt-4 border-t border-line pt-3">
+        {confirmingRemove ? (
+          <form action={deleteDance} className="flex flex-wrap items-center gap-3">
+            <input type="hidden" name="danceId" value={danceId} />
+            <span className="font-display text-sm text-danger">
+              Remove this dance and its whole move timeline? This can&apos;t be undone.
+            </span>
+            <button
+              type="submit"
+              className="cursor-pointer rounded-md border border-danger/40 bg-panel px-3 py-1.5 font-display text-sm font-semibold text-danger hover:bg-danger/10"
+            >
+              Yes, remove it
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmingRemove(false)}
+              className="cursor-pointer font-display text-sm text-muted hover:text-ink"
+            >
+              Keep it
+            </button>
+          </form>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setConfirmingRemove(true)}
+            className="cursor-pointer font-display text-sm text-danger/80 underline underline-offset-2 hover:text-danger"
+          >
+            Remove this dance
+          </button>
+        )}
+      </div>
+    ) : null}
+    </div>
   );
 }

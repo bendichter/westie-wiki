@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers, events, handholds, moves, moveVariants, VIDEO_ROLES, videoDancers, videos, type VideoRole } from "@/db/schema";
+import { dancers, events, handholds, moves, moveVariants, reports, VIDEO_ROLES, videoDancers, videos, type VideoRole } from "@/db/schema";
+import { isAdmin } from "@/lib/admin";
 import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
@@ -185,14 +186,17 @@ export async function updateVideoClip(
   return { error: null, success: true };
 }
 
+/** Delete a clip: its owner, or an admin cleaning up. */
 export async function deleteVideo(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
   if (!user) return;
   const videoId = Number(formData.get("videoId"));
   const video = db.select().from(videos).where(eq(videos.id, videoId)).get();
-  if (!video || video.addedBy !== user.id) return;
+  if (!video || (video.addedBy !== user.id && !isAdmin(user))) return;
 
   const move = db.select().from(moves).where(eq(moves.id, video.moveId)).get();
+  // detach any reports pointing at this clip, or the delete hits their FK
+  db.update(reports).set({ videoId: null }).where(eq(reports.videoId, videoId)).run();
   db.delete(videoDancers).where(eq(videoDancers.videoId, videoId)).run();
   db.delete(videos).where(eq(videos.id, videoId)).run();
   if (move) revalidatePath(`/moves/${move.slug}`);

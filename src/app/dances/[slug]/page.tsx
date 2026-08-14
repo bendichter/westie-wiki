@@ -9,6 +9,7 @@ import { EditDanceDetailsForm } from "@/components/EditDanceDetailsForm";
 import { ReportForm } from "@/components/ReportForm";
 import { JsonLd } from "@/components/JsonLd";
 import { CountChip } from "@/components/ui";
+import { isAdmin } from "@/lib/admin";
 import { getCurrentUser } from "@/lib/auth";
 import {
   getDanceAnnotations,
@@ -137,7 +138,7 @@ export default async function DancePage({
                       {d.name}
                     </Link>
                     {d.role ? (
-                      <span className="text-xl text-muted font-normal"> ({d.role})</span>
+                      <span className="text-lg sm:text-xl text-muted font-normal"> ({d.role})</span>
                     ) : null}
                     {i < danceDancerList.length - 1 ? <span className="text-muted"> &amp; </span> : null}
                   </span>
@@ -188,6 +189,7 @@ export default async function DancePage({
               eventSuggestions={eventSuggestions}
               dancerSuggestions={dancerSuggestions}
               canEdit={!!user}
+              canRemove={user.id === dance.addedBy || isAdmin(user)}
             />
           </div>
         ) : null}
@@ -202,6 +204,7 @@ export default async function DancePage({
         variantsByMove={variantsByMove}
         handholds={allHandholds}
         currentUserId={user?.id ?? null}
+        currentUserIsAdmin={isAdmin(user)}
         initialClipId={initialClipId}
       />
 
