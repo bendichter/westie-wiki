@@ -38,7 +38,7 @@ export default function HomePage() {
           <div className="font-mono text-[13px] text-amber mb-4">1&nbsp;&nbsp;2&nbsp;&nbsp;3&amp;4&nbsp;&nbsp;5&amp;6</div>
           <h1 className="text-4xl sm:text-6xl font-bold leading-[1.05]">
             The moves of West Coast Swing,{" "}
-            <span className="text-denim">documented by the people dancing them.</span>
+            <span className="text-denim">documented by us.</span>
           </h1>
           <p className="mt-5 text-lg text-ink-soft max-w-2xl">
             Every move with its names and its aliases. Every description backed by timestamped
