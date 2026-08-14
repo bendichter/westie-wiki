@@ -19,7 +19,7 @@ export default function AboutPage() {
         <h2>Descriptive, not prescriptive</h2>
         <p>
           Everything here describes how dancers actually dance and what they actually call things.
-          Nothing here defines how a move <em>must</em> be danced or what it <em>must</em> be
+          Nothing here defines how a move <em>must</em> be danced or what it <em>must</em>{" "}be
           called. West Coast Swing is a living, improvised dance: patterns mutate, names collide,
           regional scenes disagree, and the pros you&apos;ll find in our video examples break these
           &ldquo;rules&rdquo; constantly and gloriously.
@@ -42,7 +42,7 @@ export default function AboutPage() {
             restore.
           </li>
           <li>
-            <strong>Videos stay on YouTube.</strong> We link to clips with start/end timestamps and
+            <strong>Videos stay on YouTube.</strong>{" "}We link to clips with start/end timestamps and
             label them with dancers and events. We host nothing and claim nothing — and we only
             link videos uploaded by the dancers themselves or the event, or shared with the
             dancer&apos;s explicit permission. Never workshop recaps.
