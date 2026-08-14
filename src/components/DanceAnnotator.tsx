@@ -55,7 +55,7 @@ export function DanceAnnotator({
   const [note, setNote] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [removing, setRemoving] = useState(false);
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const [activeIds, setActiveIds] = useState<ReadonlySet<number>>(new Set());
   // the marking/loop panel folds away so watchers can focus on the timeline;
   // it starts open on an unmapped dance, where marking is the whole point
   const [panelOpen, setPanelOpen] = useState(annotations.length === 0);
@@ -77,20 +77,26 @@ export function DanceAnnotator({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerReady, initialClipId, annotations]);
 
-  // follow playback and highlight the annotation under the playhead; an
-  // annotation without an end time stays active until the next one starts
+  // follow playback and highlight every annotation whose segment contains the
+  // playhead — overlapping segments all light up together; an annotation
+  // without an end time stays active until the next one starts
   useEffect(() => {
     if (!playerReady || annotations.length === 0) return;
     const timer = setInterval(() => {
       const t = playerRef.current?.getCurrentTime();
       if (t == null || !Number.isFinite(t)) return;
-      let current: AnnotationItem | null = null;
-      for (const a of annotations) {
-        if (a.startSec <= t) current = a;
-        else break;
+      const next = new Set<number>();
+      for (let i = 0; i < annotations.length; i++) {
+        const a = annotations[i];
+        if (t < a.startSec) break; // sorted by start; the rest start later
+        const end = a.endSec ?? annotations[i + 1]?.startSec ?? Infinity;
+        if (t < end) next.add(a.id);
       }
-      if (current && current.endSec != null && t > current.endSec) current = null;
-      setActiveId(current?.id ?? null);
+      // keep the same Set instance when nothing changed, so playback doesn't
+      // re-render the timeline four times a second
+      setActiveIds((prev) =>
+        prev.size === next.size && [...next].every((id) => prev.has(id)) ? prev : next
+      );
     }, 250);
     return () => clearInterval(timer);
   }, [playerReady, annotations, playerRef]);
@@ -383,13 +389,13 @@ export function DanceAnnotator({
               <li
                 key={a.id}
                 className={`relative pb-4 pl-5 transition-colors ${
-                  activeId === a.id ? "rounded-r-md bg-amber/10" : ""
+                  activeIds.has(a.id) ? "rounded-r-md bg-amber/10" : ""
                 }`}
               >
                 <span
                   className={`absolute -left-[5px] top-2 h-2 w-2 rounded-full ${
                     editingId === a.id ? "bg-denim" : "bg-amber"
-                  } ${activeId === a.id ? "ring-4 ring-amber/30" : ""}`}
+                  } ${activeIds.has(a.id) ? "ring-4 ring-amber/30" : ""}`}
                   aria-hidden
                 />
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
