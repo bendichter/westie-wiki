@@ -6,7 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { dancers, events, handholds, moves, moveVariants, reports, VIDEO_ROLES, videoDancers, videos, type VideoRole } from "@/db/schema";
 import { isAdmin } from "@/lib/admin";
-import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR, checkWriteRateLimit, WRITE_RATE_LIMIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
 import { fetchYoutubeMeta, parseYoutubeUrl } from "@/lib/youtube";
@@ -58,6 +58,7 @@ export async function addVideo(_prev: VideoFormState, formData: FormData): Promi
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const url = String(formData.get("url") ?? "").trim();
   const parsed = parseYoutubeUrl(url);
@@ -152,6 +153,7 @@ export async function updateVideoClip(
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const startRaw = String(formData.get("start") ?? "").trim();
   const endRaw = String(formData.get("end") ?? "").trim();

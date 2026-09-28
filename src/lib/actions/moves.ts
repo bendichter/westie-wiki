@@ -13,7 +13,7 @@ import {
   tags,
   type Difficulty,
 } from "@/db/schema";
-import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR, checkWriteRateLimit, WRITE_RATE_LIMIT_ERROR } from "@/lib/auth";
 import { getLatestRevisionNo, getRevision } from "@/lib/data/moves";
 import { slugify, uniqueSlug } from "@/lib/slug";
 
@@ -110,6 +110,7 @@ export async function createMove(_prev: MoveFormState, formData: FormData): Prom
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/moves/new");
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const parsed = parseMoveForm(formData);
   if (!parsed.ok) return { error: parsed.error };
@@ -159,6 +160,7 @@ export async function updateMove(_prev: MoveFormState, formData: FormData): Prom
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}/edit`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const parsed = parseMoveForm(formData);
   if (!parsed.ok) return { error: parsed.error };
@@ -212,6 +214,7 @@ export async function restoreRevision(formData: FormData): Promise<void> {
   if (!move) return;
   if (!user) redirect(`/login?next=/moves/${move.slug}/history`);
   if (!isVerified(user)) return;
+  if (!checkWriteRateLimit(user.id)) return;
 
   const revision = getRevision(move.id, revisionNo);
   if (!revision) return;

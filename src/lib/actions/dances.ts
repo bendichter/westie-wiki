@@ -21,7 +21,7 @@ import {
 } from "@/db/schema";
 import { isAdmin } from "@/lib/admin";
 import { removeDanceCascade } from "@/lib/dance-removal";
-import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR, checkWriteRateLimit, WRITE_RATE_LIMIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
 import { fetchYoutubeTitle, parseYoutubeUrl } from "@/lib/youtube";
@@ -53,6 +53,7 @@ export async function createDance(_prev: DanceFormState, formData: FormData): Pr
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/dances/new");
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const url = String(formData.get("url") ?? "").trim();
   const parsed = parseYoutubeUrl(url);
@@ -135,6 +136,7 @@ export async function addAnnotation(
   if (!dance) return { error: "This dance no longer exists." };
   if (!user) redirect(`/login?next=/dances/${dance.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const moveName = String(formData.get("moveName") ?? "").trim();
   const move = db
@@ -225,6 +227,7 @@ export async function updateAnnotation(
   if (!dance) return { error: "This dance no longer exists." };
   if (!user) redirect(`/login?next=/dances/${dance.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const previousMove = db.select().from(moves).where(eq(moves.id, clip.moveId)).get();
 
@@ -317,6 +320,7 @@ export async function updateDanceDetails(
   if (!dance) return { error: "This dance no longer exists." };
   if (!user) redirect(`/login?next=/dances/${dance.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const names = formData.getAll("dancerName").map((v) => String(v).trim().slice(0, 80));
   const roles = formData.getAll("dancerRole").map((v) => String(v));

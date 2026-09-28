@@ -71,10 +71,17 @@ Three layers protect the database:
 
 1. **Fly volume snapshots** — automatic, daily, ~5-day retention. Last-resort only.
 2. **Nightly off-site backup (already active)** — `.github/workflows/db-backup.yml` pulls a
-   consistent snapshot off the volume every night, verifies `PRAGMA integrity_check`, and
-   stores it as a GitHub Actions artifact for 30 days. Run it on demand from the Actions tab
-   ("DB Backup" → Run workflow). To restore: download the artifact, then
-   `fly ssh sftp shell -a westie-wiki` → `put backup.db /data/wcs-wiki.db` (with the app
+   consistent snapshot off the volume every night, verifies `PRAGMA integrity_check`,
+   encrypts it with [age](https://age-encryption.org) to the public key in the
+   `BACKUP_AGE_RECIPIENT` repository variable, and stores only the encrypted file as a
+   GitHub Actions artifact for 30 days. The repo is public and anyone signed in to GitHub can
+   download its artifacts, so the snapshot must never be uploaded unencrypted (it holds user
+   emails and password hashes). The private key lives offline at
+   `~/.config/westie-wiki/backup-age-key.txt` on the maintainer's machine; keep a second copy
+   in a password manager. Run the backup on demand from the Actions tab ("DB Backup" → Run
+   workflow). To restore: download the artifact, then
+   `age -d -i ~/.config/westie-wiki/backup-age-key.txt backup.db.gz.age | gunzip > backup.db`,
+   then `fly ssh sftp shell -a westie-wiki` → `put backup.db /data/wcs-wiki.db` (with the app
    stopped: `fly machine stop <id>` first, `fly machine start <id>` after).
 3. **Continuous replication with Litestream (optional, recommended once the site matters)** —
    the image ships with Litestream; it activates when secrets are set. With Cloudflare R2
@@ -110,8 +117,11 @@ Three layers protect the database:
 ## Notes for production
 
 - Sessions are stored in the database; no extra secret configuration is required.
-- Login rate limiting is in-memory per process — fine for one machine, resets on deploy.
+- Rate limiting (auth forms and all write actions) is in-memory per process, keyed on the
+  `Fly-Client-IP` header or the user id — fine for one machine, resets on deploy.
 - All write actions require an account; browsing is public.
-- The `archivist` account seeded on first boot uses the well-known local-dev password —
-  rotate it immediately on a real deployment (done for westie.wiki) and add your own
-  account to `ADMIN_USERNAMES` instead of relying on it.
+- In production the seed gives the `archivist` account a random password that is never
+  printed, so nobody can log in as it. It exists only to own the starter content and must
+  not be listed in `ADMIN_USERNAMES`.
+- Links in emails (verification, password reset) are built from `SITE_URL` (default
+  `https://westie.wiki` in production), never from the request's `Host` header.

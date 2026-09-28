@@ -56,7 +56,7 @@ export const getCurrentUser = cache(async (): Promise<User | null> => {
     .where(eq(sessions.id, hashToken(token)))
     .get();
 
-  if (!row || row.expiresAt < Date.now()) return null;
+  if (!row || row.expiresAt < Date.now() || row.user.blockedAt != null) return null;
   return row.user;
 });
 
@@ -75,12 +75,21 @@ export function isVerified(user: User | null): boolean {
   return user?.emailVerifiedAt != null;
 }
 
-// --- naive in-memory login rate limiting (per process) ---
+// --- naive in-memory rate limiting (per process) ---
 
 const attempts = new Map<string, { count: number; resetAt: number }>();
+const MAX_TRACKED_KEYS = 10_000;
 
 export function checkRateLimit(key: string, max = 10, windowMs = 15 * 60 * 1000): boolean {
   const now = Date.now();
+  if (attempts.size >= MAX_TRACKED_KEYS) {
+    for (const [k, v] of attempts) if (v.resetAt < now) attempts.delete(k);
+    // still full of live entries: drop the oldest insertions
+    for (const k of attempts.keys()) {
+      if (attempts.size < MAX_TRACKED_KEYS) break;
+      attempts.delete(k);
+    }
+  }
   const entry = attempts.get(key);
   if (!entry || entry.resetAt < now) {
     attempts.set(key, { count: 1, resetAt: now + windowMs });
@@ -88,4 +97,24 @@ export function checkRateLimit(key: string, max = 10, windowMs = 15 * 60 * 1000)
   }
   entry.count++;
   return entry.count <= max;
+}
+
+/**
+ * The visitor's IP for rate limiting. Fly's proxy sets Fly-Client-IP and
+ * overwrites any client-supplied value; X-Forwarded-For is not used because
+ * its first entry is whatever the client sent.
+ */
+export function clientIp(hdrs: Headers): string {
+  return hdrs.get("fly-client-ip")?.trim() || "local";
+}
+
+export const WRITE_RATE_LIMIT_ERROR = "You're making changes very quickly. Wait a few minutes and try again.";
+
+/**
+ * Shared budget for all wiki writes by one account: generous enough for
+ * marking every move in a dance in one sitting, low enough to cap scripted
+ * vandalism or spam from a single account.
+ */
+export function checkWriteRateLimit(userId: number): boolean {
+  return checkRateLimit(`write:${userId}`, 150, 10 * 60 * 1000);
 }

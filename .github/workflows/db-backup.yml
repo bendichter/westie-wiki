@@ -1,7 +1,11 @@
 # Nightly off-site backup of the production SQLite database.
 # Pulls a consistent snapshot off the Fly volume, verifies its integrity,
-# and stores it as a workflow artifact (30-day retention). Run manually any
-# time from the Actions tab.
+# encrypts it with age, and stores only the encrypted file as a workflow
+# artifact (30-day retention). The repo is public, so artifacts are
+# downloadable by anyone signed in to GitHub: never upload the plaintext.
+# The age public key is the BACKUP_AGE_RECIPIENT repository variable; the
+# private key is kept offline (see DEPLOY.md). Run manually any time from
+# the Actions tab.
 name: DB Backup
 
 on:
@@ -36,10 +40,20 @@ jobs:
           echo "Moves:  $(sqlite3 backup.db 'SELECT count(*) FROM moves;')"
           echo "Users:  $(sqlite3 backup.db 'SELECT count(*) FROM users;')"
 
-      - name: Store artifact
+      - name: Encrypt snapshot
+        run: |
+          test -n "$RECIPIENT" || { echo "BACKUP_AGE_RECIPIENT is not set; refusing to upload"; exit 1; }
+          sudo apt-get install -y -qq age
+          gzip -9 backup.db
+          age -r "$RECIPIENT" -o backup.db.gz.age backup.db.gz
+          rm backup.db.gz
+        env:
+          RECIPIENT: ${{ vars.BACKUP_AGE_RECIPIENT }}
+
+      - name: Store encrypted artifact
         uses: actions/upload-artifact@v4
         with:
           name: westie-wiki-db-${{ github.run_id }}
-          path: backup.db
+          path: backup.db.gz.age
           retention-days: 30
-          compression-level: 9
+          compression-level: 0

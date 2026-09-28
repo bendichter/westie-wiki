@@ -27,6 +27,7 @@ import {
   videos,
 } from "./schema";
 import { SEED_CURRICULA, SEED_MOVES, SEED_RELATIONS, SEED_RESOURCES } from "./seed-data";
+import { randomBytes } from "node:crypto";
 import { hashPassword } from "../lib/auth-crypto";
 import { slugify } from "../lib/slug";
 
@@ -39,18 +40,27 @@ if (existing > 0) {
 const now = Date.now();
 
 // --- demo editor account ---
+// The well-known password is for local development only. In production the
+// account just owns the starter content, so it gets a random password that
+// is never printed and nobody can log in as it.
+const isProduction = process.env.NODE_ENV === "production";
+const archivistPassword = isProduction ? randomBytes(32).toString("base64url") : "westie-demo-1234";
 const archivist = db
   .insert(users)
   .values({
     email: "archivist@westiewiki.example",
     username: "archivist",
-    passwordHash: hashPassword("westie-demo-1234"),
+    passwordHash: hashPassword(archivistPassword),
     createdAt: now,
     emailVerifiedAt: now,
   })
   .returning()
   .get();
-console.log("Created demo account: archivist@westiewiki.example / westie-demo-1234");
+console.log(
+  isProduction
+    ? "Created content account: archivist (random password, login disabled in practice)"
+    : "Created demo account: archivist@westiewiki.example / westie-demo-1234"
+);
 
 // --- moves, aliases, tags, revision 1 ---
 const moveIdByName = new Map<string, number>();

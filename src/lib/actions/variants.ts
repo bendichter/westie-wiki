@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { handholds, moves, moveVariants, videos } from "@/db/schema";
-import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR, checkWriteRateLimit, WRITE_RATE_LIMIT_ERROR } from "@/lib/auth";
 
 export type VariantFormState = { error: string | null; success?: boolean };
 
@@ -19,6 +19,7 @@ export async function addVariant(
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const name = String(formData.get("name") ?? "").trim().slice(0, 60);
   const note = String(formData.get("note") ?? "").trim().slice(0, 200);
@@ -53,6 +54,7 @@ export async function setDefaultHandhold(
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const raw = Number(formData.get("handholdId"));
   const handholdId =
@@ -68,6 +70,7 @@ export async function setDefaultHandhold(
 export async function deleteVariant(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
   if (!user || !isVerified(user)) return;
+  if (!checkWriteRateLimit(user.id)) return;
   const variantId = Number(formData.get("variantId"));
   const variant = db.select().from(moveVariants).where(eq(moveVariants.id, variantId)).get();
   if (!variant) return;

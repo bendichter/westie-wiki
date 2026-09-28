@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { curricula, curriculumItems, curriculumRevisions, moves } from "@/db/schema";
-import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR, checkWriteRateLimit, WRITE_RATE_LIMIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 
 export type CurriculumFormState = { error: string | null };
@@ -95,6 +95,7 @@ export async function createCurriculum(
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/curricula/new");
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").replace(/\r\n/g, "\n").trim();
@@ -131,6 +132,7 @@ export async function updateCurriculum(
   if (!curriculum) return { error: "This curriculum no longer exists." };
   if (!user) redirect(`/login?next=/curricula/${curriculum.slug}/edit`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").replace(/\r\n/g, "\n").trim();
@@ -187,6 +189,7 @@ export async function restoreCurriculumRevision(formData: FormData): Promise<voi
   if (!curriculum) return;
   if (!user) redirect(`/login?next=/curricula/${curriculum.slug}/history`);
   if (!isVerified(user)) return;
+  if (!checkWriteRateLimit(user.id)) return;
 
   const revision = db
     .select()

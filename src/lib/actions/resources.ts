@@ -6,7 +6,7 @@ import { and, count, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { moveResources, moves } from "@/db/schema";
 import { isAdmin } from "@/lib/admin";
-import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR } from "@/lib/auth";
+import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR, checkWriteRateLimit, WRITE_RATE_LIMIT_ERROR } from "@/lib/auth";
 
 export type ResourceFormState = { error: string | null; success?: boolean };
 
@@ -20,6 +20,7 @@ export async function addResource(
   if (!move) return { error: "This move no longer exists." };
   if (!user) redirect(`/login?next=/moves/${move.slug}`);
   if (!isVerified(user)) return { error: VERIFY_TO_EDIT_ERROR };
+  if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const urlRaw = String(formData.get("url") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim().slice(0, 120);

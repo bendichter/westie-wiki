@@ -15,6 +15,18 @@ export function Markdown({ children, className }: { children: string; className?
           "sup", "section",
         ]}
         unwrapDisallowed
+        components={{
+          // Anyone can edit, so external links must not pass search ranking:
+          // otherwise editing the wiki becomes a way to buy backlinks.
+          // Pass every other prop through: GFM footnote links carry ids and data attributes.
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          a: ({ node, ...props }) =>
+            props.href && /^https?:\/\//i.test(props.href) ? (
+              <a {...props} rel="ugc nofollow" />
+            ) : (
+              <a {...props} />
+            ),
+        }}
       >
         {children}
       </ReactMarkdown>

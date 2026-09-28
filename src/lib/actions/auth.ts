@@ -8,6 +8,7 @@ import { db } from "@/db";
 import { emailVerificationTokens, passwordResetTokens, sessions, users } from "@/db/schema";
 import {
   checkRateLimit,
+  clientIp,
   createSession,
   destroySession,
   getCurrentUser,
@@ -16,6 +17,7 @@ import {
 } from "@/lib/auth";
 import { sendEmail } from "@/lib/mailer";
 import { safeNextPath } from "@/lib/redirects";
+import { SITE_URL } from "@/lib/site-url";
 
 export type AuthFormState = { error: string | null };
 
@@ -25,7 +27,7 @@ export async function signup(_prev: AuthFormState, formData: FormData): Promise<
   const password = String(formData.get("password") ?? "");
 
   const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  const ip = clientIp(hdrs);
   if (!checkRateLimit(`signup:${ip}`)) {
     return { error: "Too many signup attempts. Try again in a few minutes." };
   }
@@ -66,8 +68,8 @@ export async function login(_prev: AuthFormState, formData: FormData): Promise<A
   const password = String(formData.get("password") ?? "");
 
   const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
-  if (!checkRateLimit(`login:${ip}`)) {
+  const ip = clientIp(hdrs);
+  if (!checkRateLimit(`login:${ip}`) || !checkRateLimit(`login-account:${email}`, 20)) {
     return { error: "Too many login attempts. Try again in a few minutes." };
   }
 
@@ -103,10 +105,7 @@ async function sendVerificationEmail(userId: number, email: string, username: st
     })
     .run();
 
-  const hdrs = await headers();
-  const proto = hdrs.get("x-forwarded-proto") ?? "http";
-  const host = hdrs.get("host") ?? "localhost:3000";
-  const link = `${proto}://${host}/verify-email?token=${token}`;
+  const link = `${SITE_URL}/verify-email?token=${token}`;
   await sendEmail({
     to: email,
     subject: "Confirm your Westie Wiki email",
@@ -120,7 +119,7 @@ export async function resendVerification(): Promise<AuthFormState & { sent?: boo
   if (user.emailVerifiedAt != null) return { error: null, sent: true };
 
   const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  const ip = clientIp(hdrs);
   if (!checkRateLimit(`verify:${ip}`, 5)) {
     return { error: "Too many requests. Try again in a few minutes." };
   }
@@ -145,8 +144,8 @@ export async function requestPasswordReset(
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid email address." };
 
   const hdrs = await headers();
-  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
-  if (!checkRateLimit(`reset:${ip}`, 5)) {
+  const ip = clientIp(hdrs);
+  if (!checkRateLimit(`reset:${ip}`, 5) || !checkRateLimit(`reset-account:${email}`, 3, 60 * 60 * 1000)) {
     return { error: "Too many reset requests. Try again in a few minutes." };
   }
 
@@ -159,9 +158,7 @@ export async function requestPasswordReset(
       .values({ id: hashResetToken(token), userId: user.id, expiresAt: Date.now() + RESET_TOKEN_TTL_MS })
       .run();
 
-    const proto = hdrs.get("x-forwarded-proto") ?? "http";
-    const host = hdrs.get("host") ?? "localhost:3000";
-    const link = `${proto}://${host}/reset-password?token=${token}`;
+    const link = `${SITE_URL}/reset-password?token=${token}`;
     await sendEmail({
       to: user.email,
       subject: "Reset your Westie Wiki password",
