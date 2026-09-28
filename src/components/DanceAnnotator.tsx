@@ -9,7 +9,9 @@ import {
   type AnnotationFormState,
 } from "@/lib/actions/dances";
 import { formatTimestamp } from "@/lib/time";
+import { JoinPrompt } from "./JoinPrompt";
 import { ClipLoopControls, PlayerBox, StartEndFields } from "./LoopControls";
+import { VerifyToMarkNotice } from "./VerifyEmailBanner";
 import { useYouTubeLoop } from "./useYouTubeLoop";
 import { FormError, inputClass, Input, PrimaryButton } from "./ui";
 
@@ -35,6 +37,8 @@ export function DanceAnnotator({
   handholds,
   currentUserId,
   currentUserIsAdmin = false,
+  needsVerification = false,
+  startMarking = false,
   initialClipId = null,
 }: {
   danceId: number;
@@ -43,11 +47,17 @@ export function DanceAnnotator({
   moveNames: string[];
   variantsByMove: Record<string, { id: number; name: string }[]>;
   handholds: { id: number; name: string }[];
+  /** Set only for accounts that can save marks (logged in with a confirmed email). */
   currentUserId: number | null;
   currentUserIsAdmin?: boolean;
+  /** Logged in, but the email isn't confirmed yet, so marks can't be saved. */
+  needsVerification?: boolean;
+  /** Open the marking panel on load (arriving from signup or email confirmation). */
+  startMarking?: boolean;
   initialClipId?: number | null;
 }) {
   const moveInputRef = useRef<HTMLInputElement>(null);
+  const playerWrapRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [moveName, setMoveName] = useState("");
   const [variantId, setVariantId] = useState("");
@@ -57,8 +67,9 @@ export function DanceAnnotator({
   const [removing, setRemoving] = useState(false);
   const [activeIds, setActiveIds] = useState<ReadonlySet<number>>(new Set());
   // the marking/loop panel folds away so watchers can focus on the timeline;
-  // it starts open on an unmapped dance, where marking is the whole point
-  const [panelOpen, setPanelOpen] = useState(annotations.length === 0);
+  // it starts open on an unmapped dance, where marking is the whole point,
+  // and for someone who just joined in order to mark
+  const [panelOpen, setPanelOpen] = useState(annotations.length === 0 || startMarking);
 
   const yt = useYouTubeLoop({ videoId: youtubeId });
   const { playerReady, playerRef } = yt;
@@ -160,6 +171,10 @@ export function DanceAnnotator({
   function loadClip(a: AnnotationItem, loop: number | null = null) {
     setPanelOpen(true);
     yt.loadSegment(a.startSec, a.endSec, loop);
+    // on phones the timeline sits below the player; bring the video back into
+    // view so tapping a move doesn't play it off-screen
+    const box = playerWrapRef.current?.getBoundingClientRect();
+    if (box && box.top < 0) playerWrapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   /** Load an annotation into the form for editing (and cue the player to it). */
@@ -196,7 +211,9 @@ export function DanceAnnotator({
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       {/* player + marking panel */}
       <div>
-        <PlayerBox hostRef={yt.playerHostRef} />
+        <div ref={playerWrapRef} className="scroll-mt-2">
+          <PlayerBox hostRef={yt.playerHostRef} />
+        </div>
 
         <div className="mt-4 rounded-lg border border-line bg-panel">
           <button
@@ -362,15 +379,19 @@ export function DanceAnnotator({
               </p>
               <div className="flex flex-wrap gap-3">{startEndFields}</div>
               {clipLoopControls}
-              <p className="font-display text-sm text-muted">
-                <Link href="/login" className="text-denim underline">
-                  Log in
-                </Link>{" "}
-                to mark the moves in this dance.
-              </p>
             </div>
           )}
         </div>
+        {/* outside the panel so it shows even while the panel is folded away */}
+        {currentUserId ? null : (
+          <div className="mt-3">
+            {needsVerification ? (
+              <VerifyToMarkNotice />
+            ) : (
+              <JoinPrompt returnQuery="?mark=1">to mark the moves in this dance.</JoinPrompt>
+            )}
+          </div>
+        )}
       </div>
 
       {/* annotation timeline */}

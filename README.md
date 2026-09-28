@@ -24,7 +24,7 @@ and names things; it is a learning aid, not a source of truth about WCS.
 - **Community** — per-move discussion threads, favorites/practice lists, user profiles with
   contribution history, and a site-wide Recent Changes feed.
 
-Anyone can browse. Editing requires a free account (email + password, no verification emails).
+Anyone can browse. Editing requires a free account with a confirmed email address; the confirmation link returns people to the page they signed up from.
 
 ## Quick start
 

@@ -10,7 +10,7 @@ import { ReportForm } from "@/components/ReportForm";
 import { JsonLd } from "@/components/JsonLd";
 import { CountChip } from "@/components/ui";
 import { isAdmin } from "@/lib/admin";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isVerified } from "@/lib/auth";
 import {
   getDanceAnnotations,
   getDanceBySlug,
@@ -50,10 +50,10 @@ export default async function DancePage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ clip?: string }>;
+  searchParams: Promise<{ clip?: string; mark?: string }>;
 }) {
   const { slug } = await params;
-  const { clip } = await searchParams;
+  const { clip, mark } = await searchParams;
   const initialClipId = clip && /^\d+$/.test(clip) ? Number(clip) : null;
   const dance = getDanceBySlug(slug);
   if (!dance) notFound();
@@ -190,8 +190,10 @@ export default async function DancePage({
         moveNames={moveNames}
         variantsByMove={variantsByMove}
         handholds={allHandholds}
-        currentUserId={user?.id ?? null}
+        currentUserId={user && isVerified(user) ? user.id : null}
         currentUserIsAdmin={isAdmin(user)}
+        needsVerification={!!user && !isVerified(user)}
+        startMarking={mark === "1"}
         initialClipId={initialClipId}
       />
 

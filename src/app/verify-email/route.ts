@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { emailVerificationTokens, users } from "@/db/schema";
+import { safeNextPath } from "@/lib/redirects";
 
 /** Email verification link target: consume the token, then show the result page. */
 export async function GET(request: NextRequest) {
@@ -22,10 +23,13 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  const next = safeNextPath(request.nextUrl.searchParams.get("next"));
+  const nextParam = next !== "/" ? `&next=${encodeURIComponent(next)}` : "";
+
   // Relative Location: behind fly-proxy, nextUrl reflects the internal host
   // (localhost:3000), and the Host header is attacker-controlled.
   return new NextResponse(null, {
     status: 303,
-    headers: { Location: `/verify-email/result${ok ? "?ok=1" : ""}` },
+    headers: { Location: `/verify-email/result${ok ? `?ok=1${nextParam}` : ""}` },
   });
 }

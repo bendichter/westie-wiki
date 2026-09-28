@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { JoinPrompt } from "./JoinPrompt";
 import { addComment, deleteComment, type CommentFormState } from "@/lib/actions/community";
 import { FormError, PrimaryButton, Textarea } from "./ui";
 
@@ -85,12 +86,7 @@ export function CommentSection({
           </PrimaryButton>
         </form>
       ) : (
-        <p className="text-sm text-muted font-display">
-          <Link href="/login" className="text-denim underline">
-            Log in
-          </Link>{" "}
-          to join the discussion.
-        </p>
+        <JoinPrompt className="text-sm text-muted font-display">to join the discussion.</JoinPrompt>
       )}
     </section>
   );

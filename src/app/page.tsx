@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { count, countDistinct, desc, eq, isNotNull, max } from "drizzle-orm";
+import { count, desc, eq, isNotNull, max } from "drizzle-orm";
 import { db } from "@/db";
-import { curricula, dancers, events, moves, videos } from "@/db/schema";
+import { curricula, dancers, dances, events, moves, videos } from "@/db/schema";
 import { DanceCard } from "@/components/DanceCard";
 import { SponsorSlot } from "@/components/SponsorSlot";
 import { ButtonLink, EmptyState } from "@/components/ui";
@@ -10,7 +10,8 @@ import { listDances } from "@/lib/data/dances";
 export default function HomePage() {
   const stats = {
     moves: db.select({ n: count() }).from(moves).where(eq(moves.deleted, 0)).get()?.n ?? 0,
-    dances: db.select({ n: countDistinct(videos.danceId) }).from(videos).where(isNotNull(videos.danceId)).get()?.n ?? 0,
+    // every registered dance, matching the count on /dances
+    dances: db.select({ n: count() }).from(dances).get()?.n ?? 0,
     dancers: db.select({ n: count() }).from(dancers).get()?.n ?? 0,
     events: db.select({ n: count() }).from(events).get()?.n ?? 0,
     curricula: db.select({ n: count() }).from(curricula).where(eq(curricula.deleted, 0)).get()?.n ?? 0,
@@ -26,7 +27,10 @@ export default function HomePage() {
     .limit(2)
     .all()
     .map((r) => r.danceId);
-  const recentDances = listDances()
+  const allDances = listDances();
+  // the concrete ask for new contributors: dances nobody has mapped yet
+  const unmappedDances = allDances.filter((d) => d.annotationCount === 0);
+  const recentDances = allDances
     .filter((d) => recentDanceIds.includes(d.id))
     .sort((a, b) => recentDanceIds.indexOf(a.id) - recentDanceIds.indexOf(b.id));
 
@@ -95,6 +99,33 @@ export default function HomePage() {
         </div>
 
         <div className="space-y-8">
+          {unmappedDances.length > 0 ? (
+            <div className="rounded-lg border border-line bg-panel p-4">
+              <h2 className="text-xl font-bold mb-1">Help map a dance</h2>
+              <p className="font-display text-sm text-ink-soft mb-3">
+                {unmappedDances.length} {unmappedDances.length === 1 ? "dance is" : "dances are"} waiting
+                for someone to mark their moves. Play one, and each time a pattern starts, tap{" "}
+                <span className="font-mono">now</span> and name it.
+              </p>
+              <ul className="space-y-1.5 mb-3">
+                {unmappedDances.slice(0, 4).map((d) => (
+                  <li key={d.id}>
+                    <Link href={`/dances/${d.slug}`} className="font-display font-semibold text-denim hover:underline">
+                      {d.dancers.length > 0 ? d.dancers.map((x) => x.name).join(" & ") : (d.title ?? "Untitled dance")}
+                    </Link>
+                    {d.eventName ? (
+                      <span className="font-display text-sm text-muted">
+                        {" "}· {d.eventName}{d.eventYear ? ` ${d.eventYear}` : ""}
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/dances" className="font-display text-sm text-denim underline">
+                Browse all dances
+              </Link>
+            </div>
+          ) : null}
           <SponsorSlot />
         </div>
       </section>

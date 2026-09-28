@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
-import Link from "next/link";
+import { JoinPrompt } from "./JoinPrompt";
 import { addResource, deleteResource, type ResourceFormState } from "@/lib/actions/resources";
 import { CountChip, FieldHint, FormError, Input, Label, PrimaryButton, SecondaryButton } from "./ui";
 
@@ -84,12 +84,7 @@ export function ResourceSection({
       ) : null}
 
       {currentUserId == null ? (
-        <p className="font-display text-sm text-muted">
-          <Link href="/login" className="text-denim underline">
-            Log in
-          </Link>{" "}
-          to cite a tutorial.
-        </p>
+        <JoinPrompt>to cite a tutorial.</JoinPrompt>
       ) : !open ? (
         <SecondaryButton type="button" onClick={() => setOpen(true)}>
           + Cite an instructional video

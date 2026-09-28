@@ -1,26 +1,29 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui";
+import { safeNextPath } from "@/lib/redirects";
 
 export const metadata: Metadata = { title: "Verify email", robots: { index: false } };
 
 export default async function VerifyEmailResultPage({
   searchParams,
 }: {
-  searchParams: Promise<{ ok?: string }>;
+  searchParams: Promise<{ ok?: string; next?: string }>;
 }) {
-  const { ok } = await searchParams;
+  const { ok, next: rawNext } = await searchParams;
+  const next = safeNextPath(rawNext);
 
   if (ok === "1") {
     return (
       <div className="max-w-md mx-auto mt-8">
         <h1 className="text-3xl font-bold mb-1">Email confirmed ✓</h1>
-        <p className="text-muted font-display">
-          You can now edit moves, add clips, and build curricula.{" "}
-          <Link href="/moves" className="text-denim underline">
-            Get to it
-          </Link>
-          .
+        <p className="text-muted font-display mb-5">
+          You can now mark moves in dances, edit move pages, add clips, and build curricula.
         </p>
+        {next !== "/" ? (
+          <ButtonLink href={next}>{next.startsWith("/dances/") ? "Back to the dance to start marking" : "Back to where you were"}</ButtonLink>
+        ) : (
+          <ButtonLink href="/dances">Find a dance to map</ButtonLink>
+        )}
       </div>
     );
   }

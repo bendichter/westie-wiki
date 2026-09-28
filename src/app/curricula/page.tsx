@@ -61,8 +61,8 @@ export default async function CurriculaPage() {
               Build the first one
             </Link>
           ) : (
-            <Link href="/login" className="text-denim underline">
-              Log in to build one
+            <Link href="/signup?next=/curricula/new" className="text-denim underline">
+              Join the wiki to build one
             </Link>
           )}
           .

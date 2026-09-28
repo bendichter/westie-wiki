@@ -58,9 +58,10 @@ export async function signup(_prev: AuthFormState, formData: FormData): Promise<
     .returning({ id: users.id })
     .get();
 
-  await sendVerificationEmail(inserted.id, email, username);
+  const next = safeNextPath(formData.get("next"));
+  await sendVerificationEmail(inserted.id, email, username, next);
   await createSession(inserted.id);
-  redirect(safeNextPath(formData.get("next")));
+  redirect(next);
 }
 
 export async function login(_prev: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -94,7 +95,13 @@ export async function logout(): Promise<void> {
 
 const VERIFY_TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-async function sendVerificationEmail(userId: number, email: string, username: string): Promise<void> {
+/** `next` is where the confirmation link returns them: the page they were on when they signed up. */
+async function sendVerificationEmail(
+  userId: number,
+  email: string,
+  username: string,
+  next = "/"
+): Promise<void> {
   const token = randomBytes(32).toString("hex");
   db.delete(emailVerificationTokens).where(eq(emailVerificationTokens.userId, userId)).run();
   db.insert(emailVerificationTokens)
@@ -105,7 +112,7 @@ async function sendVerificationEmail(userId: number, email: string, username: st
     })
     .run();
 
-  const link = `${SITE_URL}/verify-email?token=${token}`;
+  const link = `${SITE_URL}/verify-email?token=${token}${next !== "/" ? `&next=${encodeURIComponent(next)}` : ""}`;
   await sendEmail({
     to: email,
     subject: "Confirm your Westie Wiki email",
@@ -113,7 +120,7 @@ async function sendVerificationEmail(userId: number, email: string, username: st
   });
 }
 
-export async function resendVerification(): Promise<AuthFormState & { sent?: boolean }> {
+export async function resendVerification(nextPath?: string): Promise<AuthFormState & { sent?: boolean }> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.emailVerifiedAt != null) return { error: null, sent: true };
@@ -124,7 +131,7 @@ export async function resendVerification(): Promise<AuthFormState & { sent?: boo
     return { error: "Too many requests. Try again in a few minutes." };
   }
 
-  await sendVerificationEmail(user.id, user.email, user.username);
+  await sendVerificationEmail(user.id, user.email, user.username, safeNextPath(nextPath));
   return { error: null, sent: true };
 }
 
