@@ -101,14 +101,16 @@ export async function resolveReport(formData: FormData): Promise<void> {
     if (report.videoId != null) {
       const videoId = report.videoId;
       // resolve every open report on this clip, detach FKs, then delete it
-      db.update(reports)
-        .set({ resolvedAt: now, resolution: "removed", videoId: null })
-        .where(and(eq(reports.videoId, videoId), isNull(reports.resolvedAt)))
-        .run();
-      // detach already-resolved reports too, or the delete hits their FK
-      db.update(reports).set({ videoId: null }).where(eq(reports.videoId, videoId)).run();
-      db.delete(videoDancers).where(eq(videoDancers.videoId, videoId)).run();
-      db.delete(videos).where(eq(videos.id, videoId)).run();
+      db.transaction((tx) => {
+        tx.update(reports)
+          .set({ resolvedAt: now, resolution: "removed", videoId: null })
+          .where(and(eq(reports.videoId, videoId), isNull(reports.resolvedAt)))
+          .run();
+        // detach already-resolved reports too, or the delete hits their FK
+        tx.update(reports).set({ videoId: null }).where(eq(reports.videoId, videoId)).run();
+        tx.delete(videoDancers).where(eq(videoDancers.videoId, videoId)).run();
+        tx.delete(videos).where(eq(videos.id, videoId)).run();
+      });
     } else if (report.danceId != null) {
       removeDanceCascade(report.danceId, now);
     }

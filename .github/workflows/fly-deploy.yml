@@ -6,8 +6,43 @@ on:
     branches:
       - main
 jobs:
+  test:
+    name: Lint, type-check, unit and end-to-end tests
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_PATH: ./data/wcs-wiki.db
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - name: Create and seed a throwaway database
+        run: mkdir -p data && npm run db:migrate && npm run db:seed
+      - run: npm run build
+      - run: npx tsc --noEmit
+      - run: npx playwright install --with-deps chromium
+      - name: End-to-end suite against the production build
+        run: |
+          npx next start -p 3000 > server.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:3000/ && break; sleep 1; done
+          npx tsx e2e/run-e2e.ts
+      - name: Upload screenshots and server log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-failure-${{ github.run_id }}
+          path: |
+            e2e/shots
+            server.log
+          retention-days: 7
+
   deploy:
     name: Deploy app
+    needs: test
     runs-on: ubuntu-latest
     concurrency: deploy-group    # optional: ensure only one action runs at a time
     steps:

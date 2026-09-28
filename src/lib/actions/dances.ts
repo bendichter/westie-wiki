@@ -411,8 +411,10 @@ export async function deleteAnnotation(formData: FormData): Promise<void> {
 
   const dance = db.select().from(dances).where(eq(dances.id, video.danceId)).get();
   // detach any reports pointing at this clip, or the delete hits their FK
-  db.update(reports).set({ videoId: null }).where(eq(reports.videoId, videoId)).run();
-  db.delete(videoDancers).where(eq(videoDancers.videoId, videoId)).run();
-  db.delete(videos).where(eq(videos.id, videoId)).run();
+  db.transaction((tx) => {
+    tx.update(reports).set({ videoId: null }).where(eq(reports.videoId, videoId)).run();
+    tx.delete(videoDancers).where(eq(videoDancers.videoId, videoId)).run();
+    tx.delete(videos).where(eq(videos.id, videoId)).run();
+  });
   if (dance) revalidatePath(`/dances/${dance.slug}`);
 }
