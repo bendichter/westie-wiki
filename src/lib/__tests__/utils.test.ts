@@ -1,8 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { diffLines } from "../diff";
+import { canonicalEmail } from "../email";
 import { slugify, uniqueSlug } from "../slug";
 import { formatTimestamp, parseTimestamp } from "../time";
 import { parseYoutubeUrl, youtubeEmbedUrl } from "../youtube";
+
+describe("canonicalEmail", () => {
+  it("folds dotted and +tag Gmail variants onto one address", () => {
+    expect(canonicalEmail("s.ar.ach.chi.g.ekuma.r@gmail.com")).toBe("sarachchigekumar@gmail.com");
+    expect(canonicalEmail("Joe.Smith+wiki@GoogleMail.com")).toBe("joesmith@gmail.com");
+  });
+  it("leaves other domains alone apart from case", () => {
+    expect(canonicalEmail("First.Last@Example.org")).toBe("first.last@example.org");
+  });
+});
 
 describe("slugify", () => {
   it("lowercases and hyphenates", () => {

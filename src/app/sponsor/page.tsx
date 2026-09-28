@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { count, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { moves, users, videos } from "@/db/schema";
+import { moves, videos } from "@/db/schema";
 import { PageTitle } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -17,7 +17,6 @@ export default function SponsorPage() {
   const stats = {
     moves: db.select({ n: count() }).from(moves).where(eq(moves.deleted, 0)).get()?.n ?? 0,
     clips: db.select({ n: count() }).from(videos).get()?.n ?? 0,
-    members: db.select({ n: count() }).from(users).get()?.n ?? 0,
   };
 
   return (
@@ -30,7 +29,7 @@ export default function SponsorPage() {
         <p>
           Westie Wiki is the community-edited reference for West Coast Swing moves, currently{" "}
           <strong>{stats.moves} documented moves</strong> with <strong>{stats.clips} labeled
-          video clips</strong>, built by {stats.members} member{stats.members === 1 ? "" : "s"}.
+          video clips</strong>.
           The people reading it are learners looking up patterns after class, dancers preparing
           for their next event, and teachers building curricula: exactly the audience for WCS
           events, dance shoes, apparel, and instruction.

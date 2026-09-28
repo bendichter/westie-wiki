@@ -4,6 +4,7 @@ import { AuthForm } from "@/components/AuthForm";
 import { Card } from "@/components/ui";
 import { getCurrentUser } from "@/lib/auth";
 import { safeNextPath } from "@/lib/redirects";
+import { issueFormToken } from "@/lib/form-token";
 
 export const metadata: Metadata = { title: "Join", robots: { index: false } };
 
@@ -22,7 +23,7 @@ export default async function SignupPage({
         Free account. Document moves, label videos, and build learning paths for the community.
       </p>
       <Card>
-        <AuthForm mode="signup" next={next} />
+        <AuthForm mode="signup" next={next} formToken={issueFormToken()} />
       </Card>
     </div>
   );

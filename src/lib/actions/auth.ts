@@ -18,8 +18,13 @@ import {
 import { sendEmail } from "@/lib/mailer";
 import { safeNextPath } from "@/lib/redirects";
 import { SITE_URL } from "@/lib/site-url";
+import { canonicalEmail } from "@/lib/email";
+import { formTokenAgeMs } from "@/lib/form-token";
 
 export type AuthFormState = { error: string | null };
+
+const SIGNUP_MIN_MS = 2000;
+const SIGNUP_MAX_MS = 6 * 60 * 60 * 1000;
 
 export async function signup(_prev: AuthFormState, formData: FormData): Promise<AuthFormState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
@@ -28,8 +33,23 @@ export async function signup(_prev: AuthFormState, formData: FormData): Promise<
 
   const hdrs = await headers();
   const ip = clientIp(hdrs);
-  if (!checkRateLimit(`signup:${ip}`)) {
-    return { error: "Too many signup attempts. Try again in a few minutes." };
+  // "local" means no Fly proxy (development and e2e), where there is no real traffic to limit
+  if (ip !== "local" && !checkRateLimit(`signup:${ip}`, 5, 60 * 60 * 1000)) {
+    return { error: "Too many signup attempts. Try again later." };
+  }
+
+  // Bot checks. A person leaves the hidden "homepage" field empty and spends
+  // more than a couple of seconds on the form; the scripted signups that sent
+  // confirmation emails to strangers in Sep 2026 did neither.
+  const formAge = formTokenAgeMs(formData.get("formToken"));
+  const looksAutomated =
+    String(formData.get("homepage") ?? "") !== "" ||
+    formAge == null ||
+    formAge < SIGNUP_MIN_MS ||
+    formAge > SIGNUP_MAX_MS;
+  if (looksAutomated) {
+    console.warn(`[signup] rejected as automated: ip=${ip} age=${formAge}`);
+    return { error: "Something went wrong. Reload the page and try again." };
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid email address." };
@@ -50,6 +70,18 @@ export async function signup(_prev: AuthFormState, formData: FormData): Promise<
           ? "An account with that email already exists."
           : "That username is taken.",
     };
+  }
+  // dotted and "+tag" variants of an existing Gmail address count as the same address
+  const canonical = canonicalEmail(email);
+  if (canonical !== email) {
+    const gmailUsers = db
+      .select({ email: users.email })
+      .from(users)
+      .where(sql`${users.email} like '%@gmail.com' or ${users.email} like '%@googlemail.com'`)
+      .all();
+    if (gmailUsers.some((u) => canonicalEmail(u.email) === canonical)) {
+      return { error: "An account with that email already exists." };
+    }
   }
 
   const inserted = db
@@ -133,6 +165,30 @@ export async function resendVerification(nextPath?: string): Promise<AuthFormSta
 
   await sendVerificationEmail(user.id, user.email, user.username, safeNextPath(nextPath));
   return { error: null, sent: true };
+}
+
+/** The confirm button on /verify-email: consume the token, then show the result page. */
+export async function confirmEmail(formData: FormData): Promise<void> {
+  const token = String(formData.get("token") ?? "");
+  const next = safeNextPath(formData.get("next"));
+
+  let ok = false;
+  if (/^[a-f0-9]{64}$/.test(token)) {
+    const row = db
+      .select({ userId: emailVerificationTokens.userId, expiresAt: emailVerificationTokens.expiresAt, blockedAt: users.blockedAt })
+      .from(emailVerificationTokens)
+      .innerJoin(users, eq(users.id, emailVerificationTokens.userId))
+      .where(eq(emailVerificationTokens.id, createHash("sha256").update(token).digest("hex")))
+      .get();
+    if (row && row.expiresAt >= Date.now() && row.blockedAt == null) {
+      db.update(users).set({ emailVerifiedAt: Date.now() }).where(eq(users.id, row.userId)).run();
+      db.delete(emailVerificationTokens).where(eq(emailVerificationTokens.userId, row.userId)).run();
+      ok = true;
+    }
+  }
+
+  const nextParam = next !== "/" ? `&next=${encodeURIComponent(next)}` : "";
+  redirect(`/verify-email/result${ok ? `?ok=1${nextParam}` : ""}`);
 }
 
 // --- password reset ---

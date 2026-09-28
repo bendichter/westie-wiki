@@ -114,12 +114,21 @@ async function main() {
   if (!movePage.includes('"@type":"Article"')) throw new Error("move page missing Article JSON-LD");
 
   // --- signup ---
+  log("signup submitted faster than a person could type is rejected");
+  await page.goto(`${BASE}/signup`);
+  await page.getByLabel("Email").fill(user1.email);
+  await page.getByLabel("Username").fill(user1.username);
+  await page.getByLabel("Password").fill(user1.password);
+  await page.getByRole("button", { name: "Create account" }).click();
+  await expectText(page, "Something went wrong");
+
   log("signup user1");
   await page.goto(`${BASE}/signup`);
   await page.getByLabel("Email").fill(user1.email);
   await page.getByLabel("Username").fill(user1.username);
   await page.getByLabel("Password").fill(user1.password);
   await shot(page, "04-signup");
+  await page.waitForTimeout(2500); // the bot check rejects forms submitted within 2s of loading
   await page.getByRole("button", { name: "Create account" }).click();
   await page.waitForURL(`${BASE}/`);
   await expectText(page, user1.username);
@@ -132,9 +141,15 @@ async function main() {
   await page.getByRole("button", { name: "Create move" }).click();
   await expectText(page, "Confirm your email address to edit");
 
-  log("verification link confirms the email");
+  log("opening the verification link alone does not confirm (mail scanners open links)");
   const verifyToken = plantVerificationToken(user1.email);
   await page.goto(`${BASE}/verify-email?token=${verifyToken}`);
+  await page.goto(`${BASE}/`);
+  await expectText(page, "Confirm your email address to edit the wiki");
+
+  log("clicking the confirm button confirms the email");
+  await page.goto(`${BASE}/verify-email?token=${verifyToken}`);
+  await page.getByRole("button", { name: "Confirm my email" }).click();
   await expectText(page, "Email confirmed");
   await page.goto(`${BASE}/`);
   const bannerGone = await page.getByText("Confirm your email address to edit the wiki").count();
@@ -524,6 +539,7 @@ async function main() {
   await page.getByLabel("Email").fill(user2.email);
   await page.getByLabel("Username").fill(user2.username);
   await page.getByLabel("Password").fill(user2.password);
+  await page.waitForTimeout(2500);
   await page.getByRole("button", { name: "Create account" }).click();
   await page.waitForURL(`${BASE}/`);
   markVerified(user2.email);

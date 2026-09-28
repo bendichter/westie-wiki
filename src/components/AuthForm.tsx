@@ -5,7 +5,16 @@ import Link from "next/link";
 import { login, signup, type AuthFormState } from "@/lib/actions/auth";
 import { FieldHint, FormError, Input, Label, PrimaryButton } from "./ui";
 
-export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: string }) {
+export function AuthForm({
+  mode,
+  next,
+  formToken,
+}: {
+  mode: "login" | "signup";
+  next?: string;
+  /** Signed render time for signup's bot check (see lib/form-token). */
+  formToken?: string;
+}) {
   const action = mode === "login" ? login : signup;
   const [state, formAction, pending] = useActionState<AuthFormState, FormData>(action, {
     error: null,
@@ -15,6 +24,16 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: stri
     <form action={formAction} className="space-y-4">
       <FormError error={state.error} />
       {next ? <input type="hidden" name="next" value={next} /> : null}
+      {mode === "signup" ? (
+        <>
+          <input type="hidden" name="formToken" value={formToken ?? ""} />
+          {/* bot trap: off-screen and skipped by keyboard and screen readers, so only scripts fill it */}
+          <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
+            <label htmlFor="homepage">Leave this empty</label>
+            <input id="homepage" name="homepage" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+          </div>
+        </>
+      ) : null}
 
       <div>
         <Label htmlFor="email">Email</Label>
