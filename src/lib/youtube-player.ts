@@ -2,6 +2,7 @@
 // client components (the API needs window), but not itself a component
 export type YTPlayer = {
   getCurrentTime: () => number;
+  getDuration: () => number;
   seekTo: (seconds: number, allowSeekAhead: boolean) => void;
   playVideo: () => void;
   setPlaybackRate: (rate: number) => void;

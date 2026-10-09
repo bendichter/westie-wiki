@@ -3,9 +3,10 @@ import { count, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { curricula, dancers, dances, events, moves } from "@/db/schema";
 import { DanceCard } from "@/components/DanceCard";
+import { FeaturedDance } from "@/components/FeaturedDance";
 import { SponsorSlot } from "@/components/SponsorSlot";
 import { ButtonLink, EmptyState } from "@/components/ui";
-import { listDances } from "@/lib/data/dances";
+import { getDanceAnnotations, listDances } from "@/lib/data/dances";
 
 export default function HomePage() {
   const stats = {
@@ -22,38 +23,61 @@ export default function HomePage() {
   const unmappedDances = allDances.filter((d) => d.annotationCount === 0);
   // the dances with the most moves marked show what a mapped dance looks like;
   // ties go to the one annotated most recently
-  const mappedDances = allDances
+  const rankedDances = allDances
     .filter((d) => d.annotationCount > 0)
     .sort(
       (a, b) =>
         b.annotationCount - a.annotationCount || (b.lastAnnotatedAt ?? 0) - (a.lastAnnotatedAt ?? 0)
-    )
-    .slice(0, 4);
+    );
+  // the best-mapped one is shown in the hero
+  const featured = rankedDances[0];
+  const featuredMoves = featured
+    ? getDanceAnnotations(featured.id).map((a) => ({
+        id: a.id,
+        startSec: a.startSec,
+        name: a.move.name,
+      }))
+    : [];
+  // and the cards show the next four, unless that would leave the row thin
+  const mappedDances = rankedDances.length > 4 ? rankedDances.slice(1, 5) : rankedDances.slice(0, 4);
 
   return (
     <div>
       {/* hero */}
       <section className="py-10 sm:py-16">
-        <div className="max-w-3xl">
-          <div className="font-mono text-[13px] text-amber mb-4">1&nbsp;&nbsp;2&nbsp;&nbsp;3&amp;4&nbsp;&nbsp;5&amp;6</div>
-          <h1 className="text-4xl sm:text-6xl font-bold leading-[1.05]">
-            The moves of West Coast Swing,{" "}
-            <span className="text-denim">documented by us.</span>
-          </h1>
-          <p className="mt-5 text-lg text-ink-soft max-w-2xl">
-            Every dance mapped move by move, with timestamps. Every marked move linked to its
-            wiki page, with names, aliases, and a description. Every page editable, wiki-style,
-            by anyone in the community.
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <ButtonLink href="/dances">Watch dances</ButtonLink>
-            <ButtonLink href="/moves" variant="secondary">
-              Browse moves
-            </ButtonLink>
-            <ButtonLink href="/curricula" variant="secondary">
-              Start a learning path
-            </ButtonLink>
+        <div className={featured ? "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)]" : ""}>
+          <div className="max-w-3xl">
+            <div className="font-mono text-[13px] text-amber mb-4">1&nbsp;&nbsp;2&nbsp;&nbsp;3&amp;4&nbsp;&nbsp;5&amp;6</div>
+            <h1 className={`text-4xl font-bold leading-[1.05] text-balance ${featured ? "sm:text-5xl" : "sm:text-6xl"}`}>
+              The moves of West Coast Swing,{" "}
+              <span className="text-denim">documented by us.</span>
+            </h1>
+            <p className="mt-5 text-lg text-ink-soft max-w-2xl">
+              Every dance mapped move by move, with timestamps. Every marked move linked to its
+              wiki page, with names, aliases, and a description. Every page editable, wiki-style,
+              by anyone in the community.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <ButtonLink href="/dances">Watch dances</ButtonLink>
+              <ButtonLink href="/moves" variant="secondary">
+                Browse moves
+              </ButtonLink>
+              <ButtonLink href="/curricula" variant="secondary">
+                Start a learning path
+              </ButtonLink>
+            </div>
           </div>
+          {featured ? (
+            <FeaturedDance
+              slug={featured.slug}
+              youtubeId={featured.youtubeId}
+              who={featured.dancers.map((d) => d.name).join(" & ") || featured.title || "Untitled dance"}
+              eventLabel={
+                featured.eventName ? `${featured.eventName}${featured.eventYear ? ` ${featured.eventYear}` : ""}` : null
+              }
+              moves={featuredMoves}
+            />
+          ) : null}
         </div>
 
         <div className="mt-12 slot-line" aria-hidden />

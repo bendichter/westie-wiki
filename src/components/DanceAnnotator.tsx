@@ -9,9 +9,11 @@ import {
   type AnnotationFormState,
 } from "@/lib/actions/dances";
 import { formatTimestamp } from "@/lib/time";
+import { CoverageBar } from "./CoverageBar";
 import { JoinCallout } from "./JoinPrompt";
 import { ClipLoopControls, PlayerBox, StartEndFields } from "./LoopControls";
 import { VerifyToMarkNotice } from "./VerifyEmailBanner";
+import { useActiveClips } from "./useActiveClips";
 import { useYouTubeLoop } from "./useYouTubeLoop";
 import { FormError, inputClass, Input, PrimaryButton } from "./ui";
 
@@ -65,7 +67,6 @@ export function DanceAnnotator({
   const [note, setNote] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [removing, setRemoving] = useState(false);
-  const [activeIds, setActiveIds] = useState<ReadonlySet<number>>(new Set());
   // the marking/loop panel folds away so watchers can focus on the timeline;
   // it starts open on an unmapped dance, where marking is the whole point,
   // and for someone who just joined in order to mark
@@ -88,29 +89,12 @@ export function DanceAnnotator({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerReady, initialClipId, annotations]);
 
-  // follow playback and highlight every annotation whose segment contains the
-  // playhead — overlapping segments all light up together; an annotation
-  // without an end time stays active until the next one starts
-  useEffect(() => {
-    if (!playerReady || annotations.length === 0) return;
-    const timer = setInterval(() => {
-      const t = playerRef.current?.getCurrentTime();
-      if (t == null || !Number.isFinite(t)) return;
-      const next = new Set<number>();
-      for (let i = 0; i < annotations.length; i++) {
-        const a = annotations[i];
-        if (t < a.startSec) break; // sorted by start; the rest start later
-        const end = a.endSec ?? annotations[i + 1]?.startSec ?? Infinity;
-        if (t < end) next.add(a.id);
-      }
-      // keep the same Set instance when nothing changed, so playback doesn't
-      // re-render the timeline four times a second
-      setActiveIds((prev) =>
-        prev.size === next.size && [...next].every((id) => prev.has(id)) ? prev : next
-      );
-    }, 250);
-    return () => clearInterval(timer);
-  }, [playerReady, annotations, playerRef]);
+  // every annotation whose segment contains the playhead lights up
+  const activeIds = useActiveClips(playerRef, playerReady, annotations);
+  const moveLabels = useMemo(
+    () => Object.fromEntries(annotations.map((a) => [a.id, a.move.name])),
+    [annotations]
+  );
 
   // offer to document a move the wiki doesn't know yet (matching is
   // case-insensitive so a lowercase spelling of an existing move doesn't
@@ -214,6 +198,18 @@ export function DanceAnnotator({
         <div ref={playerWrapRef} className="scroll-mt-2">
           <PlayerBox hostRef={yt.playerHostRef} />
         </div>
+        <CoverageBar
+          clips={annotations}
+          labels={moveLabels}
+          playerRef={playerRef}
+          playerReady={playerReady}
+          activeIds={activeIds}
+          onSelect={(id) => {
+            const a = annotations.find((x) => x.id === id);
+            if (a) (currentUserId ? loadAnnotation : loadClip)(a);
+          }}
+          onSeek={yt.jumpTo}
+        />
 
         <div className="mt-4 rounded-lg border border-line bg-panel">
           <button
