@@ -47,7 +47,6 @@ export default function HomePage() {
       <section className="py-10 sm:py-16">
         <div className={featured ? "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)]" : ""}>
           <div className="max-w-3xl">
-            <div className="font-mono text-[13px] text-amber mb-4">1&nbsp;&nbsp;2&nbsp;&nbsp;3&amp;4&nbsp;&nbsp;5&amp;6</div>
             <h1 className={`text-4xl font-bold leading-[1.05] text-balance ${featured ? "sm:text-5xl" : "sm:text-6xl"}`}>
               The moves of West Coast Swing,{" "}
               <span className="text-denim">documented by us.</span>
