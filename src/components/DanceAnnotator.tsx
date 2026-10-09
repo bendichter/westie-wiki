@@ -60,6 +60,7 @@ export function DanceAnnotator({
 }) {
   const moveInputRef = useRef<HTMLInputElement>(null);
   const playerWrapRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [moveName, setMoveName] = useState("");
   const [variantId, setVariantId] = useState("");
@@ -67,10 +68,12 @@ export function DanceAnnotator({
   const [note, setNote] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [removing, setRemoving] = useState(false);
-  // the marking/loop panel folds away so watchers can focus on the timeline;
-  // it starts open on an unmapped dance, where marking is the whole point,
-  // and for someone who just joined in order to mark
-  const [panelOpen, setPanelOpen] = useState(annotations.length === 0 || startMarking);
+  // the panel starts open for anyone who can mark, so the form is the first
+  // thing they see, and on an unmapped dance, where marking is the whole
+  // point; logged-out watchers of a mapped dance get it folded away
+  const [panelOpen, setPanelOpen] = useState(
+    currentUserId != null || annotations.length === 0 || startMarking
+  );
 
   const yt = useYouTubeLoop({ videoId: youtubeId });
   const { playerReady, playerRef } = yt;
@@ -153,12 +156,24 @@ export function DanceAnnotator({
    * it). Pass a rate to start looping it immediately (needs an end time).
    */
   function loadClip(a: AnnotationItem, loop: number | null = null) {
-    setPanelOpen(true);
     yt.loadSegment(a.startSec, a.endSec, loop);
-    // on phones the timeline sits below the player; bring the video back into
-    // view so tapping a move doesn't play it off-screen
-    const box = playerWrapRef.current?.getBoundingClientRect();
-    if (box && box.top < 0) playerWrapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const player = playerWrapRef.current?.getBoundingClientRect();
+    const controls = controlsRef.current?.getBoundingClientRect();
+    // the controls are out of sight when the reader has scrolled down the
+    // timeline past them (on phones they slide under the pinned player)
+    const controlsHidden = !!player && !!controls && controls.top < Math.max(player.bottom, 0) - 1;
+    if (currentUserId) {
+      // someone who can mark tapped a move to edit it: show them the form
+      setPanelOpen(true);
+      if (controlsHidden) controlsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      // a watcher keeps their place in the timeline; opening a panel above
+      // them would only shove the list down
+      if (!controlsHidden) setPanelOpen(true);
+      // where the player isn't pinned, bring it back into view so the clip
+      // doesn't play off-screen
+      if (player && player.top < 0) playerWrapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 
   /** Load an annotation into the form for editing (and cue the player to it). */
@@ -192,12 +207,19 @@ export function DanceAnnotator({
   );
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-      {/* player + marking panel */}
-      <div>
-        <div ref={playerWrapRef} className="scroll-mt-2">
-          <PlayerBox hostRef={yt.playerHostRef} />
-        </div>
+    <div className="grid lg:grid-cols-[1fr_360px] lg:grid-rows-[auto_1fr] lg:gap-x-6">
+      {/* on phones the player stays pinned to the top while the timeline
+          scrolls under it; it is a direct child of the grid so it stays
+          pinned for the whole timeline, not just the controls */}
+      <div
+        ref={playerWrapRef}
+        className="sticky top-0 z-10 scroll-mt-2 sm:static lg:col-start-1 lg:row-start-1"
+      >
+        <PlayerBox hostRef={yt.playerHostRef} />
+      </div>
+
+      {/* coverage bar + marking panel */}
+      <div ref={controlsRef} className="max-sm:scroll-mt-[56.25vw] lg:col-start-1 lg:row-start-2">
         <CoverageBar
           clips={annotations}
           labels={moveLabels}
@@ -397,7 +419,7 @@ export function DanceAnnotator({
       </div>
 
       {/* annotation timeline */}
-      <aside>
+      <aside className="mt-6 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:mt-0">
         <h2 className="mb-3 font-display text-lg font-bold">
           Moves in this dance{" "}
           <span className="font-mono text-sm font-normal text-muted">({annotations.length})</span>
@@ -425,7 +447,7 @@ export function DanceAnnotator({
                   <button
                     type="button"
                     onClick={() => (currentUserId ? loadAnnotation(a) : loadClip(a))}
-                    className="cursor-pointer font-mono text-sm font-semibold text-amber hover:underline"
+                    className="cursor-pointer font-mono text-sm font-semibold text-denim hover:underline"
                     title={
                       currentUserId
                         ? "Load this clip into the form"
@@ -437,7 +459,7 @@ export function DanceAnnotator({
                   </button>
                   <Link
                     href={`/moves/${a.move.slug}`}
-                    className="font-display text-sm font-semibold text-denim hover:underline"
+                    className="font-display text-sm font-semibold text-amber hover:underline"
                   >
                     {a.move.name}
                   </Link>

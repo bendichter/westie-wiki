@@ -349,8 +349,7 @@ async function main() {
   await page.goto(`${BASE}/loop?v=GGi2Rkf-15g&start=15&end=19&rate=0.5`);
   await page.getByRole("button", { name: "◼ stop ½× loop" }).waitFor({ timeout: 15000 });
   await page.goto(danceUrl);
-  // the marking panel is an accordion, collapsed by default on a mapped dance
-  await page.getByRole("button", { name: /Mark a move/ }).click();
+  // the marking panel starts open for anyone who can mark
   await page.getByLabel("Move", { exact: true }).waitFor();
 
   log("removing an annotation requires clicking into it first");
