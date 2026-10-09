@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { favorites, moveRelations, moves } from "@/db/schema";
 import { CommentSection } from "@/components/CommentSection";
 import { JsonLd } from "@/components/JsonLd";
+import { LiteYouTube } from "@/components/LiteYouTube";
 import { DefaultHandholdPicker } from "@/components/DefaultHandholdPicker";
 import { MoveMarkdown } from "@/components/MoveMarkdown";
 import { stripMoveLinks } from "@/lib/move-links";
@@ -35,6 +36,7 @@ import {
 } from "@/lib/data/moves";
 import { groupClipsByDance } from "@/lib/data/clips";
 import { formatDate, timeAgo } from "@/lib/format";
+import { formatTimestamp } from "@/lib/time";
 import { platformLabel } from "@/lib/platform";
 
 export async function generateMetadata({
@@ -133,6 +135,9 @@ export default async function MovePage({
     (videoPage - 1) * VIDEOS_PER_PAGE,
     videoPage * VIDEOS_PER_PAGE
   );
+  // one example beside the description: a timed clip shows the move itself,
+  // where an untimed video is usually a whole tutorial
+  const leadClip = videos.find((v) => v.endSec != null) ?? videos[0] ?? null;
   const comments = getMoveComments(move.id).map((c) => ({
     ...c,
     timeAgoLabel: timeAgo(c.createdAt),
@@ -239,50 +244,46 @@ export default async function MovePage({
       <div className="slot-line mt-4" aria-hidden />
 
       <div className="mt-6 space-y-10">
-        {/* pattern card */}
-        {hasPatternCard ? (
-        <section className="rounded-lg border border-line bg-panel p-5 sm:p-6">
-          <dl className="grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
-            <RelationGroup
-              title="Learn first"
-              items={related.prerequisites}
-              currentUserCanEdit={!!user}
-              relationIds={relationIds}
-            />
-            <RelationGroup
-              title="Variation of"
-              items={related.variationOf}
-              currentUserCanEdit={!!user}
-              relationIds={relationIds}
-            />
-            <RelationGroup
-              title="Variations"
-              items={related.variations}
-              currentUserCanEdit={false}
-            />
-            <RelationGroup title="Related" items={related.related} currentUserCanEdit={!!user} relationIds={relationIds} />
-            <RelationGroup title="Leads into" items={related.unlocks} currentUserCanEdit={false} />
-            <DefaultHandholdPicker
-              moveId={move.id}
-              current={defaultHandhold}
-              handholds={allHandholds}
-              canEdit={!!user}
-            />
-            <VariantManager moveId={move.id} variants={variants} canEdit={!!user} />
-          </dl>
-          {user ? (
-            <div className="mt-5 border-t border-line pt-4">
-              <RelationEditor moveId={move.id} moveNames={allMoveNames} />
-            </div>
+        {/* the description reads at prose width; on wide screens an example
+            clip and the pattern card sit beside it, and on phones the clip
+            leads and the card follows the description */}
+        <div className="grid gap-x-10 gap-y-6 lg:grid-cols-[minmax(0,1fr)_25rem] lg:grid-rows-[auto_1fr]">
+          {leadClip ? (
+            <figure className="lg:col-start-2 lg:row-start-1">
+              <LiteYouTube
+                youtubeId={leadClip.youtubeId}
+                startSec={leadClip.startSec}
+                endSec={leadClip.endSec}
+                title={leadClip.title ?? "Video example"}
+                portrait={leadClip.portrait}
+                href={leadClip.danceSlug ? `/dances/${leadClip.danceSlug}?clip=${leadClip.id}` : undefined}
+              />
+              <figcaption className="mt-2 font-display text-sm text-muted">
+                {leadClip.dancers.length > 0 ? (
+                  <span className="text-ink-soft">{leadClip.dancers.map((d) => d.name).join(" & ")}</span>
+                ) : (
+                  <span className="text-ink-soft">{leadClip.title ?? "Video example"}</span>
+                )}
+                {leadClip.event ? (
+                  <>
+                    {" "}
+                    at {leadClip.event.name}
+                    {leadClip.event.year ? ` ${leadClip.event.year}` : ""}
+                  </>
+                ) : null}
+                {leadClip.endSec != null ? (
+                  <span className="font-mono text-xs">
+                    {" "}
+                    · {formatTimestamp(leadClip.startSec)} — {formatTimestamp(leadClip.endSec)}
+                  </span>
+                ) : null}
+              </figcaption>
+            </figure>
           ) : null}
-        </section>
-        ) : null}
 
-        <section>
+          <section className="lg:col-start-1 lg:row-start-1 lg:row-span-2">
             {move.description.trim() ? (
-              <MoveMarkdown selfSlug={move.slug} className="!max-w-none">
-                {move.description}
-              </MoveMarkdown>
+              <MoveMarkdown selfSlug={move.slug}>{move.description}</MoveMarkdown>
             ) : (
               <EmptyState title="No description yet">
                 Know this move?{" "}
@@ -293,6 +294,46 @@ export default async function MovePage({
               </EmptyState>
             )}
           </section>
+
+          {/* pattern card */}
+          {hasPatternCard ? (
+            <section className="rounded-lg border border-line bg-panel p-5 lg:col-start-2 lg:self-start">
+              <dl className="grid grid-cols-2 gap-x-6 gap-y-5">
+                <RelationGroup
+                  title="Learn first"
+                  items={related.prerequisites}
+                  currentUserCanEdit={!!user}
+                  relationIds={relationIds}
+                />
+                <RelationGroup
+                  title="Variation of"
+                  items={related.variationOf}
+                  currentUserCanEdit={!!user}
+                  relationIds={relationIds}
+                />
+                <RelationGroup
+                  title="Variations"
+                  items={related.variations}
+                  currentUserCanEdit={false}
+                />
+                <RelationGroup title="Related" items={related.related} currentUserCanEdit={!!user} relationIds={relationIds} />
+                <RelationGroup title="Leads into" items={related.unlocks} currentUserCanEdit={false} />
+                <DefaultHandholdPicker
+                  moveId={move.id}
+                  current={defaultHandhold}
+                  handholds={allHandholds}
+                  canEdit={!!user}
+                />
+                <VariantManager moveId={move.id} variants={variants} canEdit={!!user} />
+              </dl>
+              {user ? (
+                <div className="mt-5 border-t border-line pt-4">
+                  <RelationEditor moveId={move.id} moveNames={allMoveNames} />
+                </div>
+              ) : null}
+            </section>
+          ) : null}
+        </div>
 
           <section>
             <div className="flex items-baseline justify-between mb-4">
