@@ -14,37 +14,22 @@ export const SEED_MOVES: SeedMove[] = [
     aliases: ["Push Break", "6-Count Push"],
     difficulty: "beginner",
     tags: ["fundamentals", "push family", "6-count"],
-    description: `The sugar push is usually the first pattern taught in West Coast Swing, and many dancers argue it stays the hardest to do *well* for your entire dancing life.
+    description: `The sugar push is a 6-count pattern and usually the first one taught in West Coast Swing. The follower walks toward the leader, the connection compresses, and the follower returns to where they started. Unlike most WCS patterns, the follower does not pass the leader.
 
-## The shape
+- **1–2**: the follower walks forward (walk, walk)
+- **3&4**: triple step as the connection compresses
+- **5&6**: [[Anchor Step|anchor step]]
 
-A 6-count pattern danced in the slot. The follower travels toward the leader, reaches a two-hand (or one-hand) compression, and returns to roughly where they started. Unlike most WCS patterns, the follower does not pass the leader.
+The name is misleading, because neither partner pushes with the hands. Thibault and Nicole Ramirez call it "a little bit of a misnomer" and teach the leader to absorb the follower's energy and send it back out.[^1] The arms stay relaxed and the compression comes from where the two bodies are.
 
-- **1–2**: follower walks forward toward the leader (walk, walk)
-- **3&4**: follower arrives with a triple, connection compresses ("catch")
-- **5&6**: [[Anchor Step|anchor step]] — both partners settle away from each other and re-establish leverage
-
-## What it teaches
-
-The sugar push is the purest expression of WCS **elastic connection**: extension into compression into extension. Commonly taught points include keeping the arms relaxed so the connection moves your body (not your shoulders), and letting the compression on 3&4 come from body positioning rather than pushing with the hands. Despite the name, there is no actual push: Thibault and Nicole Ramirez teach it as absorbing the follower's energy and sending it back out, warning that "sugar push is a little bit of a misnomer — we don't actually want to push our partners."[^1] Brian B teaches the same idea with a roller-skates image: if the follower were on skates, they would roll in until the connection stopped them, and roll back out only when sent.[^2]
-
-## Common variations
-
-The skeleton stays the same across handholds — list the variant in a clip's note when you spot one:
-
-- **Two-hand** — both hands connected; the most common classroom version, with compression split across both arms.
-- **Right-to-left (standard one-hand)** — leader's left to follower's right; frees a hand for styling and hand changes.
-- **Right-to-right (handshake)** — sets up tucks, hand changes behind the back, and crossed-hand shapes.
-- **Left-to-left** — less common; usually a deliberate setup for a specific next pattern.
-- **One-hand with resistance styling, no-hands (body-lead) push** — advanced connection play on the same geometry.
+It is danced with a two-hand hold, the most common in classes, or with one hand: leader's left to follower's right, right-to-right (handshake), or left-to-left. The footwork and timing stay the same.
 
 ## Naming
 
-Widely also called the **push break**, especially in scenes with roots in East Coast Swing pedagogy. Both names are heard at every event; neither is wrong. The "sugar" traces back to Lindy Hop: strictly, a sugar push includes a **sugar foot** — a follower swivel on the way in — and the swivel-free version is technically a push break, named for the leader breaking away to open position. Over the years the distinction eroded and the two names now describe the same pattern.[^3]
+Also called the **push break**. The "sugar" comes from Lindy Hop, where a sugar push included a sugar foot (a follower swivel on the way in) and the version without the swivel was a push break. The two names now describe the same pattern.[^2]
 
 [^1]: Thibault & Nicole Ramirez, ["Sugar Push – The Heart of West Coast Swing"](https://www.youtube.com/watch?v=mM86VQ_hViw&t=172s) at 2:52.
-[^2]: Brian B & Megan, West Coast Swing Online, ["How to Dance the West Coast Swing Basic Steps"](https://www.youtube.com/watch?v=dfVpwMLqm-o&t=283s) at 4:43.
-[^3]: Brian B, West Coast Swing Online, ["How to Dance the West Coast Swing Basic Steps"](https://www.youtube.com/watch?v=dfVpwMLqm-o&t=368s) at 6:08–7:24.`,
+[^2]: Brian B, West Coast Swing Online, ["How to Dance the West Coast Swing Basic Steps"](https://www.youtube.com/watch?v=dfVpwMLqm-o&t=368s) at 6:08–7:24.`,
   },
   {
     name: "Left Side Pass",
