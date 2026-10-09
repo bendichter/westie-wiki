@@ -9,7 +9,7 @@ import {
   type AnnotationFormState,
 } from "@/lib/actions/dances";
 import { formatTimestamp } from "@/lib/time";
-import { JoinPrompt } from "./JoinPrompt";
+import { JoinCallout } from "./JoinPrompt";
 import { ClipLoopControls, PlayerBox, StartEndFields } from "./LoopControls";
 import { VerifyToMarkNotice } from "./VerifyEmailBanner";
 import { useYouTubeLoop } from "./useYouTubeLoop";
@@ -384,11 +384,17 @@ export function DanceAnnotator({
         </div>
         {/* outside the panel so it shows even while the panel is folded away */}
         {currentUserId ? null : (
-          <div className="mt-3">
+          <div className="mt-4">
             {needsVerification ? (
               <VerifyToMarkNotice />
             ) : (
-              <JoinPrompt returnQuery="?mark=1">to mark the moves in this dance.</JoinPrompt>
+              <JoinCallout title="Help map this dance" action="Join to mark moves" returnQuery="?mark=1">
+                {annotations.length === 0
+                  ? "No moves are marked yet. "
+                  : `${annotations.length} move${annotations.length === 1 ? " is" : "s are"} marked so far. `}
+                Play the video, and each time a pattern starts, tap{" "}
+                <span className="font-mono">now</span> and name it.
+              </JoinCallout>
             )}
           </div>
         )}

@@ -406,9 +406,9 @@ async function main() {
   await page.goto(`${BASE}/events?q=Test Event ${run.toUpperCase()}`);
   await expectText(page, `Test Event ${run.toUpperCase()}`);
 
-  log("home shows the freshly annotated dance's card");
+  log("home shows the mapped dance's card");
   await page.goto(BASE);
-  await expectText(page, "Recent contributions");
+  await expectText(page, "Most mapped dances");
   await expectText(page, `Lead ${run} & Follow ${run}`);
 
   log("dances list shows the mapped dance");

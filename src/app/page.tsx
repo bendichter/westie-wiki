@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { count, desc, eq, isNotNull, max } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { curricula, dancers, dances, events, moves, videos } from "@/db/schema";
+import { curricula, dancers, dances, events, moves } from "@/db/schema";
 import { DanceCard } from "@/components/DanceCard";
 import { SponsorSlot } from "@/components/SponsorSlot";
 import { ButtonLink, EmptyState } from "@/components/ui";
@@ -17,22 +17,18 @@ export default function HomePage() {
     curricula: db.select({ n: count() }).from(curricula).where(eq(curricula.deleted, 0)).get()?.n ?? 0,
   };
 
-  // the two dances whose move annotations are newest
-  const recentDanceIds = db
-    .select({ danceId: videos.danceId })
-    .from(videos)
-    .where(isNotNull(videos.danceId))
-    .groupBy(videos.danceId)
-    .orderBy(desc(max(videos.createdAt)))
-    .limit(2)
-    .all()
-    .map((r) => r.danceId);
   const allDances = listDances();
   // the concrete ask for new contributors: dances nobody has mapped yet
   const unmappedDances = allDances.filter((d) => d.annotationCount === 0);
-  const recentDances = allDances
-    .filter((d) => recentDanceIds.includes(d.id))
-    .sort((a, b) => recentDanceIds.indexOf(a.id) - recentDanceIds.indexOf(b.id));
+  // the dances with the most moves marked show what a mapped dance looks like;
+  // ties go to the one annotated most recently
+  const mappedDances = allDances
+    .filter((d) => d.annotationCount > 0)
+    .sort(
+      (a, b) =>
+        b.annotationCount - a.annotationCount || (b.lastAnnotatedAt ?? 0) - (a.lastAnnotatedAt ?? 0)
+    )
+    .slice(0, 4);
 
   return (
     <div>
@@ -81,18 +77,28 @@ export default function HomePage() {
       </section>
 
       <section className="grid gap-10 lg:grid-cols-[1fr_360px] mt-4">
-        {/* recently annotated dances */}
+        {/* the most thoroughly mapped dances */}
         <div>
-          <h2 className="text-xl font-bold mb-4">Recent contributions</h2>
-          {recentDances.length === 0 ? (
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 className="text-xl font-bold">Most mapped dances</h2>
+            {mappedDances.length > 0 ? (
+              <Link href="/dances?sort=annotations" className="font-display text-sm text-denim underline">
+                See all dances
+              </Link>
+            ) : null}
+          </div>
+          {mappedDances.length === 0 ? (
             <EmptyState title="No annotated dances yet">
               Dances are full videos mapped move by move —{" "}
               <Link href="/dances/new" className="text-denim underline">add the first one</Link>.
             </EmptyState>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2">
-              {recentDances.map((dance) => (
-                <DanceCard key={dance.id} dance={dance} />
+              {mappedDances.map((dance, i) => (
+                // phones get the top two, so the "Help map a dance" panel stays within reach
+                <div key={dance.id} className={i < 2 ? "contents" : "hidden sm:contents"}>
+                  <DanceCard dance={dance} />
+                </div>
               ))}
             </div>
           )}
