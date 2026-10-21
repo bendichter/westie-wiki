@@ -354,7 +354,8 @@ async function main() {
 
   log("removing an annotation requires clicking into it first");
   if ((await page.getByText("\u2715").count()) !== 0) throw new Error("timeline should not show inline delete buttons");
-  await page.getByLabel("Move", { exact: true }).fill("Whip");
+  // lowercase on purpose: names resolve case-insensitively when saving
+  await page.getByLabel("Move", { exact: true }).fill("whip");
   await page.getByLabel("Start").fill("0:50.5");
   await page.getByRole("button", { name: "Add move" }).click();
   await expectText(page, "(4)");
@@ -363,6 +364,15 @@ async function main() {
   await page.getByRole("button", { name: "Remove", exact: true }).click();
   await expectText(page, "(3)");
   await expectText(page, "Mark a move");
+
+  log("typing part of a name and pressing Enter picks the suggestion");
+  await page.getByLabel("Move", { exact: true }).fill("sug");
+  await page.getByRole("option", { name: "Sugar Push" }).waitFor({ state: "visible", timeout: 15000 });
+  await page.getByLabel("Move", { exact: true }).press("Enter");
+  if ((await page.getByLabel("Move", { exact: true }).inputValue()) !== "Sugar Push") {
+    throw new Error("Enter did not pick the top suggestion");
+  }
+  if ((await page.getByRole("listbox").count()) !== 0) throw new Error("suggestions should close after picking");
 
   log("unknown move name is rejected with guidance");
   await page.getByLabel("Move", { exact: true }).fill("Not A Real Move");

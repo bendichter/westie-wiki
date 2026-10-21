@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { asc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { dancers as dancersTable, events, handholds as handholdsTable, moves, moveVariants, users } from "@/db/schema";
+import { dancers as dancersTable, events, handholds as handholdsTable, moveAliases, moves, moveVariants, users } from "@/db/schema";
 import { DanceAnnotator } from "@/components/DanceAnnotator";
 import { EditDanceDetailsForm } from "@/components/EditDanceDetailsForm";
 import { ReportForm } from "@/components/ReportForm";
@@ -76,13 +76,17 @@ export default async function DancePage({
   const songs = getDanceSongs(dance.id);
   const annotations = getDanceAnnotations(dance.id);
   const addedBy = db.select({ username: users.username }).from(users).where(eq(users.id, dance.addedBy)).get();
-  const moveNames = db
-    .select({ name: moves.name })
+  const moveOptions = db
+    .select({ id: moves.id, name: moves.name })
     .from(moves)
     .where(eq(moves.deleted, 0))
     .orderBy(asc(moves.name))
     .all()
-    .map((r) => r.name);
+    .map((r) => ({ id: r.id, name: r.name, aliases: [] as string[] }));
+  const optionsById = new Map(moveOptions.map((o) => [o.id, o]));
+  for (const alias of db.select({ moveId: moveAliases.moveId, name: moveAliases.name }).from(moveAliases).all()) {
+    optionsById.get(alias.moveId)?.aliases.push(alias.name);
+  }
 
   const allHandholds = db
     .select({ id: handholdsTable.id, name: handholdsTable.name })
@@ -187,7 +191,7 @@ export default async function DancePage({
         danceId={dance.id}
         youtubeId={dance.youtubeId}
         annotations={annotations}
-        moveNames={moveNames}
+        moveOptions={moveOptions}
         variantsByMove={variantsByMove}
         handholds={allHandholds}
         currentUserId={user && isVerified(user) ? user.id : null}

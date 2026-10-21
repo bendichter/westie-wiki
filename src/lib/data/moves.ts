@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
   comments,
@@ -29,6 +29,30 @@ export function getMoveBySlug(slug: string): Move | undefined {
     .from(moves)
     .where(and(eq(moves.slug, slug), eq(moves.deleted, 0)))
     .get();
+}
+
+/**
+ * Resolve a typed move name the way a reader would: case-insensitively, and
+ * by alias when no move has that name. An alias shared by several moves is
+ * ambiguous, so it resolves to nothing.
+ */
+export function findMoveByName(name: string): Move | undefined {
+  const lower = name.trim().toLowerCase();
+  if (!lower) return undefined;
+  const byName = db
+    .select()
+    .from(moves)
+    .where(and(sql`lower(${moves.name}) = ${lower}`, eq(moves.deleted, 0)))
+    .get();
+  if (byName) return byName;
+  const aliasMatches = db
+    .selectDistinct({ id: moves.id })
+    .from(moveAliases)
+    .innerJoin(moves, eq(moves.id, moveAliases.moveId))
+    .where(and(sql`lower(${moveAliases.name}) = ${lower}`, eq(moves.deleted, 0)))
+    .all();
+  if (aliasMatches.length !== 1) return undefined;
+  return db.select().from(moves).where(eq(moves.id, aliasMatches[0].id)).get();
 }
 
 export function getAliases(moveId: number): string[] {

@@ -8,9 +8,11 @@ import {
   updateAnnotation,
   type AnnotationFormState,
 } from "@/lib/actions/dances";
+import { resolveMoveName, type MoveOption } from "@/lib/move-match";
 import { formatTimestamp } from "@/lib/time";
 import { CoverageBar } from "./CoverageBar";
 import { JoinCallout } from "./JoinPrompt";
+import { MoveCombobox } from "./MoveCombobox";
 import { ClipLoopControls, PlayerBox, StartEndFields } from "./LoopControls";
 import { VerifyToMarkNotice } from "./VerifyEmailBanner";
 import { useActiveClips } from "./useActiveClips";
@@ -34,7 +36,7 @@ export function DanceAnnotator({
   danceId,
   youtubeId,
   annotations,
-  moveNames,
+  moveOptions,
   variantsByMove,
   handholds,
   currentUserId,
@@ -46,7 +48,7 @@ export function DanceAnnotator({
   danceId: number;
   youtubeId: string;
   annotations: AnnotationItem[];
-  moveNames: string[];
+  moveOptions: MoveOption[];
   variantsByMove: Record<string, { id: number; name: string }[]>;
   handholds: { id: number; name: string }[];
   /** Set only for accounts that can save marks (logged in with a confirmed email). */
@@ -99,16 +101,13 @@ export function DanceAnnotator({
     [annotations]
   );
 
-  // offer to document a move the wiki doesn't know yet (matching is
-  // case-insensitive so a lowercase spelling of an existing move doesn't
-  // read as new)
-  const knownMoveNames = useMemo(
-    () => new Set(moveNames.map((n) => n.toLowerCase())),
-    [moveNames]
-  );
+  // offer to document a move the wiki doesn't know yet (a different
+  // capitalization or an alias of an existing move resolves to it, the same
+  // way the server does when saving)
   const trimmedMoveName = moveName.trim();
-  const isUnknownMove =
-    trimmedMoveName.length >= 2 && !knownMoveNames.has(trimmedMoveName.toLowerCase());
+  const resolvedMoveName = resolveMoveName(moveOptions, moveName);
+  const isUnknownMove = trimmedMoveName.length >= 2 && resolvedMoveName == null;
+  const moveVariants = resolvedMoveName ? (variantsByMove[resolvedMoveName] ?? []) : [];
 
   function clearForm() {
     formRef.current?.reset();
@@ -272,22 +271,16 @@ export function DanceAnnotator({
                 <label htmlFor="annotate-move" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
                   Move
                 </label>
-                <input
+                <MoveCombobox
                   id="annotate-move"
                   name="moveName"
-                  list="annotate-move-suggestions"
                   required
                   placeholder="e.g. Whip"
-                  ref={moveInputRef}
+                  inputRef={moveInputRef}
+                  options={moveOptions}
                   value={moveName}
-                  onChange={(e) => setMoveName(e.target.value)}
-                  className={inputClass()}
+                  onChange={setMoveName}
                 />
-                <datalist id="annotate-move-suggestions">
-                  {moveNames.map((name) => (
-                    <option key={name} value={name} />
-                  ))}
-                </datalist>
                 {isUnknownMove ? (
                   <p className="mt-1.5 flex flex-wrap items-center gap-1.5 font-display text-xs text-muted">
                     <span>No move named “{trimmedMoveName}” yet.</span>
@@ -310,7 +303,7 @@ export function DanceAnnotator({
             {clipLoopControls}
 
             <div className="flex flex-wrap items-end gap-3">
-              {(variantsByMove[moveName] ?? []).length > 0 ? (
+              {moveVariants.length > 0 ? (
                 <div className="w-full sm:w-52">
                   <label htmlFor="annotate-variant" className="mb-0.5 block font-display text-xs font-semibold text-ink-soft">
                     Variant <span className="font-normal text-muted">(optional)</span>
@@ -323,7 +316,7 @@ export function DanceAnnotator({
                     className={inputClass("cursor-pointer min-w-0 max-w-full")}
                   >
                     <option value="">Not specified</option>
-                    {(variantsByMove[moveName] ?? []).map((v) => (
+                    {moveVariants.map((v) => (
                       <option key={v.id} value={v.id}>
                         {v.name}
                       </option>

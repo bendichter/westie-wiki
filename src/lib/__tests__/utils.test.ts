@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { diffLines } from "../diff";
 import { canonicalEmail } from "../email";
+import { matchMoves, resolveMoveName } from "../move-match";
 import { slugify, uniqueSlug } from "../slug";
 import { formatTimestamp, parseTimestamp } from "../time";
 import { parseYoutubeUrl, youtubeEmbedUrl } from "../youtube";
@@ -256,5 +257,27 @@ describe("fractional timestamps", () => {
     const url = youtubeEmbedUrl("abc123def45", 70.5, 79.2);
     expect(url).toContain("start=70");
     expect(url).toContain("end=80");
+  });
+});
+
+describe("move matching", () => {
+  const options = [
+    { name: "Chest Press", aliases: [] },
+    { name: "Sugar Push", aliases: ["Push Break"] },
+    { name: "Tuck Turn", aliases: ["Sugar Tuck"] },
+    { name: "Left Side Pass", aliases: ["Pass"] },
+    { name: "Right Side Pass", aliases: ["Pass"] },
+  ];
+  it("resolves names case-insensitively and by unique alias", () => {
+    expect(resolveMoveName(options, "  chest press ")).toBe("Chest Press");
+    expect(resolveMoveName(options, "sugar tuck")).toBe("Tuck Turn");
+    expect(resolveMoveName(options, "pass")).toBeNull();
+    expect(resolveMoveName(options, "chest")).toBeNull();
+  });
+  it("ranks prefix matches first and names above aliases", () => {
+    expect(matchMoves(options, "sugar").map((m) => m.name)).toEqual(["Sugar Push", "Tuck Turn"]);
+    expect(matchMoves(options, "sugar")[1].alias).toBe("Sugar Tuck");
+    expect(matchMoves(options, "press").map((m) => m.name)).toEqual(["Chest Press"]);
+    expect(matchMoves(options, "")).toHaveLength(options.length);
   });
 });

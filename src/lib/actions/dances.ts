@@ -21,6 +21,7 @@ import {
 } from "@/db/schema";
 import { isAdmin } from "@/lib/admin";
 import { removeDanceCascade } from "@/lib/dance-removal";
+import { findMoveByName } from "@/lib/data/moves";
 import { getCurrentUser, isVerified, VERIFY_TO_EDIT_ERROR, checkWriteRateLimit, WRITE_RATE_LIMIT_ERROR } from "@/lib/auth";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { parseTimestamp } from "@/lib/time";
@@ -139,11 +140,7 @@ export async function addAnnotation(
   if (!checkWriteRateLimit(user.id)) return { error: WRITE_RATE_LIMIT_ERROR };
 
   const moveName = String(formData.get("moveName") ?? "").trim();
-  const move = db
-    .select()
-    .from(moves)
-    .where(and(eq(moves.name, moveName), eq(moves.deleted, 0)))
-    .get();
+  const move = findMoveByName(moveName);
   if (!move) {
     return { error: `No move named "${moveName}" — pick one from the suggestions, or document it first.` };
   }
@@ -232,11 +229,7 @@ export async function updateAnnotation(
   const previousMove = db.select().from(moves).where(eq(moves.id, clip.moveId)).get();
 
   const moveName = String(formData.get("moveName") ?? "").trim();
-  const move = db
-    .select()
-    .from(moves)
-    .where(and(eq(moves.name, moveName), eq(moves.deleted, 0)))
-    .get();
+  const move = findMoveByName(moveName);
   if (!move) {
     return { error: `No move named "${moveName}" — pick one from the suggestions, or document it first.` };
   }
